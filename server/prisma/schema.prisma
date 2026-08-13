@@ -56,7 +56,7 @@ model Utilisateur {
   courriel      String   @unique
   motDePasse    String
 
-  pseudonyme    String?
+  pseudonyme    String   @unique
   nom           String?
   avatarUrl     String?
   bio           String?
