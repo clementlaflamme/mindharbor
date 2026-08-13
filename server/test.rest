@@ -1,23 +1,19 @@
-@baseUrl = http://localhost:3000
+@base = http://localhost:3000
 
-POST {{baseUrl}}/api/auth/register
+### 1. Register user sans infos facultatives
+POST {{base}}/auth/register
 Content-Type: application/json
 
-{
-    "email": "math_le_barbare@waaagh.com",
-    "pseudo": "DakkaBoii",
-    "mdp": "WaaAgh247!"
-}
+{"courriel": "bobby@gmail.com", "pseudonyme": "Tristesse38", "motDePasse": "bobby123"}
 
-### Login dans un compte comme utilisateur avec infos OK
-# @name loginReq
-POST {{baseUrl}}/api/v1/auth/login
+### 2. Register user avec infos facultatives
+POST {{base}}/auth/register
 Content-Type: application/json
 
-{
-    "email": "math_le_barbare@waaagh.com",
-    "mdp": "WaaAgh247!"
-}
+{"courriel": "jean@gmail.com", "pseudonyme": "Jean_ai_plein_mon_cass", "motDePasse": "jean123", "nom": "Jean Souffre", "avatarUrl": "https://www.pinclipart.com/picdir/middle/529-5291405_peace-sign-clipart-avatar-peace-symbol-transparent-background.png", "bio": "Juste un dude tanné. Je veux des vacaaaaances...!"}
 
-### authToken garde en mémoire le token du login pour l'utiliser dans d'autres routes
-@authToken = {{loginReq.response.body.token}}
+### 
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{"courriel": "admin@gmail.com", "pseudonyme": "admin01", "motDePasse": "admin123", "nom": "Claude Cobra", "avatarUrl": "https://i.pinimg.com/originals/d4/92/a0/d492a0a000b65aa5bce960e1fd782b1d.png", "bio": "Hard at work pour le mieux-être de tous! La vie est belle on lâche pas!", "codeAdmin": "admin123"}
