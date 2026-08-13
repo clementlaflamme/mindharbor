@@ -17,3 +17,15 @@ POST {{base}}/auth/register
 Content-Type: application/json
 
 {"courriel": "admin@gmail.com", "pseudonyme": "admin01", "motDePasse": "admin123", "nom": "Claude Cobra", "avatarUrl": "https://i.pinimg.com/originals/d4/92/a0/d492a0a000b65aa5bce960e1fd782b1d.png", "bio": "Hard at work pour le mieux-être de tous! La vie est belle on lâche pas!", "codeAdmin": "admin123"}
+
+### ----- Ressources -----
+
+### Get ressources
+GET {{base}}/resources
+
+### Filtre par durée maximale uniquement (ex: max 6 minutes)
+GET {{base}}/resources?dureeMax=6
+
+### Combinaison : Recherche + Durée Max + Pagination
+GET {{base}}/resources?recherche=médit&dureeMax=6&page=1&limit=5
+

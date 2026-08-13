@@ -2,6 +2,7 @@ import express, { type Request, type Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
+import ressourcesRoutes from "./routes/ressources.routes.js"
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/auth", authRoutes)
+app.use("/resources", ressourcesRoutes)
 
 const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
