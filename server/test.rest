@@ -49,6 +49,32 @@ Authorization: Bearer {{authToken}}
 }
 
 ###
+POST {{base}}/api/v1/journal
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "humeur": 5,
+  "energie": 4,
+  "sommeil": 8,
+  "anxiete": 1,
+  "gratitude": "Superbe séance de sport ce matin et un bon café au soleil"
+}
+
+###
+POST {{base}}/api/v1/journal
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "humeur": 3,
+  "energie": 2,
+  "sommeil": 5,
+  "anxiete": 4,
+  "gratitude": "Content d'avoir terminé mes examens à temps"
+}
+
+###
 GET {{base}}/api/v1/journal/2026-08-13
 Authorization: Bearer {{authToken}}
 
@@ -69,3 +95,11 @@ Content-Type: application/json
 {
     "utilisateurId": "test"
 }
+
+###
+GET {{base}}/api/v1/journal/stats?range=15d
+Authorization: Bearer {{authToken}}
+
+###
+GET {{base}}/api/v1/journal/insights
+Authorization: Bearer {{authToken}}
