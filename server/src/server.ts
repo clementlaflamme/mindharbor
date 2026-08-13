@@ -10,13 +10,14 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173" }));
 
-app.use("/api/v1/journal", routerJournal);
+
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Serveur fonctionnel !" });
 });
 
-app.use("/auth", authRoutes)
+app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/journal", routerJournal);
 
 const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
