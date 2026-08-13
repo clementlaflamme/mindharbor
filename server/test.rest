@@ -1,19 +1,71 @@
 @base = http://localhost:3000
 
 ### 1. Register user sans infos facultatives
-POST {{base}}/auth/register
+# @name registerReq
+POST {{base}}/api/v1/auth/register
 Content-Type: application/json
 
 {"courriel": "bobby@gmail.com", "pseudonyme": "Tristesse38", "motDePasse": "bobby123"}
+###
+@utilisateurId = {{registerReq.response.body.id}}
 
 ### 2. Register user avec infos facultatives
-POST {{base}}/auth/register
+POST {{base}}/api/v1/auth/register
 Content-Type: application/json
 
 {"courriel": "jean@gmail.com", "pseudonyme": "Jean_ai_plein_mon_cass", "motDePasse": "jean123", "nom": "Jean Souffre", "avatarUrl": "https://www.pinclipart.com/picdir/middle/529-5291405_peace-sign-clipart-avatar-peace-symbol-transparent-background.png", "bio": "Juste un dude tanné. Je veux des vacaaaaances...!"}
 
-### 3. Register AMIN
-POST {{base}}/auth/register
+### 
+POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {"courriel": "admin@gmail.com", "pseudonyme": "admin01", "motDePasse": "admin123", "nom": "Claude Cobra", "avatarUrl": "https://i.pinimg.com/originals/d4/92/a0/d492a0a000b65aa5bce960e1fd782b1d.png", "bio": "Hard at work pour le mieux-être de tous! La vie est belle on lâche pas!", "codeAdmin": "admin123"}
+
+### Login en tant qu'utilisateur et récupérer le token
+# @name loginReq
+POST {{base}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "courriel": "bobby@gmail.com", "pseudonyme": "Tristesse38", "motDePasse": "bobby123"
+}
+###
+@authToken = {{loginReq.response.body.token}}
+###
+GET {{base}}/api/v1/journal
+Authorization: Bearer {{authToken}}
+
+### Créer une entrée de journal
+POST {{base}}/api/v1/journal
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "humeur": 2,
+    "energie": 1,
+    "sommeil": 3,
+    "anxiete": 5,
+    "gratitude": "Test"
+}
+
+###
+GET {{base}}/api/v1/journal/2026-08-13
+Authorization: Bearer {{authToken}}
+
+###
+PATCH {{base}}/api/v1/journal/2026-08-13
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "gratitude": "Test patch"
+}
+
+###
+PATCH {{base}}/api/v1/journal/2026-08-13
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "utilisateurId": "test"
+}
