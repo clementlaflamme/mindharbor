@@ -1,0 +1,21 @@
+GET http://localhost:3000/pokedex/
+###
+GET http://localhost:3000/pokedex/api
+
+###
+POST http://localhost:3000/pokedex/capturer/pikachu/
+###
+POST http://localhost:3000/pokedex/capturer/charizard
+###
+PATCH http://localhost:3000/pokedex/changer/2
+Content-Type: application/json
+
+{
+    "rarete": "LEGENDAIRE"
+}
+
+### 
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{"email":"test-user@pokedex.com", "password":"test123"}
