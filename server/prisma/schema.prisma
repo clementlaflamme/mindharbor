@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -10,4 +5,182 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+//
+// ENUMS
+//
+
+enum Role {
+  UTILISATEUR
+  MODERATEUR
+  ADMIN
+}
+
+enum VisibiliteProfil {
+  PUBLIC
+  GROUPES_SEULEMENT
+  PRIVE
+}
+
+enum NiveauContact {
+  PERSONNE
+  TOUT_LE_MONDE
+}
+
+enum CategorieSignalement {
+  INAPPROPRIE
+  SPAM
+  INQUIETANT
+}
+
+enum StatutSignalement {
+  EN_ATTENTE
+  TRAITE
+  REJETE
+}
+
+//
+// MODELES
+//
+
+model Utilisateur {
+  id            String   @id @default(uuid())
+  courriel      String   @unique
+  motDePasse    String
+
+  pseudonyme    String?
+  nom           String?
+  avatarUrl     String?
+  bio           String?
+
+  role              Role              @default(UTILISATEUR)
+  visibilite        VisibiliteProfil  @default(PUBLIC)
+  niveauContact     NiveauContact     @default(TOUT_LE_MONDE)
+
+  creeLe        DateTime @default(now())
+  majLe         DateTime @updatedAt
+
+  entreesJournal  EntreeJournal[]
+  favoris         Favori[]
+  messagesEnvoyes Message[]   @relation("MessagesEnvoyes")
+  messagesRecus   Message[]   @relation("MessagesRecus")
+  signalements    Signalement[]
+  jetonsRefresh   JetonRefresh[]
+
+  blocagesEffectues Blocage[]
+  blocagesRecus     Blocage[] @relation("BlocagesRecus")
+}
+
+model EntreeJournal {
+  id        String   @id @default(uuid())
+  utilisateurId String
+  date      DateTime
+
+  humeur    Int
+  energie   Int
+  sommeil   Int
+  anxiete   Int
+
+  gratitude String?
+
+  creeLe    DateTime @default(now())
+  majLe     DateTime @updatedAt
+
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  activites   ActiviteJournal[]
+
+  @@unique([utilisateurId, date])
+}
+
+model Activite {
+  id    String @id @default(uuid())
+  nom   String @unique
+
+  activitesJournal ActiviteJournal[]
+}
+
+model ActiviteJournal {
+  entreeJournalId String
+  activiteId      String
+
+  entreeJournal EntreeJournal @relation(fields: [entreeJournalId], references: [id], onDelete: Cascade)
+  activite      Activite      @relation(fields: [activiteId], references: [id], onDelete: Cascade)
+
+  @@id([entreeJournalId, activiteId])
+}
+
+model Ressource {
+  id        String   @id @default(uuid())
+  titre     String
+  contenu   String
+  categorie String
+  type String
+  duree Int
+  niveau Int
+
+  creeLe    DateTime @default(now())
+  majLe     DateTime @updatedAt
+
+  favoris   Favori[]
+}
+
+model Favori {
+  utilisateurId String
+  ressourceId   String
+
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  ressource   Ressource   @relation(fields: [ressourceId], references: [id], onDelete: Cascade)
+
+  @@id([utilisateurId, ressourceId])
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  expediteurId String
+  destinataireId String
+  contenu     String
+  lu          Boolean  @default(false)
+
+  creeLe      DateTime @default(now())
+
+  expediteur   Utilisateur @relation("MessagesEnvoyes", fields: [expediteurId], references: [id], onDelete: Cascade)
+  destinataire Utilisateur @relation("MessagesRecus", fields: [destinataireId], references: [id], onDelete: Cascade)
+
+  signalements Signalement[]
+}
+
+model Blocage {
+  id            String @id @default(uuid())
+  bloqueurId    String
+  bloqueId      String
+
+  bloqueur Utilisateur @relation(fields: [bloqueurId], references: [id], onDelete: Cascade)
+  bloque   Utilisateur @relation("BlocagesRecus", fields: [bloqueId], references: [id], onDelete: Cascade)
+
+  @@unique([bloqueurId, bloqueId])
+}
+
+model Signalement {
+  id          String             @id @default(uuid())
+  utilisateurId String
+  messageId   String?
+  categorie   CategorieSignalement
+  statut      StatutSignalement  @default(EN_ATTENTE)
+
+  creeLe      DateTime @default(now())
+  majLe       DateTime @updatedAt
+
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  message     Message?    @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+model JetonRefresh {
+  id        String   @id @default(uuid())
+  utilisateurId String
+  token     String   @unique
+  invalide  Boolean  @default(false)
+  expireLe  DateTime
+
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
 }
