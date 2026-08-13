@@ -13,7 +13,6 @@ datasource db {
 
 enum Role {
   UTILISATEUR
-  MODERATEUR
   ADMIN
 }
 
