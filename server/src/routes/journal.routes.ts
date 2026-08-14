@@ -2,8 +2,6 @@ import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { authentifier } from "../middleware/auth.js";
 import { z } from "zod";
-import { error } from "node:console";
-import type { NestedEnumVisibiliteProfilFilter } from "../../generated/prisma/commonInputTypes.js";
 
 const routerJournal = Router();
 
@@ -117,7 +115,6 @@ const stats = await prisma.entreeJournal.aggregate({
   },
 );
 
-// NON VÉRIFIÉ, À VÉRIFIER LORSQUE ACTIVITÉS SONT IMPLÉMENTÉES
 routerJournal.get("/insights", authentifier, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).utilisateur.sub;
