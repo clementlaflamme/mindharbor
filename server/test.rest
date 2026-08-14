@@ -100,9 +100,19 @@ Content-Type: application/json
 GET {{base}}/api/v1/journal/stats?range=15d
 Authorization: Bearer {{authToken}}
 
+### Login en tant que alice et récupérer le token
+# @name loginAlice
+POST {{base}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "courriel": "alice@example.com", "pseudonyme": "AliceZen", "motDePasse": "Password123!"
+}
+###
+@aliceToken = {{loginAlice.response.body.token}}
 ###
 GET {{base}}/api/v1/journal/insights
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{aliceToken}}
 
 ### ----- Ressources -----
 
