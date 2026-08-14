@@ -15,11 +15,22 @@ Content-Type: application/json
 
 {"courriel": "jean@gmail.com", "pseudonyme": "Jean_ai_plein_mon_cass", "motDePasse": "jean123", "nom": "Jean Souffre", "avatarUrl": "https://www.pinclipart.com/picdir/middle/529-5291405_peace-sign-clipart-avatar-peace-symbol-transparent-background.png", "bio": "Juste un dude tanné. Je veux des vacaaaaances...!"}
 
-###
-POST http://localhost:3000/auth/register
+### Créer un compte admin
+POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 {"courriel": "admin@gmail.com", "pseudonyme": "admin01", "motDePasse": "admin123", "nom": "Claude Cobra", "avatarUrl": "https://i.pinimg.com/originals/d4/92/a0/d492a0a000b65aa5bce960e1fd782b1d.png", "bio": "Hard at work pour le mieux-être de tous! La vie est belle on lâche pas!", "codeAdmin": "admin123"}
+### Login en tant qu'admin et récupérer le token
+# @name loginAdmin
+POST {{base}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "courriel": "admin@gmail.com",
+  "motDePasse": "admin123"
+}
+###
+@adminToken = {{loginAdmin.response.body.token}}
 
 ### Login en tant qu'utilisateur et récupérer le token
 # @name loginReq
@@ -243,6 +254,31 @@ Content-Type: application/json
 GET {{base}}/api/v1/users/u3
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
+
+###
+POST {{base}}/api/v1/reports
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "categorie": "INQUIETANT"
+}
+###
+
+GET {{base}}/api/v1/admin/reports
+Authorization: Bearer {{adminToken}}
+
+###
+
+PATCH  {{base}}/api/v1/admin/reports/sig1
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "statut": "TRAITE"
+}
+###
+
 SECTION D : Groupe de soutien
 
 # ### 1. Création du groupe privé par le modérateur

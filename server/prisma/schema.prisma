@@ -210,6 +210,10 @@ model Signalement {
 
   utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   message     Message?    @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([utilisateurId, messageId])
+  @@unique([utilisateurId, publicationId])
+  @@unique([utilisateurId, commentaireId])
 }
 
 model JetonRefresh {
