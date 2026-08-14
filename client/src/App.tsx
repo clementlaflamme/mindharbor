@@ -28,7 +28,7 @@ function App() {
 
       {/* Pour changer d'écran, on devra changer la balise accueil par une autre selon la page désirée
       ex: <Journal/> pour l'écran Journal qui vient de Journal.tsx */}
-      <main className="content">
+      <main>
         <h1>Exam mi-session service web</h1>
         <Accueil/>
       </main>

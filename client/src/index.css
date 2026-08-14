@@ -1,4 +1,11 @@
+
+
 :root {
+    --couleur-palette0: #1b2330; 
+    --couleur-palette1: #6482AD;
+    --couleur-palette2: #7FA1C3;
+    --couleur-palette3: #E2DAD6;
+    --couleur-palette4: #F5EDED;
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -17,7 +24,6 @@
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -32,8 +38,6 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
     --bg: #16171d;
     --border: #2e303a;
     --code-bg: #1f2028;
@@ -51,7 +55,8 @@
 }
 
 #root {
-  width: 1126px;
+    color: var(--couleur-palette0);
+  width: 1200px;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -60,6 +65,19 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+nav, footer {
+    background-color: var(--couleur-palette2);
+}
+
+footer {
+    color: var(--couleur-palette0);
+}
+
+main {
+    background-color: var(--couleur-palette3);
+
 }
 
 body {
