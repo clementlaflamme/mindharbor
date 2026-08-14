@@ -21,16 +21,29 @@ const API = "http://localhost:3000"
 
 function App() { 
 
+  const [pageActive, setPageActive] = useState("analyses");
+
   return (
     <div className="app-container">
 
-      <Navbar/>
+      <Navbar setPageActive={setPageActive} />
 
       {/* Pour changer d'écran, on devra changer la balise accueil par une autre selon la page désirée
       ex: <Journal/> pour l'écran Journal qui vient de Journal.tsx */}
       <main>
-        <h1>Exam mi-session service web</h1>
-        <Accueil/>
+        <h2>Exam mi-session service web</h2>
+        {pageActive === "analyses" && <Analyses/>}
+        {pageActive === "ressources" && <Ressources/>}
+        {pageActive === "accueil" && <Accueil/>}
+        {pageActive === "admin" && <Admin/>}
+        {pageActive === "connexion" && <Connexion/>}
+        {pageActive === "dashboard" && <Dashboard/>}
+        {pageActive === "groupes" && <Groupes/>}
+        {pageActive === "inscription" && <Inscription/>}
+        {pageActive === "journal" && <Journal/>}
+        {pageActive === "messagerie" && <Messagerie/>}
+        {pageActive === "options" && <Options/>}
+        {pageActive === "optionsBio" && <OptionsBio/>}
       </main>
 
       <Footer/>

@@ -1,11 +1,11 @@
 export default function Footer() {
   return (
     <footer className="footer">
-        <div className="badgeArea">
-            <div className="badge911">911</div>
-            <div className="badge866">1-866-APPELLE</div>
+        <div style={{ display: "flex", justifyContent: "flex-end"}} className="badgeArea">
+            <div className="badgeUrgence">911</div>
+            <div className="badgeUrgence">1-866-APPELLE</div>
         </div>
-        <p>&copy; 2026 MindHarbor. Tous droits réservés.</p>
+        <p style={{fontSize: "0.8em"}}>&copy; 2026 MindHarbor. Tous droits réservés.</p>
     
     </footer>
   );
