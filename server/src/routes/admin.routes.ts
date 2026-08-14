@@ -46,39 +46,61 @@ const bodySignalement = z
   })
   .strict();
 
+routerAdmin.get(
+  "/stats",
+  authentifier,
+  exigerRole("ADMIN"),
+  async (req: Request, res: Response) => {
+    try {
+      const stats = await prisma.entreeJournal.aggregate({
+        _avg: {
+          humeur: true,
+          energie: true,
+          sommeil: true,
+          anxiete: true,
+        },
+      });
+
+      return res.status(200).json({ stats });
+    } catch (error) {
+      console.error("Erreur :", error);
+      return res
+        .status(500)
+        .json({ message: "Erreur lors de la récupération des statistiques." });
+    }
+  },
+);
+
 routerAdmin.patch(
-  "/reports/:id",
+  "/users/:id/suspend",
   authentifier,
   exigerRole("ADMIN"),
   async (req: Request, res: Response) => {
     try {
       const id = req.params.id as string;
-
       if (!id || id.trim() === "") {
         return res
           .status(400)
-          .json({ message: "Erreur: Aucun ID de signalement n'a été saisi" });
+          .json({ message: "L'id de l'utilisateur à suspendre est manquant" });
       }
 
-      const verificationBody = bodySignalement.safeParse(req.body);
-
-      if (!verificationBody.success) {
-        return res.status(200).json({
-          message: "Données incorrectes",
-        });
-      }
-
-      const signalementMAJ = await prisma.signalement.update({
+      const utilisateurSuspendu = await prisma.utilisateur.update({
         where: { id },
-        data: { ...req.body },
+        data: { estSuspendu: true },
       });
 
-      return res.status(200).json({ signalementMAJ });
+      if (!utilisateurSuspendu) {
+        return res
+          .status(404)
+          .json({ message: "Erreur : aucun utilisateur trouvé" });
+      }
+
+      return res.status(200).json({ utilisateurSuspendu });
     } catch (error) {
       console.error("Erreur :", error);
       return res
-        .status(400)
-        .json({ message: "Erreur lors de la mise à jour du signalement." });
+        .status(500)
+        .json({ message: "Erreur lors de la suspension de l'utilisateur." });
     }
   },
 );

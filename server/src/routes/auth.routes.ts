@@ -3,21 +3,21 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../utils/prisma.js";
 import { authentifier } from "../middleware/auth.js";
+import { util } from "zod";
 
 const router = Router();
 
 // POST /auth/register Public
 // avec un moyen de créer un Admin avec un code secret admin
 router.post("/register", async (req: Request, res: Response) => {
-  const { courriel, pseudonyme, motDePasse, nom, avatarUrl, bio, codeAdmin } = req.body;
+  const { courriel, pseudonyme, motDePasse, nom, avatarUrl, bio, codeAdmin } =
+    req.body;
 
   if (!courriel || !pseudonyme || !motDePasse) {
-    return res
-      .status(400)
-      .json({
-        erreur:
-          "Erreur: Une information requise est manquante. (email, pseudo, mot de passe)",
-      });
+    return res.status(400).json({
+      erreur:
+        "Erreur: Une information requise est manquante. (email, pseudo, mot de passe)",
+    });
   }
   let attributionRole: "UTILISATEUR" | "ADMIN" = "UTILISATEUR";
 
@@ -28,39 +28,51 @@ router.post("/register", async (req: Request, res: Response) => {
   try {
     const hash = await bcrypt.hash(motDePasse, 10);
     const utilisateur = await prisma.utilisateur.create({
-      data: { courriel, pseudonyme, motDePasse: hash, role: attributionRole, nom, avatarUrl, bio },
+      data: {
+        courriel,
+        pseudonyme,
+        motDePasse: hash,
+        role: attributionRole,
+        nom,
+        avatarUrl,
+        bio,
+      },
     });
-    res
-      .status(201)
-      .json({
-        id: utilisateur.id,
-        courriel: utilisateur.courriel,
-        pseudonyme: utilisateur.pseudonyme,
-        nom: utilisateur.nom,
-        avatarUrl: utilisateur.avatarUrl,
-        bio: utilisateur.bio,
-      });
+    res.status(201).json({
+      id: utilisateur.id,
+      courriel: utilisateur.courriel,
+      pseudonyme: utilisateur.pseudonyme,
+      nom: utilisateur.nom,
+      avatarUrl: utilisateur.avatarUrl,
+      bio: utilisateur.bio,
+    });
   } catch {
-    res
-      .status(400)
-      .json({
-        erreur: "Erreur: Le email ou le nom d'utilisateur est déjà pris.",
-      });
+    res.status(400).json({
+      erreur: "Erreur: Le email ou le nom d'utilisateur est déjà pris.",
+    });
   }
-})
+});
 
 // POST /auth/login Public
 router.post("/login", async (req: Request, res: Response) => {
   const { courriel, motDePasse } = req.body;
-  const utilisateur = await prisma.utilisateur.findUnique({ where: { courriel } });
+  const utilisateur = await prisma.utilisateur.findUnique({
+    where: { courriel },
+  });
 
   // rejeter si le nom d'utilisateur n'est pas bon
   if (!utilisateur)
     return res.status(401).json({ erreur: "Identifiants invalides." });
 
-    // rejeter si le mdp ne correspond pas a la version hachée dans la BD
-    const ok = await bcrypt.compare(motDePasse, utilisateur.motDePasse)
-    if (!ok) return res.status(401).json({erreur: "Identifiants invalides."})
+  if (utilisateur.estSuspendu) {
+    return res
+      .status(401)
+      .json({ erreur: "Votre compte a été suspendu par un administrateur." });
+  }
+
+  // rejeter si le mdp ne correspond pas a la version hachée dans la BD
+  const ok = await bcrypt.compare(motDePasse, utilisateur.motDePasse);
+  if (!ok) return res.status(401).json({ erreur: "Identifiants invalides." });
 
   // signature du token avec le JWT_SECRET de .env
   const token = jwt.sign(
@@ -73,12 +85,10 @@ router.post("/login", async (req: Request, res: Response) => {
 
 // POST /auth/refresh Public, jeton valide // À revoir, demande d'info envoyée au prof
 
-
 // POST /auth/logout Authentifié -- note: on devra faire localStorage.removeItem("token") dans le Frontend
-router.post("/logout", authentifier, async (req:Request, res:Response) => {
-    return res.status(200).json({message: "Déconnexion réussie."})
-})
-
+router.post("/logout", authentifier, async (req: Request, res: Response) => {
+  return res.status(200).json({ message: "Déconnexion réussie." });
+});
 
 // GET /auth/me Authentifié
 router.get("/me", authentifier, async (req: Request, res: Response) => {
@@ -104,7 +114,9 @@ router.get("/me", authentifier, async (req: Request, res: Response) => {
     });
 
     if (!utilisateur) {
-      return res.status(404).json({ erreur: "Erreur: Utilisateur introuvable." });
+      return res
+        .status(404)
+        .json({ erreur: "Erreur: Utilisateur introuvable." });
     }
 
     return res.json(utilisateur);
