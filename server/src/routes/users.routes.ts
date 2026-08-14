@@ -52,3 +52,5 @@ routerUsers.post("/:id/block", authentifier, async (req: Request, res: Response)
         return res.status(500).json({ erreur: "Erreur serveur" });
     }
 })
+
+export default routerUsers

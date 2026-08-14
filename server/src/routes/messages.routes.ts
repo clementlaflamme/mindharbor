@@ -14,7 +14,8 @@ routerMessages.get("/:userId", authentifier, async (req: Request, res: Response)
         const ami = req.params.userId as string;
 
         const page = parseInt(req.query.page as string) || 1;
-        const limit = parseInt(req.query.limit as string) || 20;
+        const limiteQuery = parseInt(req.query.limit as string) || 20;
+        const limit = Math.min(limiteQuery, 100);
         const skip = (page -1) * limit;
 
         const sort = (req.query.sort as string) || "creeLe";
@@ -159,3 +160,5 @@ routerMessages.patch("/lire", authentifier, async (req: Request, res: Response) 
         return res.status(500).json({erreur: "Erreur serveur"})
     }
 });
+
+export default routerMessages
