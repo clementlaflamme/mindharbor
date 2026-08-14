@@ -103,3 +103,24 @@ Authorization: Bearer {{authToken}}
 ###
 GET {{base}}/api/v1/journal/insights
 Authorization: Bearer {{authToken}}
+
+### ----- Ressources -----
+
+### Get ressources
+GET {{base}}/resources
+
+### Filtre par durée maximale uniquement (ex: max 6 minutes)
+GET {{base}}/resources?dureeMax=6
+
+### Combinaison : Recherche + Durée Max + Pagination
+GET {{base}}/resources?recherche=médit&dureeMax=6&page=1&limit=5
+
+###
+POST {{base}}/api/v1/activities
+Authorization: `Bearer {{authToken}}`
+Content-Type: application/json
+
+{
+    "entreeJournalId": "Test",
+    "activiteId": "Test"
+}

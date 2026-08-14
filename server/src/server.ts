@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import routerJournal from "./routes/journal.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import ressourcesRoutes from "./routes/ressources.routes.js"
+import routerActivites from "./routes/activites.routes.js";
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/journal", routerJournal);
+app.use("/resources", ressourcesRoutes)
+app.use("/api/v1/activities", routerActivites);
 
 const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
