@@ -69,3 +69,5 @@ routerMe.patch("/privacy", authentifier, async (req: Request, res: Response) => 
         return res.status(500).json({erreur: "Erreur serveur"})
     }
 });
+
+export default routerMe
