@@ -49,6 +49,22 @@ enum CategorieRessource {
   ENERGIE
 }
 
+enum VisibiliteGroupe {
+  PUBLIC
+  PRIVE
+}
+
+enum StatutAdhesion {
+  EN_ATTENTE
+  ACCEPTEE
+  REFUSEE
+}
+
+enum RoleGroupe {
+  MODERATEUR
+  MEMBRE
+}
+
 //
 // MODELES
 //
@@ -76,6 +92,11 @@ model Utilisateur {
   messagesRecus   Message[]   @relation("MessagesRecus")
   signalements    Signalement[]
   jetonsRefresh   JetonRefresh[]
+
+  membresGroupes    MembreGroupe[]
+  demandesAdhesion  DemandeAdhesion[]
+  publications      Publication[]
+  commentairesGroupe CommentaireGroup[]
 
   blocagesEffectues Blocage[]
   blocagesRecus     Blocage[] @relation("BlocagesRecus")
@@ -178,6 +199,12 @@ model Signalement {
   categorie   CategorieSignalement
   statut      StatutSignalement  @default(EN_ATTENTE)
 
+  publicationId String?
+  commentaireId    String?
+
+  publication   Publication?    @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  commentaire   CommentaireGroup?  @relation(fields: [commentaireId], references: [id], onDelete: Cascade)
+
   creeLe      DateTime @default(now())
   majLe       DateTime @updatedAt
 
@@ -193,4 +220,72 @@ model JetonRefresh {
   expireLe  DateTime
 
   utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+}
+
+model Groupe {
+  id            String  @id @default(uuid())
+  thematique    String
+  description   String
+  regles        String
+  visibilite    VisibiliteGroupe    @default(PUBLIC)
+  Creele        DateTime            @default(now())
+  majle         DateTime            @updatedAt
+
+  membres       MembreGroupe[]
+  demandesAdhesion  DemandeAdhesion[]
+  publications  Publication[]
+}
+
+model MembreGroupe {
+  id        String      @id @default(uuid())
+  groupeId  String
+  utilisateurId String
+  role      RoleGroupe  @default(MEMBRE)
+  rejoindreLe   DateTime    @default(now())
+
+  groupe    Groupe      @relation(fields: [groupeId], references: [id], onDelete: Cascade)
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+
+  @@unique([groupeId, utilisateurId])
+}
+
+model DemandeAdhesion {
+  id        String      @id @default(uuid())
+  groupeId    String
+  utilisateurId String
+  presentation  String //La presentation requise pour Julie
+  statut    StatutAdhesion  @default(EN_ATTENTE)
+  creeLe    DateTime        @default(now())
+  majLe     DateTime        @updatedAt
+
+  groupe      Groupe  @relation(fields: [groupeId], references: [id], onDelete: Cascade)
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+
+  @@unique([groupeId, utilisateurId])
+}
+
+model Publication {
+  id        String  @id @default(uuid())
+  groupeId  String
+  utilisateurId String
+  contenu   String
+  creeLe    DateTime        @default(now())
+  majLe     DateTime        @updatedAt
+
+  groupe    Groupe  @relation(fields: [groupeId], references: [id], onDelete: Cascade)
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  commentaires  CommentaireGroup[]
+  signalements  Signalement[]
+}
+
+model CommentaireGroup {
+  id        String      @id @default(uuid())
+  publicationId String
+  utilisateurId String
+  contenu   String
+  CreeLe    DateTime    @default(now())
+
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  auteur        Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  signalments   Signalement[]
 }

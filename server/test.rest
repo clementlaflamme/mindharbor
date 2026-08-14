@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {"courriel": "jean@gmail.com", "pseudonyme": "Jean_ai_plein_mon_cass", "motDePasse": "jean123", "nom": "Jean Souffre", "avatarUrl": "https://www.pinclipart.com/picdir/middle/529-5291405_peace-sign-clipart-avatar-peace-symbol-transparent-background.png", "bio": "Juste un dude tanné. Je veux des vacaaaaances...!"}
 
-### 
+###
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
@@ -131,4 +131,87 @@ Content-Type: application/json
     // Valeurs "hard-coded"
     "entreeJournalId": "27057354-9894-4e19-b0b9-ebef53edad45",
     "activiteId": "2e564ef4-ec69-4806-b211-45bd700b2dac"
+}
+
+SECTION D : Groupe de soutien
+
+### 1. Création du groupe privé par le modérateur
+       # @name creationGroupe
+       POST {{baseUrl}}/groupes
+       Authorization: Bearer {{tokenModo}}
+       Content-Type: {{contentType}}
+
+{
+    "thematique": "Apprivoiser l'anxiété sociale",
+    "description": "Un espace sûr pour échanger sur l'anxiété au quotidien.",
+    "regles": "Respect, bienveillance et confidentialité obligatoires.",
+    "visibilite": "PRIVE"
+}
+
+### Stocker l'ID du groupe créé
+@groupeId = {{creationGroupe.response.body.id}}
+
+### 2. Julie cherche le groupe (Vérification de la visibilité)
+       GET {{baseUrl}}/groupes?recherche=anxiété
+       Authorization: Bearer {{tokenJulie}}
+
+{
+  "presentation": "Bonjour, je m'appelle Julie et je souffre d'anxiété sociale depuis 2 ans. Je cherche un groupe pour m'aider à progresser."
+}
+
+### Stocker l'ID de la demande d'adhésion
+@demandeId = {{demandeJulie.response.body.demande.id}}
+
+
+### 3. Le modérateur accepte la demande de Julie
+       PUT {{baseUrl}}/groupes/demandes/{{demandeId}}
+       Authorization: Bearer {{tokenModo}}
+       Content-Type: {{contentType}}
+
+{
+  "statut": "ACCEPTEE"
+}
+
+
+### 4. Julie publie son premier message dans le groupe
+       # @name publicationJulie
+       POST {{baseUrl}}/groupes/{{groupeId}}/publications
+       Authorization: Bearer {{tokenJulie}}
+       Content-Type: {{contentType}}
+
+{
+  "contenu": "Merci de m'avoir acceptée ! Est-ce que quelqu'un a des astuces pour gérer les crises d'angoisse en public ?"
+}
+
+### Stocker l'ID de la publication
+@publicationId = {{publicationJulie.response.body.id}}
+
+
+
+### 5. Un autre membre (ou le modo) répond au message de Julie
+       # @name commentaireModo
+       POST {{baseUrl}}/groupes/publications/{{publicationId}}/commentaires
+       Authorization: Bearer {{tokenModo}}
+       Content-Type: {{contentType}}
+{
+  "contenu": "Bienvenue Julie ! Personnellement, la méthode du 5-4-3-2-1 m'aide beaucoup à me recentrer."
+}
+
+### Stocker l'ID du commentaire
+@commentaireId = {{commentaireModo.response.body.id}}
+
+
+### 6. Julie lit le fil de discussion (Paginé)
+       GET {{baseUrl}}/groupes/{{groupeId}}/publications?page=1&limite=10
+       Authorization: Bearer {{tokenJulie}}
+
+
+### 7. Test de Sécurité / Signalement (Ex: Julie signale un contenu inapproprié)
+       POST {{baseUrl}}/signalements
+       Authorization: Bearer {{tokenJulie}}
+       Content-Type: {{contentType}}
+
+{
+  "publicationId": "{{publicationId}}",
+  "categorie": "INQUIETANT"
 }
