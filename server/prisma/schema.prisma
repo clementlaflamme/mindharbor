@@ -60,7 +60,7 @@ model Utilisateur {
 
   pseudonyme    String   @unique
   nom           String?
-  avatarUrl     String?
+  avatarUrl     String   @default("/public/images/default_avatar.jpg")
   bio           String?
 
   role              Role              @default(UTILISATEUR)
