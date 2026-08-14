@@ -9,7 +9,14 @@ routerUsers.get("/:id", async (req: Request, res: Response) => {
     try {
         const userId = req.params.id as string;
         const user = await prisma.utilisateur.findUnique({
-            where: {id: userId}
+            where: {id: userId},
+            select: {
+                nom: true,
+                pseudonyme: true,
+                avatarUrl: true,
+                bio: true,
+                visibilite: true,
+            }
         });
 
         if (user && user.visibilite == "PUBLIC"){

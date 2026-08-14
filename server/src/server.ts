@@ -7,6 +7,7 @@ import ressourcesRoutes from "./routes/ressources.routes.js"
 import routerActivites from "./routes/activites.routes.js";
 import routerMessages from "./routes/messages.routes.js";
 import routerUsers from "./routes/users.routes.js";
+import routerMe from "./routes/me.routes.js";
 
 dotenv.config();
 
@@ -24,8 +25,9 @@ app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/journal", routerJournal);
 app.use("/resources", ressourcesRoutes)
 app.use("/api/v1/activities", routerActivites);
-app.use("/api/v1/message", routerMessages);
+app.use("/api/v1/messages", routerMessages);
 app.use("/api/v1/users", routerUsers);
+app.use("/api/v1/me", routerMe);
 
 const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {

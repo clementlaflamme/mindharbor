@@ -132,3 +132,104 @@ Content-Type: application/json
     "entreeJournalId": "27057354-9894-4e19-b0b9-ebef53edad45",
     "activiteId": "2e564ef4-ec69-4806-b211-45bd700b2dac"
 }
+
+
+
+
+###### MESSAGES ##############################
+
+### Login en tant qu'utilisateur et récupérer le token
+# @name loginReq
+POST {{base}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "courriel": "sara@example.com",
+  "motDePasse": "Password123!"
+}
+
+###  Voir les messages de l'utilisateur u3 avec l'utilisateur u1
+GET {{base}}/api/v1/messages/u1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+###  Voir toutes les conversations (le dernier message de chacune)
+GET {{base}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+###  Envoyer un message a l'utilisateur u2
+POST {{base}}/api/v1/messages/u2
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "sujet": "Ca va?",
+    "contenu": "Aurais tu le temps de parler du deuil?"
+}
+
+###  Voir les messages de l'utilisateur u3 avec l'utilisateur u2
+GET {{base}}/api/v1/messages/u2
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+
+############ USERS #############################
+
+### Bloquer utilisateur u5
+POST {{base}}/api/v1/users/u5/block
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Essayer d'envoyer un message a u5
+POST {{base}}/api/v1/messages/u5
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "sujet": "test de bloc",
+    "contenu": "Aurais tu le temps de parler du blocage?"
+}
+
+
+### afficher un utilisateur
+GET {{base}}/api/v1/users/u5
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+
+
+############ ME #############################
+
+### changer la bio du user u3
+PATCH {{base}}/api/v1/me
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "bio": "Moi j'aime les chars pis le biseboll"
+}
+
+### changer les donnes de privacy pour rendre le profil prive
+PATCH {{base}}/api/v1/me/privacy
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "visibilite": "PRIVE"
+}
+
+### changer les donnes de privacy pour rendre le profil public
+PATCH {{base}}/api/v1/me/privacy
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "visibilite": "PUBLIC"
+}
+
+
+### afficher un utilisateur (introuvable lorse que prive)
+GET {{base}}/api/v1/users/u3
+Authorization: Bearer {{authToken}}
+Content-Type: application/json

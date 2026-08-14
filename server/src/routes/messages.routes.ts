@@ -7,7 +7,7 @@ const routerMessages = Router();
 
 
 
-// // Afficher tous les messages de l'utilisateur connecté
+// // Afficher tous les messages avec un autre utilisateur
 routerMessages.get("/:userId", authentifier, async (req: Request, res: Response) => {
     try {
         const idUtilisateur = (req as any).utilisateur.sub;
@@ -51,7 +51,7 @@ routerMessages.get("/:userId", authentifier, async (req: Request, res: Response)
     }
 })
 
-// // Afficher tous les messages d'une conversation
+// // Afficher tous les dernier messages des conversations (toutes les conversations)
 routerMessages.get("/", authentifier, async (req: Request, res: Response) => {
     try {
         const idUtilisateur = (req as any).utilisateur.sub;
@@ -70,6 +70,17 @@ routerMessages.get("/", authentifier, async (req: Request, res: Response) => {
 
     for (const msg of messages) {
         const ami = msg.expediteurId === idUtilisateur ? msg.destinataireId : msg.expediteurId;
+        const bloque = await prisma.blocage.findFirst({
+            where: {
+                OR: [
+                    { bloqueurId : idUtilisateur, bloqueId: ami },
+                    { bloqueurId : ami, bloqueId: idUtilisateur },
+                ]
+            }
+        })
+
+        if (bloque) continue;
+
         if (!conversationsMap.has(ami)) {
             conversationsMap.set(ami, {
                 idUtilisateur: ami,
@@ -79,14 +90,18 @@ routerMessages.get("/", authentifier, async (req: Request, res: Response) => {
         }
     }
 
-    const conversation = Array.from(conversationsMap.values());
-    return res.status(200).json({ conversation });
+    const conversations = Array.from(conversationsMap.values());
+    return res.status(200).json({ conversations });
 
         
     } catch (e) {
         return res.status(500).json({ erreur: "Erreur serveur" });
     }
 })
+
+
+
+
 
 //envoyer un message
 routerMessages.post("/:userId", authentifier, async (req: Request, res: Response) => {
@@ -106,12 +121,13 @@ routerMessages.post("/:userId", authentifier, async (req: Request, res: Response
             return res.status(404).json({message: "Utilisateur introuvable"})
         }
 
-        const bloque = await prisma.blocage.findUnique({
+        const bloque = await prisma.blocage.findFirst({
             where: {
-                bloqueurId_bloqueId: {
-                    bloqueurId: destinataire.id,
-                    bloqueId: idUtilisateur
-                }
+                OR: [
+                    { bloqueurId: destinataire.id, bloqueId: idUtilisateur},
+                    { bloqueurId: idUtilisateur, bloqueId: destinataire.id},
+                ]
+
             }
         });
 
@@ -131,6 +147,11 @@ routerMessages.post("/:userId", authentifier, async (req: Request, res: Response
         return res.status(400).json({erreur: "Erreur lors de la creation du message"})
     }
 });
+
+
+
+
+
 
 //lire un message
 routerMessages.patch("/lire", authentifier, async (req: Request, res: Response) => {
