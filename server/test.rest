@@ -29,3 +29,7 @@ GET {{base}}/resources?dureeMax=6
 ### Combinaison : Recherche + Durée Max + Pagination
 GET {{base}}/resources?recherche=médit&dureeMax=6&page=1&limit=5
 
+### Get une ressource par id
+GET {{base}}/resources/17dad342-7dfd-4e1d-a6f3-c6ec2d682ebc
+
+

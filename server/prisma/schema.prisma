@@ -45,6 +45,8 @@ enum CategorieRessource {
   RELATIONS
   TRAVAIL
   DEUIL
+  HUMEUR
+  ENERGIE
 }
 
 //
