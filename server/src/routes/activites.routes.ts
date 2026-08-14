@@ -1,12 +1,12 @@
 import { Router, type Request, type Response } from "express";
-import prisma from "../../utils/prisma.js";
+import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middleware/auth.js";
 import router from "./auth.routes.js";
 
 const routerActivites = Router();
 
 //GET /activities Public -- ressort le nom de toutes les activites de la table Activite
-routerActivites.get("/activities", async (req: Request, res: Response) => {
+routerActivites.get("/", async (req: Request, res: Response) => {
   try {
     const activites = await prisma.activite.findMany({ select: { nom: true } });
     if (!activites)
@@ -20,8 +20,8 @@ routerActivites.get("/activities", async (req: Request, res: Response) => {
 });
 
 //POST /activities Privé à son auteur -- enregistre les activités pratiqués
-router.post(
-  "/activities",
+routerActivites.post(
+  "/",
   authentifier,
   async (req: Request, res: Response) => {
     try {

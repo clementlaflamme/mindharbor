@@ -117,10 +117,11 @@ GET {{base}}/resources?recherche=médit&dureeMax=6&page=1&limit=5
 
 ###
 POST {{base}}/api/v1/activities
-Authorization: `Bearer {{authToken}}`
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "entreeJournalId": "Test",
-    "activiteId": "Test"
+    // Valeurs "hard-coded"
+    "entreeJournalId": "27057354-9894-4e19-b0b9-ebef53edad45",
+    "activiteId": "2e564ef4-ec69-4806-b211-45bd700b2dac"
 }
