@@ -122,61 +122,98 @@ routerJournal.get("/insights", authentifier, async (req: Request, res: Response)
   try {
     const userId = (req as any).utilisateur.sub;
 
-    // Récupérer toutes les activités de l'utilisateur avec leurs entrées de journal
-    const activites = await prisma.activite.findMany({
-      where: {
-        activitesJournal: {
-          some: {
-            entreeJournal: {
-              utilisateurId: userId,
-            },
-          },
-        },
-      },
+    const toutesLesEntrees = await prisma.entreeJournal.findMany({
+      where: { utilisateurId: userId },
       include: {
-        activitesJournal: {
-          where: {
-            entreeJournal: {
-              utilisateurId: userId,
-            },
-          },
-          include: {
-            entreeJournal: true,
-          },
+        activites: {
+          include: { activite: true },
         },
       },
     });
 
-    // Calculer les moyennes pour chaque activité
-    const SEUIL_MINIMUM = 3; // L'activité doit apparaître au moins 3 fois, sinon ce n'est pas une tendance
-    const correlations = activites.map((activite) => {
-      const entrees = activite.activitesJournal.map((aj) => aj.entreeJournal);
-      const total = entrees.length;
-      if (total < SEUIL_MINIMUM) return null;
+    const SEUIL_MINIMUM = 3;
+    const metriques = ["humeur", "energie", "sommeil", "anxiete"] as const;
 
-      // Calculer les sommes
-      const sommes = entrees.reduce(
-        (acc, e) => ({
-          humeur: acc.humeur + e.humeur,
-          energie: acc.energie + e.energie,
-          sommeil: acc.sommeil + e.sommeil,
-          anxiete: acc.anxiete + e.anxiete,
-        }),
-        { humeur: 0, energie: 0, sommeil: 0, anxiete: 0 }
-      );
+    const moyenneGlobale = (metrique: (typeof metriques)[number]) => {
+      const total = toutesLesEntrees.reduce((acc, e) => acc + e[metrique], 0);
+      return total / toutesLesEntrees.length;
+    };
 
-      return {
-        activiteId: activite.id,
-        nom: activite.nom,
-        nombreOccurrences: total,
-        moyennes: {
-          humeur: Number((sommes.humeur / total).toFixed(2)),
-          energie: Number((sommes.energie / total).toFixed(2)),
-          sommeil: Number((sommes.sommeil / total).toFixed(2)),
-          anxiete: Number((sommes.anxiete / total).toFixed(2)),
-        },
-      };
-    }).filter(Boolean);
+    const activitesMap = new Map<string, { nom: string; entrees: typeof toutesLesEntrees }>();
+
+    for (const entree of toutesLesEntrees) {
+      for (const aj of entree.activites) {
+        const id = aj.activite.id;
+        if (!activitesMap.has(id)) {
+          activitesMap.set(id, { nom: aj.activite.nom, entrees: [] });
+        }
+        activitesMap.get(id)!.entrees.push(entree);
+      }
+    }
+
+    const correlations = Array.from(activitesMap.entries())
+      .map(([activiteId, { nom, entrees: entreesAvecActivite }]) => {
+        const total = entreesAvecActivite.length;
+        if (total < SEUIL_MINIMUM) return null;
+
+        const entreesSansActivite = toutesLesEntrees.filter(
+          (e) => !e.activites.some((aj) => aj.activite.id === activiteId)
+        );
+
+        const resultats: Record<string, any> = {};
+
+        for (const metrique of metriques) {
+          const moyenneAvec =
+            entreesAvecActivite.reduce((acc, e) => acc + e[metrique], 0) / total;
+
+          const moyenneSans =
+            entreesSansActivite.length > 0
+              ? entreesSansActivite.reduce((acc, e) => acc + e[metrique], 0) /
+                entreesSansActivite.length
+              : moyenneGlobale(metrique);
+
+          const differenceAbsolue = moyenneAvec - moyenneSans;
+          const differencePourcentage =
+            moyenneSans !== 0 ? (differenceAbsolue / moyenneSans) * 100 : 0;
+
+          resultats[metrique] = {
+            moyenneAvec: Number(moyenneAvec.toFixed(2)),
+            moyenneSans: Number(moyenneSans.toFixed(2)),
+            differencePourcentage: Number(differencePourcentage.toFixed(1)),
+          };
+        }
+
+        const metriqueDominante = metriques.reduce((max, m) =>
+          Math.abs(resultats[m].differencePourcentage) >
+          Math.abs(resultats[max].differencePourcentage)
+            ? m
+            : max
+        );
+
+        const ecart = resultats[metriqueDominante].differencePourcentage;
+        const direction = ecart > 0 ? "plus élevé" : "moins élevé";
+        const texte = `Lorsque vous pratiquez «${nom}», votre ${metriqueDominante} est ${Math.abs(
+          ecart
+        ).toFixed(0)}% ${direction} que d'habitude.`;
+
+        return {
+          activiteId,
+          nom,
+          nombreOccurrences: total,
+          metriques: resultats,
+          insight: texte,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => {
+        const maxA = Math.max(
+          ...metriques.map((m) => Math.abs(a!.metriques[m].differencePourcentage))
+        );
+        const maxB = Math.max(
+          ...metriques.map((m) => Math.abs(b!.metriques[m].differencePourcentage))
+        );
+        return maxB - maxA;
+      });
 
     res.status(200).json({ correlations });
   } catch (error) {
