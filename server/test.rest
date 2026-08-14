@@ -130,18 +130,18 @@ GET {{base}}/resources/17dad342-7dfd-4e1d-a6f3-c6ec2d682ebc
 
 
 ###
-POST {{base}}/api/v1/activities
+GET {{base}}/api/v1/me/export
 Authorization: Bearer {{authToken}}
-Content-Type: application/json
 
-{
-    "entreeJournalId": "Test",
-    "activiteId": "Test"
-}
-    // Valeurs "hard-coded"
-    "entreeJournalId": "27057354-9894-4e19-b0b9-ebef53edad45",
-    "activiteId": "2e564ef4-ec69-4806-b211-45bd700b2dac"
-}
+###
+GET {{base}}/api/v1/me/export?format=csv
+Authorization: Bearer {{authToken}}
+
+###
+DELETE  {{base}}/api/v1/me/
+Authorization: Bearer {{authToken}}
+
+###
 
 
 
