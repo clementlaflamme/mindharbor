@@ -73,10 +73,13 @@ nav, footer {
 
 footer {
     color: var(--couleur-palette0);
+
 }
 
 main {
     background-color: var(--couleur-palette3);
+    flex: 1;
+    padding: 2px;
 
 }
 
@@ -94,7 +97,6 @@ h2 {
 h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
-  margin: 32px 0;
   @media (max-width: 1024px) {
     font-size: 36px;
     margin: 20px 0;
@@ -109,21 +111,44 @@ h2 {
     font-size: 20px;
   }
 }
-p {
-  margin: 0;
-}
 
-code,
+
+/* code,
 .counter {
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
   color: var(--text-h);
-}
+} */
 
-code {
+/* code {
   font-size: 15px;
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+} */
+
+.badgeUrgence {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1;
+  white-space: nowrap;
+  font-size: 1rem; padding: 0.4rem 1rem;
+  background: #ef4444;
+  color: #ffffff;
+  border-radius: 9999px;
+  margin: 12px;
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 1.5rem;
+  align-items: center;
 }
