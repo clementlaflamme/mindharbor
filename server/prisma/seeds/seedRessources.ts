@@ -1,307 +1,311 @@
 import prisma from "../../src/utils/prisma.js";
+import { CategorieRessource } from "../../generated/prisma/enums.js";
 
 export async function seedRessources() {
-  console.log("🌱 Début du seed des ressources...");
+  console.log("🌱 Nettoyage de la table Ressource...");
+  await prisma.ressource.deleteMany({});
 
-  await prisma.ressource.createMany({
-    data: [
-      // -------------------------
-      // ANXIETE (6 ressources)
-      // -------------------------
-      {
-        titre: "Respiration 4-7-8 pour calmer l’anxiété",
-        contenu:
-          "Technique de respiration guidée pour réduire l’anxiété rapidement.",
-        url: "https://mindharbor.ca/respiration-478",
-        categorie: "ANXIETE",
-        type: "exercice",
-        duree: 2,
-        niveau: 1,
-      },
-      {
-        titre: "Comprendre les pensées anxieuses",
-        contenu: "Article expliquant les pensées automatiques et leur impact.",
-        url: "https://mindharbor.ca/pensees-anxieuses",
-        categorie: "ANXIETE",
-        type: "article",
-        duree: 5,
-        niveau: 2,
-      },
-      {
-        titre: "Méditation anti-stress de 5 minutes",
-        contenu: "Méditation courte pour réduire le stress et l’anxiété.",
-        url: "https://mindharbor.ca/meditation-anti-stress",
-        categorie: "ANXIETE",
-        type: "audio",
-        duree: 5,
-        niveau: 1,
-      },
-      {
-        titre: "Exercice d’ancrage sensoriel",
-        contenu: "Technique pour revenir au moment présent en cas d’anxiété.",
-        url: "https://mindharbor.ca/ancrage-sensoriel",
-        categorie: "ANXIETE",
-        type: "exercice",
-        duree: 3,
-        niveau: 1,
-      },
-      {
-        titre: "Guide de gestion des crises d’angoisse",
-        contenu: "Stratégies pour gérer les crises d’angoisse efficacement.",
-        url: "https://mindharbor.ca/crises-angoisse",
-        categorie: "ANXIETE",
-        type: "guide",
-        duree: 10,
-        niveau: 2,
-      },
-      {
-        titre: "Vidéo : comprendre l’anxiété en 10 minutes",
-        contenu: "Vidéo éducative sur les mécanismes de l’anxiété.",
-        url: "https://mindharbor.ca/video-anxiete",
-        categorie: "ANXIETE",
-        type: "video",
-        duree: 10,
-        niveau: 1,
-      },
+  console.log("🌱 Insertion des nouvelles ressources...");
 
-      // -------------------------
-      // SOMMEIL (6 ressources)
-      // -------------------------
-      {
-        titre: "Routine de sommeil réparateur",
-        contenu: "Conseils pratiques pour améliorer la qualité du sommeil.",
-        url: "https://mindharbor.ca/routine-sommeil",
-        categorie: "SOMMEIL",
-        type: "article",
-        duree: 7,
-        niveau: 1,
-      },
-      {
-        titre: "Méditation guidée pour s’endormir",
-        contenu: "Audio de méditation douce pour faciliter l’endormissement.",
-        url: "https://mindharbor.ca/meditation-sommeil",
-        categorie: "SOMMEIL",
-        type: "audio",
-        duree: 10,
-        niveau: 1,
-      },
-      {
-        titre: "Étirements avant le coucher",
-        contenu:
-          "Séquence d’étirements pour détendre le corps avant de dormir.",
-        url: "https://mindharbor.ca/etirements-sommeil",
-        categorie: "SOMMEIL",
-        type: "exercice",
-        duree: 4,
-        niveau: 1,
-      },
-      {
-        titre: "Comprendre l’insomnie",
-        contenu:
-          "Article expliquant les causes de l’insomnie et les solutions.",
-        url: "https://mindharbor.ca/insomnie",
-        categorie: "SOMMEIL",
-        type: "article",
-        duree: 8,
-        niveau: 2,
-      },
-      {
-        titre: "Respiration pour s’endormir",
-        contenu: "Technique de respiration pour réduire l’agitation mentale.",
-        url: "https://mindharbor.ca/respiration-sommeil",
-        categorie: "SOMMEIL",
-        type: "exercice",
-        duree: 3,
-        niveau: 1,
-      },
-      {
-        titre: "Vidéo : comment créer un environnement propice au sommeil",
-        contenu:
-          "Conseils pour optimiser sa chambre et son hygiène de sommeil.",
-        url: "https://mindharbor.ca/video-environnement-sommeil",
-        categorie: "SOMMEIL",
-        type: "video",
-        duree: 6,
-        niveau: 1,
-      },
+  const ressources = [
+    // -------------------------
+    // ANXIETE (6)
+    // -------------------------
+    {
+      titre: "Breathing Exercise: 4-7-8 Technique",
+      contenu: "Technique de respiration pour réduire l’anxiété.",
+      url: "https://www.healthline.com/health/4-7-8-breathing",
+      categorie: CategorieRessource.ANXIETE,
+      type: "exercice",
+      duree: 2,
+      niveau: 1,
+    },
+    {
+      titre: "What Is Anxiety?",
+      contenu: "Explication claire des mécanismes de l’anxiété.",
+      url: "https://www.anxietycanada.com/articles/what-is-anxiety/",
+      categorie: CategorieRessource.ANXIETE,
+      type: "article",
+      duree: 5,
+      niveau: 2,
+    },
+    {
+      titre: "Grounding Techniques (5-4-3-2-1)",
+      contenu: "Méthode sensorielle pour calmer une crise d’angoisse.",
+      url: "https://www.therapistaid.com/worksheets/grounding-techniques.pdf",
+      categorie: CategorieRessource.ANXIETE,
+      type: "guide",
+      duree: 3,
+      niveau: 1,
+    },
+    {
+      titre: "Anxiety Explained in 10 Minutes",
+      contenu: "Vidéo éducative sur l’anxiété.",
+      url: "https://www.youtube.com/watch?v=WWloIAQpMcQ",
+      categorie: CategorieRessource.ANXIETE,
+      type: "video",
+      duree: 10,
+      niveau: 1,
+    },
+    {
+      titre: "Cognitive Distortions",
+      contenu: "Article sur les pensées anxieuses et biais cognitifs.",
+      url: "https://www.psychologytoday.com/us/basics/cognitive-distortions",
+      categorie: CategorieRessource.ANXIETE,
+      type: "article",
+      duree: 7,
+      niveau: 2,
+    },
+    {
+      titre: "Progressive Muscle Relaxation",
+      contenu: "Exercice de relaxation musculaire pour réduire l’anxiété.",
+      url: "https://www.anxietycanada.com/articles/how-to-do-progressive-muscle-relaxation/",
+      categorie: CategorieRessource.ANXIETE,
+      type: "exercice",
+      duree: 5,
+      niveau: 1,
+    },
 
-      // -------------------------
-      // RELATIONS (6 ressources)
-      // -------------------------
-      {
-        titre: "Communiquer ses besoins dans une relation",
-        contenu: "Guide pour exprimer ses besoins émotionnels sans conflit.",
-        url: "https://mindharbor.ca/communication-besoins",
-        categorie: "RELATIONS",
-        type: "article",
-        duree: 6,
-        niveau: 2,
-      },
-      {
-        titre: "Exercice d’écoute active",
-        contenu: "Petit exercice pour améliorer l’écoute dans les relations.",
-        url: "https://mindharbor.ca/ecoute-active",
-        categorie: "RELATIONS",
-        type: "exercice",
-        duree: 4,
-        niveau: 1,
-      },
-      {
-        titre: "Vidéo : gérer les conflits de manière saine",
-        contenu: "Vidéo éducative sur la résolution de conflits.",
-        url: "https://mindharbor.ca/video-conflits",
-        categorie: "RELATIONS",
-        type: "video",
-        duree: 8,
-        niveau: 2,
-      },
-      {
-        titre: "Comprendre les styles d’attachement",
-        contenu: "Article expliquant les styles d’attachement et leur impact.",
-        url: "https://mindharbor.ca/styles-attachement",
-        categorie: "RELATIONS",
-        type: "article",
-        duree: 10,
-        niveau: 3,
-      },
-      {
-        titre: "Exercice : exprimer sa gratitude à un proche",
-        contenu: "Activité pour renforcer les liens affectifs.",
-        url: "https://mindharbor.ca/gratitude-relation",
-        categorie: "RELATIONS",
-        type: "exercice",
-        duree: 5,
-        niveau: 1,
-      },
-      {
-        titre: "Guide : reconnaître les limites personnelles",
-        contenu: "Apprendre à identifier et respecter ses limites.",
-        url: "https://mindharbor.ca/limites-personnelles",
-        categorie: "RELATIONS",
-        type: "guide",
-        duree: 7,
-        niveau: 2,
-      },
+    // -------------------------
+    // SOMMEIL (6)
+    // -------------------------
+    {
+      titre: "Sleep Hygiene Guide",
+      contenu: "Conseils pour améliorer la qualité du sommeil.",
+      url: "https://www.sleepfoundation.org/sleep-hygiene",
+      categorie: CategorieRessource.SOMMEIL,
+      type: "article",
+      duree: 7,
+      niveau: 1,
+    },
+    {
+      titre: "Guided Sleep Meditation",
+      contenu: "Méditation guidée pour s’endormir.",
+      url: "https://www.youtube.com/watch?v=ZToicYcHIOU",
+      categorie: CategorieRessource.SOMMEIL,
+      type: "audio",
+      duree: 10,
+      niveau: 1,
+    },
+    {
+      titre: "Stretching Before Bed",
+      contenu: "Étirements pour favoriser l’endormissement.",
+      url: "https://www.healthline.com/health/stretching-before-bed",
+      categorie: CategorieRessource.SOMMEIL,
+      type: "exercice",
+      duree: 4,
+      niveau: 1,
+    },
+    {
+      titre: "Understanding Insomnia",
+      contenu: "Article sur les causes de l’insomnie.",
+      url: "https://www.sleepfoundation.org/insomnia",
+      categorie: CategorieRessource.SOMMEIL,
+      type: "article",
+      duree: 8,
+      niveau: 2,
+    },
+    {
+      titre: "Breathing to Fall Asleep",
+      contenu: "Technique de respiration pour réduire l’agitation mentale.",
+      url: "https://www.healthline.com/health/4-7-8-breathing-to-help-you-fall-asleep",
+      categorie: CategorieRessource.SOMMEIL,
+      type: "exercice",
+      duree: 3,
+      niveau: 1,
+    },
+    {
+      titre: "Optimize Your Sleep Environment",
+      contenu: "Vidéo sur l’hygiène du sommeil.",
+      url: "https://www.youtube.com/watch?v=gbQyZcFhQF0",
+      categorie: CategorieRessource.SOMMEIL,
+      type: "video",
+      duree: 6,
+      niveau: 1,
+    },
 
-      // -------------------------
-      // TRAVAIL (6 ressources)
-      // -------------------------
-      {
-        titre: "Gérer le stress au travail",
-        contenu: "Stratégies pour réduire le stress professionnel.",
-        url: "https://mindharbor.ca/stress-travail",
-        categorie: "TRAVAIL",
-        type: "article",
-        duree: 8,
-        niveau: 2,
-      },
-      {
-        titre: "Pause de pleine conscience au bureau",
-        contenu:
-          "Exercice rapide pour se recentrer pendant une journée chargée.",
-        url: "https://mindharbor.ca/pause-pleine-conscience",
-        categorie: "TRAVAIL",
-        type: "exercice",
-        duree: 3,
-        niveau: 1,
-      },
-      {
-        titre: "Vidéo : organiser sa journée efficacement",
-        contenu: "Conseils pour mieux gérer son temps au travail.",
-        url: "https://mindharbor.ca/video-organisation",
-        categorie: "TRAVAIL",
-        type: "video",
-        duree: 9,
-        niveau: 2,
-      },
-      {
-        titre: "Comprendre l’épuisement professionnel",
-        contenu: "Article sur les signes du burnout et comment le prévenir.",
-        url: "https://mindharbor.ca/burnout",
-        categorie: "TRAVAIL",
-        type: "article",
-        duree: 10,
-        niveau: 3,
-      },
-      {
-        titre: "Exercice : micro-pauses actives",
-        contenu: "Petits mouvements pour réduire la tension musculaire.",
-        url: "https://mindharbor.ca/micro-pauses",
-        categorie: "TRAVAIL",
-        type: "exercice",
-        duree: 2,
-        niveau: 1,
-      },
-      {
-        titre: "Guide : améliorer sa concentration",
-        contenu: "Techniques pour rester concentré plus longtemps.",
-        url: "https://mindharbor.ca/concentration",
-        categorie: "TRAVAIL",
-        type: "guide",
-        duree: 7,
-        niveau: 2,
-      },
+    // -------------------------
+    // RELATIONS (6)
+    // -------------------------
+    {
+      titre: "Active Listening Skills",
+      contenu: "Guide pour améliorer l’écoute active.",
+      url: "https://www.mindtools.com/a5v7p3p/active-listening",
+      categorie: CategorieRessource.RELATIONS,
+      type: "guide",
+      duree: 6,
+      niveau: 2,
+    },
+    {
+      titre: "Attachment Styles",
+      contenu: "Article sur les styles d’attachement.",
+      url: "https://www.psychologytoday.com/us/basics/attachment",
+      categorie: CategorieRessource.RELATIONS,
+      type: "article",
+      duree: 10,
+      niveau: 3,
+    },
+    {
+      titre: "Healthy Conflict Resolution",
+      contenu: "Vidéo éducative sur la gestion des conflits.",
+      url: "https://www.youtube.com/watch?v=KY5TWVz5ZDU",
+      categorie: CategorieRessource.RELATIONS,
+      type: "video",
+      duree: 8,
+      niveau: 2,
+    },
+    {
+      titre: "Expressing Gratitude",
+      contenu: "Exercice pour renforcer les liens affectifs.",
+      url: "https://positivepsychology.com/gratitude-exercises/",
+      categorie: CategorieRessource.RELATIONS,
+      type: "exercice",
+      duree: 5,
+      niveau: 1,
+    },
+    {
+      titre: "Setting Healthy Boundaries",
+      contenu: "Guide pour établir des limites personnelles.",
+      url: "https://psychcentral.com/health/setting-boundaries",
+      categorie: CategorieRessource.RELATIONS,
+      type: "guide",
+      duree: 7,
+      niveau: 2,
+    },
+    {
+      titre: "Love Languages Explained",
+      contenu: "Article sur les langages de l’amour.",
+      url: "https://www.5lovelanguages.com/",
+      categorie: CategorieRessource.RELATIONS,
+      type: "article",
+      duree: 6,
+      niveau: 1,
+    },
 
-      // -------------------------
-      // DEUIL (6 ressources)
-      // -------------------------
-      {
-        titre: "Comprendre le processus du deuil",
-        contenu: "Article expliquant les différentes étapes du deuil.",
-        url: "https://mindharbor.ca/etapes-deuil",
-        categorie: "DEUIL",
-        type: "article",
-        duree: 10,
-        niveau: 2,
-      },
-      {
-        titre: "Exercice d’écriture pour apaiser le deuil",
-        contenu: "Activité d’écriture pour exprimer ses émotions.",
-        url: "https://mindharbor.ca/ecriture-deuil",
-        categorie: "DEUIL",
-        type: "exercice",
-        duree: 5,
-        niveau: 1,
-      },
-      {
-        titre: "Vidéo : vivre avec la perte",
-        contenu: "Vidéo éducative sur l’acceptation et la reconstruction.",
-        url: "https://mindharbor.ca/video-deuil",
-        categorie: "DEUIL",
-        type: "video",
-        duree: 8,
-        niveau: 2,
-      },
-      {
-        titre: "Guide : accompagner un proche en deuil",
-        contenu: "Conseils pour soutenir quelqu’un qui traverse un deuil.",
-        url: "https://mindharbor.ca/soutenir-deuil",
-        categorie: "DEUIL",
-        type: "guide",
-        duree: 7,
-        niveau: 2,
-      },
-      {
-        titre: "Méditation pour apaiser la tristesse",
-        contenu:
-          "Audio de méditation douce pour traverser les émotions difficiles.",
-        url: "https://mindharbor.ca/meditation-deuil",
-        categorie: "DEUIL",
-        type: "audio",
-        duree: 6,
-        niveau: 1,
-      },
-      {
-        titre: "Article : mythes sur le deuil",
-        contenu: "Démystification des idées reçues sur le processus de deuil.",
-        url: "https://mindharbor.ca/mythes-deuil",
-        categorie: "DEUIL",
-        type: "article",
-        duree: 9,
-        niveau: 2,
-      },
-    ],
-  });
+    // -------------------------
+    // TRAVAIL (6)
+    // -------------------------
+    {
+      titre: "Managing Work Stress",
+      contenu: "Article sur la gestion du stress au travail.",
+      url: "https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/workplace-stress/art-20043887",
+      categorie: CategorieRessource.TRAVAIL,
+      type: "article",
+      duree: 8,
+      niveau: 2,
+    },
+    {
+      titre: "Mindfulness at Work",
+      contenu: "Exercice de pleine conscience pour le bureau.",
+      url: "https://www.mindful.org/mindfulness-at-work/",
+      categorie: CategorieRessource.TRAVAIL,
+      type: "exercice",
+      duree: 3,
+      niveau: 1,
+    },
+    {
+      titre: "Burnout Prevention",
+      contenu: "Article sur la prévention du burnout.",
+      url: "https://www.helpguide.org/articles/stress/burnout-prevention-and-recovery.htm",
+      categorie: CategorieRessource.TRAVAIL,
+      type: "article",
+      duree: 10,
+      niveau: 3,
+    },
+    {
+      titre: "Time Management Tips",
+      contenu: "Vidéo sur l’organisation du travail.",
+      url: "https://www.youtube.com/watch?v=jV6iJ8Wc5yE",
+      categorie: CategorieRessource.TRAVAIL,
+      type: "video",
+      duree: 9,
+      niveau: 2,
+    },
+    {
+      titre: "Microbreak Exercises",
+      contenu: "Exercices rapides pour réduire la tension musculaire.",
+      url: "https://www.healthline.com/health/microbreaks",
+      categorie: CategorieRessource.TRAVAIL,
+      type: "exercice",
+      duree: 2,
+      niveau: 1,
+    },
+    {
+      titre: "Improving Concentration",
+      contenu: "Guide pour augmenter sa concentration.",
+      url: "https://www.healthline.com/health/how-to-improve-concentration",
+      categorie: CategorieRessource.TRAVAIL,
+      type: "guide",
+      duree: 7,
+      niveau: 2,
+    },
+
+    // -------------------------
+    // DEUIL (6)
+    // -------------------------
+    {
+      titre: "Understanding Grief",
+      contenu: "Article expliquant les étapes du deuil.",
+      url: "https://www.psychologytoday.com/us/basics/grief",
+      categorie: CategorieRessource.DEUIL,
+      type: "article",
+      duree: 10,
+      niveau: 2,
+    },
+    {
+      titre: "Coping With Loss",
+      contenu: "Guide pour traverser un deuil.",
+      url: "https://www.cancer.org/treatment/end-of-life-care/grief-and-loss/coping-with-loss.html",
+      categorie: CategorieRessource.DEUIL,
+      type: "guide",
+      duree: 7,
+      niveau: 2,
+    },
+    {
+      titre: "Meditation for Grief",
+      contenu: "Audio de méditation pour apaiser la tristesse.",
+      url: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
+      categorie: CategorieRessource.DEUIL,
+      type: "audio",
+      duree: 6,
+      niveau: 1,
+    },
+    {
+      titre: "Helping Someone in Grief",
+      contenu: "Conseils pour soutenir un proche en deuil.",
+      url: "https://www.helpguide.org/articles/grief/helping-someone-who-is-grieving.htm",
+      categorie: CategorieRessource.DEUIL,
+      type: "guide",
+      duree: 7,
+      niveau: 2,
+    },
+    {
+      titre: "Myths About Grief",
+      contenu: "Article démystifiant les idées reçues sur le deuil.",
+      url: "https://www.verywellmind.com/common-myths-about-grief-4178251",
+      categorie: CategorieRessource.DEUIL,
+      type: "article",
+      duree: 9,
+      niveau: 2,
+    },
+    {
+      titre: "Living With Loss",
+      contenu: "Vidéo éducative sur l’acceptation et la reconstruction.",
+      url: "https://www.youtube.com/watch?v=Q1kTz6uJZz8",
+      categorie: CategorieRessource.DEUIL,
+      type: "video",
+      duree: 8,
+      niveau: 2,
+    },
+  ];
+
+  for (const r of ressources) {
+    await prisma.ressource.upsert({
+      where: { url: r.url },
+      update: {},
+      create: r,
+    });
+  }
 
   console.log("🌱 Seed terminé !");
 }
