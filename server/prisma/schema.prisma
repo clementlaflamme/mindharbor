@@ -148,6 +148,7 @@ model Message {
   id          String   @id @default(uuid())
   expediteurId String
   destinataireId String
+  sujet String
   contenu     String
   lu          Boolean  @default(false)
 
