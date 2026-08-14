@@ -70,32 +70,33 @@ enum RoleGroupe {
 //
 
 model Utilisateur {
-  id            String   @id @default(uuid())
-  courriel      String   @unique
-  motDePasse    String
+  id         String @id @default(uuid())
+  courriel   String @unique
+  motDePasse String
 
-  pseudonyme    String   @unique
-  nom           String?
-  avatarUrl     String   @default("/public/images/default_avatar.jpg")
-  bio           String?
+  pseudonyme String  @unique
+  nom        String?
+  avatarUrl  String  @default("/public/images/default_avatar.jpg")
+  bio        String?
 
-  role              Role              @default(UTILISATEUR)
-  visibilite        VisibiliteProfil  @default(PUBLIC)
-  niveauContact     NiveauContact     @default(TOUT_LE_MONDE)
+  role          Role             @default(UTILISATEUR)
+  visibilite    VisibiliteProfil @default(PUBLIC)
+  niveauContact NiveauContact    @default(TOUT_LE_MONDE)
+  estSuspendu   Boolean          @default(false)
 
-  creeLe        DateTime @default(now())
-  majLe         DateTime @updatedAt
+  creeLe DateTime @default(now())
+  majLe  DateTime @updatedAt
 
   entreesJournal  EntreeJournal[]
   favoris         Favori[]
-  messagesEnvoyes Message[]   @relation("MessagesEnvoyes")
-  messagesRecus   Message[]   @relation("MessagesRecus")
+  messagesEnvoyes Message[]       @relation("MessagesEnvoyes")
+  messagesRecus   Message[]       @relation("MessagesRecus")
   signalements    Signalement[]
   jetonsRefresh   JetonRefresh[]
 
-  membresGroupes    MembreGroupe[]
-  demandesAdhesion  DemandeAdhesion[]
-  publications      Publication[]
+  membresGroupes     MembreGroupe[]
+  demandesAdhesion   DemandeAdhesion[]
+  publications       Publication[]
   commentairesGroupe CommentaireGroup[]
 
   blocagesEffectues Blocage[]
@@ -103,28 +104,28 @@ model Utilisateur {
 }
 
 model EntreeJournal {
-  id        String   @id @default(uuid())
+  id            String @id @default(uuid())
   utilisateurId String
 
-  humeur    Int
-  energie   Int
-  sommeil   Int
-  anxiete   Int
+  humeur  Int
+  energie Int
+  sommeil Int
+  anxiete Int
 
   gratitude String?
 
-  creeLe    DateTime @default(now())
-  majLe     DateTime @updatedAt
+  creeLe DateTime @default(now())
+  majLe  DateTime @updatedAt
 
-  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  utilisateur Utilisateur       @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   activites   ActiviteJournal[]
 
   @@unique([utilisateurId, creeLe])
 }
 
 model Activite {
-  id    String @id @default(uuid())
-  nom   String @unique
+  id  String @id @default(uuid())
+  nom String @unique
 
   activitesJournal ActiviteJournal[]
 }
@@ -140,19 +141,19 @@ model ActiviteJournal {
 }
 
 model Ressource {
-  id        String   @id @default(uuid())
+  id        String             @id @default(uuid())
   titre     String
   contenu   String
-  url String @unique
+  url       String             @unique
   categorie CategorieRessource
-  type String
-  duree Int
-  niveau Int
+  type      String
+  duree     Int
+  niveau    Int
 
-  creeLe    DateTime @default(now())
-  majLe     DateTime @updatedAt
+  creeLe DateTime @default(now())
+  majLe  DateTime @updatedAt
 
-  favoris   Favori[]
+  favoris Favori[]
 }
 
 model Favori {
@@ -166,14 +167,14 @@ model Favori {
 }
 
 model Message {
-  id          String   @id @default(uuid())
-  expediteurId String
+  id             String  @id @default(uuid())
+  expediteurId   String
   destinataireId String
-  sujet String
-  contenu     String
-  lu          Boolean  @default(false)
+  sujet          String
+  contenu        String
+  lu             Boolean @default(false)
 
-  creeLe      DateTime @default(now())
+  creeLe DateTime @default(now())
 
   expediteur   Utilisateur @relation("MessagesEnvoyes", fields: [expediteurId], references: [id], onDelete: Cascade)
   destinataire Utilisateur @relation("MessagesRecus", fields: [destinataireId], references: [id], onDelete: Cascade)
@@ -182,9 +183,9 @@ model Message {
 }
 
 model Blocage {
-  id            String @id @default(uuid())
-  bloqueurId    String
-  bloqueId      String
+  id         String @id @default(uuid())
+  bloqueurId String
+  bloqueId   String
 
   bloqueur Utilisateur @relation(fields: [bloqueurId], references: [id], onDelete: Cascade)
   bloque   Utilisateur @relation("BlocagesRecus", fields: [bloqueId], references: [id], onDelete: Cascade)
@@ -193,20 +194,20 @@ model Blocage {
 }
 
 model Signalement {
-  id          String             @id @default(uuid())
+  id            String               @id @default(uuid())
   utilisateurId String
-  messageId   String?
-  categorie   CategorieSignalement
-  statut      StatutSignalement  @default(EN_ATTENTE)
+  messageId     String?
+  categorie     CategorieSignalement
+  statut        StatutSignalement    @default(EN_ATTENTE)
 
   publicationId String?
-  commentaireId    String?
+  commentaireId String?
 
-  publication   Publication?    @relation(fields: [publicationId], references: [id], onDelete: Cascade)
-  commentaire   CommentaireGroup?  @relation(fields: [commentaireId], references: [id], onDelete: Cascade)
+  publication Publication?      @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  commentaire CommentaireGroup? @relation(fields: [commentaireId], references: [id], onDelete: Cascade)
 
-  creeLe      DateTime @default(now())
-  majLe       DateTime @updatedAt
+  creeLe DateTime @default(now())
+  majLe  DateTime @updatedAt
 
   utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   message     Message?    @relation(fields: [messageId], references: [id], onDelete: Cascade)
@@ -217,79 +218,79 @@ model Signalement {
 }
 
 model JetonRefresh {
-  id        String   @id @default(uuid())
+  id            String   @id @default(uuid())
   utilisateurId String
-  token     String   @unique
-  invalide  Boolean  @default(false)
-  expireLe  DateTime
+  token         String   @unique
+  invalide      Boolean  @default(false)
+  expireLe      DateTime
 
   utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
 }
 
 model Groupe {
-  id            String  @id @default(uuid())
-  thematique    String
-  description   String
-  regles        String
-  visibilite    VisibiliteGroupe    @default(PUBLIC)
-  Creele        DateTime            @default(now())
-  majle         DateTime            @updatedAt
+  id          String           @id @default(uuid())
+  thematique  String
+  description String
+  regles      String
+  visibilite  VisibiliteGroupe @default(PUBLIC)
+  Creele      DateTime         @default(now())
+  majle       DateTime         @updatedAt
 
-  membres       MembreGroupe[]
-  demandesAdhesion  DemandeAdhesion[]
-  publications  Publication[]
+  membres          MembreGroupe[]
+  demandesAdhesion DemandeAdhesion[]
+  publications     Publication[]
 }
 
 model MembreGroupe {
-  id        String      @id @default(uuid())
-  groupeId  String
+  id            String     @id @default(uuid())
+  groupeId      String
   utilisateurId String
-  role      RoleGroupe  @default(MEMBRE)
-  rejoindreLe   DateTime    @default(now())
+  role          RoleGroupe @default(MEMBRE)
+  rejoindreLe   DateTime   @default(now())
 
-  groupe    Groupe      @relation(fields: [groupeId], references: [id], onDelete: Cascade)
-  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  groupe      Groupe      @relation(fields: [groupeId], references: [id], onDelete: Cascade)
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
 
   @@unique([groupeId, utilisateurId])
 }
 
 model DemandeAdhesion {
-  id        String      @id @default(uuid())
-  groupeId    String
+  id            String         @id @default(uuid())
+  groupeId      String
   utilisateurId String
   presentation  String //La presentation requise pour Julie
-  statut    StatutAdhesion  @default(EN_ATTENTE)
-  creeLe    DateTime        @default(now())
-  majLe     DateTime        @updatedAt
+  statut        StatutAdhesion @default(EN_ATTENTE)
+  creeLe        DateTime       @default(now())
+  majLe         DateTime       @updatedAt
 
-  groupe      Groupe  @relation(fields: [groupeId], references: [id], onDelete: Cascade)
-  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  groupe      Groupe      @relation(fields: [groupeId], references: [id], onDelete: Cascade)
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
 
   @@unique([groupeId, utilisateurId])
 }
 
 model Publication {
-  id        String  @id @default(uuid())
-  groupeId  String
+  id            String   @id @default(uuid())
+  groupeId      String
   utilisateurId String
-  contenu   String
-  creeLe    DateTime        @default(now())
-  majLe     DateTime        @updatedAt
+  contenu       String
+  creeLe        DateTime @default(now())
+  majLe         DateTime @updatedAt
 
-  groupe    Groupe  @relation(fields: [groupeId], references: [id], onDelete: Cascade)
-  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
-  commentaires  CommentaireGroup[]
-  signalements  Signalement[]
+  groupe       Groupe             @relation(fields: [groupeId], references: [id], onDelete: Cascade)
+  utilisateur  Utilisateur        @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  commentaires CommentaireGroup[]
+  signalements Signalement[]
 }
 
 model CommentaireGroup {
-  id        String      @id @default(uuid())
+  id            String   @id @default(uuid())
   publicationId String
   utilisateurId String
-  contenu   String
-  CreeLe    DateTime    @default(now())
+  contenu       String
+  CreeLe        DateTime @default(now())
 
-  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
-  auteur        Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
-  signalments   Signalement[]
+  publication Publication   @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  auteur      Utilisateur   @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  signalments Signalement[]
 }

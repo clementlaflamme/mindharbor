@@ -278,6 +278,18 @@ Content-Type: application/json
   "statut": "TRAITE"
 }
 ###
+GET {{base}}/api/v1/admin/stats
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "statut": "TRAITE"
+}
+###
+PATCH {{base}}/api/v1/admin/users/u1/suspend
+Authorization: Bearer {{adminToken}}
+
+###
 
 SECTION D : Groupe de soutien
 

@@ -58,8 +58,21 @@ routerJournal.get("/", authentifier, async (req: Request, res: Response) => {
   }
 });
 
+const envoyerEntree = z.object({
+  humeur: z.int().min(1).max(5),
+  energie: z.int().min(1).max(5),
+  sommeil: z.int().min(1).max(5),
+  anxiete: z.int().min(1).max(5),
+  gratitude: z.string().nonempty().optional()
+})
+
 routerJournal.post("/", authentifier, async (req: Request, res: Response) => {
   try {
+    const validationBody = envoyerEntree.safeParse(req.body);
+    if (!validationBody) {
+      return res.status(400).json({message: "Erreur: Informations incorrectes"})
+    }
+
     const entreeJournal = await prisma.entreeJournal.create({
       data: {
         ...req.body,
