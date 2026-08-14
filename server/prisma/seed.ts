@@ -1,12 +1,16 @@
 import { seedRessources } from "./seeds/seedRessources.js";
 import { seedActivites } from "./seeds/seedActivites.js";
 import { seedUsersMessages } from "./seeds/seedUsersAndMessages.js";
+import { seedEntreeJournal } from "./seeds/seedEntreeJournal.js";
+import { seedActivitesJournal } from "./seeds/seedActivitesJournal.js";
 import prisma from "../src/utils/prisma.js";
 
 async function main() {
   await seedRessources();
   await seedActivites();
   await seedUsersMessages();
+  await seedEntreeJournal();
+  await seedActivitesJournal();
 }
 
 main()
