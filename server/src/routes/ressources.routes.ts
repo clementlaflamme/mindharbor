@@ -1,20 +1,9 @@
 import { Router, type Request, type Response } from "express";
-import prisma from "../../utils/prisma.js";
+import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middleware/auth.js";
 import type { CategorieRessource } from "../../generated/prisma/enums.js";
 
 const router = Router()
-
-//GET /activities Public -- ressort le nom de toutes les activites de la table Activite
-router.get("/activities", async (req: Request, res: Response) => {
-    try {
-    const activites = await prisma.activite.findMany({select: {nom: true}})
-    if (!activites) return res.status(404).json({erreur: "Erreur: Activites introuvables."})
-    res.status(200).json(activites)
-    } catch {
-        res.status(500).json({erreur: "Erreur interne du serveur."})
-    }
-})
 
 //GET /resources (recherche, filtres, pagination) Public -- resources?recherche=titre&dureeMax=6&page=1&limit=10
 router.get("/", async(req: Request, res:Response) => {
