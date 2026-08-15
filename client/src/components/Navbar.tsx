@@ -1,4 +1,23 @@
-export default function Navbar({setPageActive}: {setPageActive: (page: string) => void}) {
+import { useState } from "react";
+import axios from "axios";
+import { api } from "../api/api";
+import { useAuth } from "../api/context/AuthContext";
+
+interface NavbarProps {
+  setPageActive: (page: string) => void;
+}
+
+export default function Navbar({setPageActive}: NavbarProps) {
+  // informations de connexion récupérées du useAuth
+  const {estConnecte, estAdmin, seDeconnecter} = useAuth();
+
+  // handler de la déconnexion
+  const gererDeconnexion = () => {
+    seDeconnecter();
+    setPageActive("accueil");
+  };
+
+
   return (
     <nav className="navbar">
 
@@ -7,13 +26,26 @@ export default function Navbar({setPageActive}: {setPageActive: (page: string) =
       </div>
 
       <div className="navbar-comptes">
-        <button onClick={() => setPageActive("inscription")} className="btn-nav-inscription">Inscription</button>
-        <button onClick={() => setPageActive("connexion")} className="btn-nav-connexion">Connexion</button>
+        {/* affichage si connecté */}
+        {estConnecte ? (
+          <button onClick={gererDeconnexion} className="btn-nav-connexion">Déconnexion</button>
+        ) : (
+          <>
+            <button onClick={() => setPageActive("inscription")} className="btn-nav-inscription">Inscription</button>
+            <button onClick={() => setPageActive("connexion")} className="btn-nav-connexion">Connexion</button>
+          </>
+        )}
       </div>
 
-      <div className="navbar-admin">
-        <button onClick={() => setPageActive("admin")} className="btn-nav-admin">Administrer</button>
-      </div>
+      {/* affichage si admin */}
+      {estAdmin ? (
+        <div className="navbar-admin">
+            <button onClick={() => setPageActive("admin")} className="btn-nav-admin">Administrer</button>
+        </div>
+        
+      ) : null}
+
+      
 
       <ul className="navbar-links">
         <li><button onClick={() => setPageActive("journal")} className="btn-nav-inscription">Journal</button></li>
