@@ -1,0 +1,4 @@
+.container-formulaire {
+    display: flex;
+    flex-direction: column;
+}

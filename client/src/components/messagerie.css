@@ -1,0 +1,112 @@
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.messagerie-page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+.messagerie-layout {
+  display: flex;
+  flex: 1;
+  min-height: 0; 
+  width: 100%;
+}
+
+.messagerie-sidebar {
+  flex: 0 0 20%; 
+  border-right: 1px solid #ccc;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 0;
+  /* overflow: hidden; */
+}
+
+.conversations-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 0;
+  border: 1px solid white;
+  margin-bottom: 1rem;
+  overflow-y: auto;
+  
+}
+
+.messagerie-conversation {
+  flex: 1;       
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 0; 
+  
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  border: 1px solid #eee;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.message-input-container {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.message-input {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.new-message-btn {
+    padding: 0.5rem 0;
+    
+}
+
+.bloquer-btn{
+  padding: 0.75rem;
+}
+
+.infos-container {
+  display: flex;
+  width: 100%;
+  align-items: center; 
+  justify-content: space-between;
+}
+
+.interlocuteur-container {
+  display: flex;
+  align-items: center; 
+}
+
+.interlocuteur-container h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.avatar {
+  max-width: 60px;
+  margin-right: 15px;
+}
+
+.contact {
+  display: flex;
+  margin: 5px;
+}

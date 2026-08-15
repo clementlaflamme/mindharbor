@@ -1,21 +1,79 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "./api/api"
 import "./index.css"
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { GroupsPage } from "./pages/GroupsPage";
 import { AdminSignalementsPage } from "./pages/AdminSignalementsPage";
+import Accueil from "./components/Accueil";
+import Admin from "./components/Admin";
+import Analyses from "./components/Analyses";
+import Connexion from "./components/Connexion";
+import Dashboard from "./components/Dashboard";
+import Groupes from "./components/Groupes";
+import Inscription from "./components/Inscription";
+import Journal from "./components/Journal";
+import Messagerie from "./components/Messagerie";
+import Options from "./components/Options";
+import OptionsBio from "./components/OptionsBio";
+import Ressources from "./components/Ressources";
 
-const API = "http://localhost:3000"
 
-function App() {
+
+
+function App() { 
+  interface Utilisateur {
+  pseudonyme: string;
+}
+
+  const [pageActive, setPageActive] = useState("analyses");
+  const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
+
+  function rafraichirUtilisateur() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUtilisateur(null);
+      return;
+    }
+  
+  api.get<Utilisateur>("/api/v1/auth/me")
+  .then(res => setUtilisateur(res.data))
+  .catch(() => setUtilisateur(null));
+  }
+  useEffect(() => {
+    rafraichirUtilisateur();
+  }, []);
+
+
+
   return (
-    <div className="app-container">
-      <Navbar />
+    <div className="app-container" style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
 
-      <main className="content">
-        <GroupsPage />
+      <Navbar setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>
+
+      {/* Pour changer d'écran, on devra changer la balise accueil par une autre selon la page désirée
+      ex: <Journal/> pour l'écran Journal qui vient de Journal.tsx */}
+      <main style={{flexGrow: 1}}>
+        <h2>
+          {utilisateur ? `Bienvenue, ${utilisateur.pseudonyme}` : "Exam mi-session service web"}
+        </h2>
+        {pageActive === "analyses" && <Analyses/>}
+        {pageActive === "ressources" && <Ressources/>}
+        {pageActive === "accueil" && <Accueil/>}
+        {pageActive === "admin" && <Admin/>}
+        {pageActive === "connexion" && <Connexion setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>}
+        {pageActive === "dashboard" && <Dashboard/>}
+        {pageActive === "groupes" && <Groupes/>}
+        {pageActive === "inscription" && <Inscription setPageActive={setPageActive}/>}
+        {pageActive === "journal" && <Journal/>}
+        {pageActive === "messagerie" && <Messagerie/>}
+        {pageActive === "options" && <Options/>}
+        {pageActive === "optionsBio" && <OptionsBio/>}
       </main>
+
+      <Footer/>
+
+    </div>
 
       <Footer />
     </div>
