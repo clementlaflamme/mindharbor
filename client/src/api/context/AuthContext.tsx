@@ -1,8 +1,17 @@
 import { useState, useContext, createContext } from "react";
+import {jwtDecode} from "jwt-decode";
+
+interface TokenPayload {
+  sub: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
 
 type AuthType = {
   token: string | null;
   estConnecte: boolean;
+  estAdmin: boolean;
   seConnecter: (t: string) => void;
   seDeconnecter: () => void;
 };
@@ -24,10 +33,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
   }
 
+  const verifierAdmin = (jwtToken: string | null): boolean => {
+    if (!jwtToken) return false; //token manquant
+    try {
+      const decode = jwtDecode<TokenPayload>(jwtToken);
+      return decode.role === "ADMIN";
+    } catch {
+      return false; //token invalide
+    }
+  }
+
+  const estAdmin = verifierAdmin(token)
+
   return (
     <>
       <AuthContext.Provider
-        value={{ token, estConnecte: !!token, seConnecter, seDeconnecter }}
+        value={{ token, estConnecte: !!token, estAdmin, seConnecter, seDeconnecter }}
       >
         {children}
       </AuthContext.Provider>
