@@ -5,16 +5,19 @@ import { useAuth } from "../api/context/AuthContext";
 
 interface NavbarProps {
   setPageActive: (page: string) => void;
+  rafraichirUtilisateur: () => void;
 }
 
-export default function Navbar({setPageActive}: NavbarProps) {
+export default function Navbar({setPageActive, rafraichirUtilisateur}: NavbarProps) {
   // informations de connexion récupérées du useAuth
   const {estConnecte, estAdmin, seDeconnecter} = useAuth();
 
   // handler de la déconnexion
   const gererDeconnexion = () => {
     seDeconnecter();
+    localStorage.removeItem("token");
     setPageActive("accueil");
+    rafraichirUtilisateur();
   };
 
 

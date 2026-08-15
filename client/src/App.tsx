@@ -47,7 +47,7 @@ function App() {
   return (
     <div className="app-container" style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
 
-      <Navbar setPageActive={setPageActive} />
+      <Navbar setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>
 
       {/* Pour changer d'écran, on devra changer la balise accueil par une autre selon la page désirée
       ex: <Journal/> pour l'écran Journal qui vient de Journal.tsx */}
