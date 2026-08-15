@@ -44,47 +44,52 @@ export default function Inscription({ setPageActive }: Props) {
   }
 
   return (
-    <div className="container-inscription">
-      <h2>Écran Inscription</h2>
-
+    <div className="container">
+      <h3>Formulaire d'inscription</h3>
       <form
         className="container-formulaire"
         onSubmit={(e) => soumettreFormulaire(e)}
       >
-        <div>
-          <label>Nom</label>
+        <div className="element-formulaire">
+          <label>Nom :</label>
           <input
             type="text"
             value={nom}
             onChange={(e) => setNom(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label>Pseudonyme</label>
+        <div className="element-formulaire">
+          <label>Pseudonyme :</label>
           <input
             type="text"
             value={pseudo}
             onChange={(e) => setPseudo(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label>Email</label>
+        <div className="element-formulaire">
+          <label>Email :</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label>Mot de passe</label>
+        <div className="element-formulaire">
+          <label>Mot de passe :</label>
           <input
             type="password"
             value={mdp}
             onChange={(e) => setMdp(e.target.value)}
+            required
           />
         </div>
-        <button type="submit">Envoyer</button>
-        {msgErreur && <p>{msgErreur}</p>}
+        <button type="submit">S'inscrire</button>
+        {msgErreur && (
+          <p style={{ color: "red", fontWeight: "bold" }}>{msgErreur}</p>
+        )}
       </form>
     </div>
   );
