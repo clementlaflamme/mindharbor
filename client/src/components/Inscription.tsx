@@ -44,7 +44,7 @@ export default function Inscription({ setPageActive }: Props) {
   }
 
   return (
-    <div className="container">
+    <div className="container-f">
       <h3>Formulaire d'inscription</h3>
       <form
         className="container-formulaire"
