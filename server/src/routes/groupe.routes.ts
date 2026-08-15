@@ -9,7 +9,7 @@ router.get('/', authentifier, async (req: Request, res: Response) => {
   try {
     const { recherche } = req.query;
 
-    const groupes = await prisma.groupe.findMany({
+    const groupes = await prisma.group.findMany({
       where: recherche ? {
         OR: [
           { thematique: { contains: recherche as string, mode: 'insensitive' } },
@@ -27,22 +27,52 @@ router.get('/', authentifier, async (req: Request, res: Response) => {
   }
 });
 
-router.post('/:groupeId/rejoindre', authentifier, async (req: Request, res: Response) => {
+// 2. CRÉER UN GROUPE (POST /)
+router.post('/', authentifier, async (req: Request, res: Response) => {
   try {
-    const { groupeId } = req.params;
+    const { thematique, description, regles, visibilite } = req.body;
+    const utilisateurId = String((req as any).utilisateur.sub);
+
+    if (!thematique || !description || !regles) {
+      return res.status(400).json({ erreur: "Champs obligatoires manquants." });
+    }
+
+    const nouveauGroupe = await prisma.group.create({
+      data: {
+        thematique,
+        description,
+        regles,
+        visibilite: visibilite || 'PUBLIC',
+        membres: {
+          create: [
+            { utilisateurId, role: 'MODERATEUR' }
+          ]
+        }
+      }
+    });
+
+    res.status(201).json(nouveauGroupe);
+  } catch (error) {
+    res.status(500).json({ erreur: "Erreur lors de la création du groupe." });
+  }
+});
+
+router.post('/:groupId/rejoindre', authentifier, async (req: Request, res: Response) => {
+  try {
+    const { groupId } = req.params;
     const utilisateurId = String((req as any).utilisateur.sub); // Récupère l'ID depuis le JWT
     const { presentation } = req.body;
 
     // Vérifier si le groupe existe
-    const groupe = await prisma.groupe.findUnique({ where: { id: groupeId } });
+    const groupe = await prisma.group.findUnique({ where: { id: groupId } });
     if (!groupe) {
       return res.status(404).json({ erreur: "Groupe introuvable." });
     }
 
     // Si le groupe est public, on l'ajoute directement comme membre
     if (groupe.visibilite === 'PUBLIC') {
-      const membre = await prisma.membreGroupe.create({
-        data: { groupeId, utilisateurId, role: 'MEMBRE' }
+      const membre = await prisma.membreGroup.create({
+        data: { groupId, utilisateurId, role: 'MEMBRE' }
       });
       return res.status(201).json({ message: "Rejoint avec succès.", membre });
     }
@@ -54,10 +84,10 @@ router.post('/:groupeId/rejoindre', authentifier, async (req: Request, res: Resp
 
     const demande = await prisma.demandeAdhesion.create({
       data: {
-        groupeId,
+        groupId,
         utilisateurId,
         presentation,
-        status: 'EN_ATTENTE'
+        statut: 'EN_ATTENTE'
       }
     });
 
@@ -85,9 +115,9 @@ router.put('/demandes/:demandeId', authentifier, async (req: Request, res: Respo
     }
 
     // Sécurité : Vérifier que l'utilisateur connecte est bien moderateur de ce groupe
-    const estModo = await prisma.membreGroupe.findFirst({
+    const estModo = await prisma.membreGroup.findFirst({
       where: {
-        groupeId: demande.groupeId,
+        groupId: demande.groupId,
         utilisateurId: moderateurId,
         role: 'MODERATEUR'
       }
@@ -100,14 +130,14 @@ router.put('/demandes/:demandeId', authentifier, async (req: Request, res: Respo
     // Mettre à jour la demande d'adhesion
     const demandeMiseAJour = await prisma.demandeAdhesion.update({
       where: { id: demandeId },
-      data: { status: statut === 'ACCEPTEE' ? 'ACCEPTEE' : 'REFUSEE' }
+      data: { statut: statut === 'ACCEPTEE' ? 'ACCEPTEE' : 'REFUSEE' }
     });
 
     // Si adhesion est acceptée, on enregistre officiellement le membre
     if (statut === 'ACCEPTEE') {
-      await prisma.membreGroupe.create({
+      await prisma.membreGroup.create({
         data: {
-          groupeId: demande.groupeId,
+          groupId: demande.groupId,
           utilisateurId: demande.utilisateurId,
           role: 'MEMBRE'
         }
@@ -121,20 +151,20 @@ router.put('/demandes/:demandeId', authentifier, async (req: Request, res: Respo
 });
 
 
-router.get('/:groupeId/publications', authentifier, async (req: Request, res: Response) => {
+router.get('/:groupId/publications', authentifier, async (req: Request, res: Response) => {
   try {
-    const { groupeId } = req.params;
+    const { groupId } = req.params;
     const utilisateurId = String((req as any).utilisateur.sub);
     const page = parseInt(req.query.page as string) || 1;
     const limite = parseInt(req.query.limite as string) || 10;
 
-    const groupe = await prisma.groupe.findUnique({ where: { id: groupeId } });
+    const groupe = await prisma.group.findUnique({ where: { id: groupId } });
     if (!groupe) return res.status(404).json({ erreur: "Groupe introuvable." });
 
     // Sécurité : Si le groupe est prive, l'utilisateur doit etre membre
     if (groupe.visibilite === 'PRIVE') {
-      const estMembre = await prisma.membreGroupe.findUnique({
-        where: { groupeId_utilisateurId: { groupeId, utilisateurId } }
+      const estMembre = await prisma.membreGroup.findUnique({
+        where: { groupId_utilisateurId: { groupId, utilisateurId } }
       });
       if (!estMembre) {
         return res.status(403).json({ erreur: "Accès refusé. Vous devez être membre de ce groupe privé." });
@@ -143,7 +173,7 @@ router.get('/:groupeId/publications', authentifier, async (req: Request, res: Re
 
     // Recuperation paginee
     const publications = await prisma.publication.findMany({
-      where: { groupeId },
+      where: { groupId },
       skip: (page - 1) * limite,
       take: limite,
       orderBy: { creeLe: 'desc' },
@@ -163,15 +193,15 @@ router.get('/:groupeId/publications', authentifier, async (req: Request, res: Re
 
 // Cree une publication dans le groupe
 
-router.post('/:groupeId/publications', authentifier, async (req: Request, res: Response) => {
+router.post('/:groupId/publications', authentifier, async (req: Request, res: Response) => {
   try {
-    const { groupeId } = req.params;
+    const { groupId } = req.params;
     const { contenu } = req.body;
     const utilisateurId = String((req as any).utilisateur.sub);
 
     // Verifier si l'utilisateur est membre du groupe
-    const estMembre = await prisma.membreGroupe.findUnique({
-      where: { groupeId_utilisateurId: { groupeId, utilisateurId } }
+    const estMembre = await prisma.membreGroup.findUnique({
+      where: { groupId_utilisateurId: { groupId, utilisateurId } }
     });
     if (!estMembre) {
       return res.status(403).json({ erreur: "Accès refusé. Vous devez être membre pour publier." });
@@ -182,7 +212,7 @@ router.post('/:groupeId/publications', authentifier, async (req: Request, res: R
     }
 
     const publication = await prisma.publication.create({
-      data: { groupeId, utilisateurId, contenu }
+      data: { groupId, utilisateurId, contenu }
     });
     res.status(201).json(publication);
   } catch (error) {
@@ -204,11 +234,11 @@ router.post('/publications/:publicationId/commentaires', authentifier, async (re
       return res.status(404).json({ erreur: "Publication introuvable." });
     }
 
-    // Verifier si l'utilisateur est membre du groupe associé a cette publication
-    const estMembre = await prisma.membreGroupe.findUnique({
+    // Verifier si l'utilisateur est membre du groupe associe a cette publication
+    const estMembre = await prisma.membreGroup.findUnique({
       where: {
-        groupeId_utilisateurId: {
-          groupeId: publication.groupeId,
+        groupId_utilisateurId: {
+          groupId: publication.groupId,
           utilisateurId
         }
       }

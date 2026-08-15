@@ -1,6 +1,6 @@
 @base = http://localhost:3000
 ### 1. Register user sans infos facultatives
-# @name registerReq
+@name registerReq
 POST {{base}}/api/v1/auth/register
 Content-Type: application/json
 
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {"courriel": "admin@gmail.com", "pseudonyme": "admin01", "motDePasse": "admin123", "nom": "Claude Cobra", "avatarUrl": "https://i.pinimg.com/originals/d4/92/a0/d492a0a000b65aa5bce960e1fd782b1d.png", "bio": "Hard at work pour le mieux-être de tous! La vie est belle on lâche pas!", "codeAdmin": "admin123"}
 ### Login en tant qu'admin et récupérer le token
-# @name loginAdmin
+@name loginAdmin
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
@@ -32,7 +32,7 @@ Content-Type: application/json
 @adminToken = {{loginAdmin.response.body.token}}
 
 ### Login en tant qu'utilisateur et récupérer le token
-# @name loginReq
+@name loginReq
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
@@ -114,7 +114,7 @@ GET {{base}}/api/v1/journal/stats?range=15d
 Authorization: Bearer {{authToken}}
 
 ### Login en tant que alice et récupérer le token
-# @name loginAlice
+@name loginAlice
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
@@ -181,7 +181,7 @@ Authorization: Bearer {{authToken}}
 ###### MESSAGES ##############################
 
 ### Login en tant qu'utilisateur et récupérer le token
-# @name loginReq
+@name loginReq
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
@@ -314,86 +314,86 @@ Authorization: Bearer {{adminToken}}
 
 SECTION D : Groupe de soutien
 
-# ### 1. Création du groupe privé par le modérateur
-#        # @name creationGroupe
-#        POST {{base}}/groupes
-#        Authorization: Bearer {{tokenModo}}
-#        Content-Type: {{contentType}}
+### 1. Création du groupe privé par le modérateur
+@name creationGroupe
+POST {{base}}/groupes
+Authorization: Bearer {{tokenModo}}
+Content-Type: {{contentType}}
 
-# {
-#     "thematique": "Apprivoiser l'anxiété sociale",
-#     "description": "Un espace sûr pour échanger sur l'anxiété au quotidien.",
-#     "regles": "Respect, bienveillance et confidentialité obligatoires.",
-#     "visibilite": "PRIVE"
-# }
+{
+    "thematique": "Apprivoiser l'anxiété sociale",
+    "description": "Un espace sûr pour échanger sur l'anxiété au quotidien.",
+    "regles": "Respect, bienveillance et confidentialité obligatoires.",
+    "visibilite": "PRIVE"
+}
 
-# ### Stocker l'ID du groupe créé
-# @groupeId = {{creationGroupe.response.body.id}}
+### Stocker l'ID du groupe créé
+@groupeId = {{creationGroupe.response.body.id}}
 
-# ### 2. Julie cherche le groupe (Vérification de la visibilité)
-#        GET {{base}}/groupes?recherche=anxiété
-#        Authorization: Bearer {{tokenJulie}}
+### 2. Julie cherche le groupe (Vérification de la visibilité)
+GET {{base}}/groupes?recherche=anxiété
+Authorization: Bearer {{tokenJulie}}
 
-# {
-#   "presentation": "Bonjour, je m'appelle Julie et je souffre d'anxiété sociale depuis 2 ans. Je cherche un groupe pour m'aider à progresser."
-# }
+{
+    "presentation": "Bonjour, je m'appelle Julie et je souffre d'anxiété sociale depuis 2 ans. Je cherche un groupe pour m'aider à progresser."
+}
 
-# ### Stocker l'ID de la demande d'adhésion
-# @demandeId = {{demandeJulie.response.body.demande.id}}
-
-
-# ### 3. Le modérateur accepte la demande de Julie
-#        PUT {{base}}/groupes/demandes/{{demandeId}}
-#        Authorization: Bearer {{tokenModo}}
-#        Content-Type: {{contentType}}
-
-# {
-#   "statut": "ACCEPTEE"
-# }
+### Stocker l'ID de la demande d'adhésion
+@demandeId = {{demandeJulie.response.body.demande.id}}
 
 
-# ### 4. Julie publie son premier message dans le groupe
-#        # @name publicationJulie
-#        POST {{base}}/groupes/{{groupeId}}/publications
-#        Authorization: Bearer {{tokenJulie}}
-#        Content-Type: {{contentType}}
+### 3. Le modérateur accepte la demande de Julie
+PUT {{base}}/groupes/demandes/{{demandeId}}
+Authorization: Bearer {{tokenModo}}
+Content-Type: {{contentType}}
 
-# {
-#   "contenu": "Merci de m'avoir acceptée ! Est-ce que quelqu'un a des astuces pour gérer les crises d'angoisse en public ?"
-# }
-
-# ### Stocker l'ID de la publication
-# @publicationId = {{publicationJulie.response.body.id}}
+{
+    "statut": "ACCEPTEE"
+}
 
 
+### 4. Julie publie son premier message dans le groupe
+@name publicationJulie
+POST {{base}}/groupes/{{groupeId}}/publications
+Authorization: Bearer {{tokenJulie}}
+Content-Type: {{contentType}}
 
-# ### 5. Un autre membre (ou le modo) répond au message de Julie
-#        # @name commentaireModo
-#        POST {{base}}/groupes/publications/{{publicationId}}/commentaires
-#        Authorization: Bearer {{tokenModo}}
-#        Content-Type: {{contentType}}
-# {
-#   "contenu": "Bienvenue Julie ! Personnellement, la méthode du 5-4-3-2-1 m'aide beaucoup à me recentrer."
-# }
+{
+    "contenu": "Merci de m'avoir acceptée ! Est-ce que quelqu'un a des astuces pour gérer les crises d'angoisse en public ?"
+}
 
-# ### Stocker l'ID du commentaire
-# @commentaireId = {{commentaireModo.response.body.id}}
-
-
-# ### 6. Julie lit le fil de discussion (Paginé)
-#        GET {{base}}/groupes/{{groupeId}}/publications?page=1&limite=10
-#        Authorization: Bearer {{tokenJulie}}
+### Stocker l'ID de la publication
+@publicationId = {{publicationJulie.response.body.id}}
 
 
-# ### 7. Test de Sécurité / Signalement (Ex: Julie signale un contenu inapproprié)
-#        POST {{base}}/signalements
-#        Authorization: Bearer {{tokenJulie}}
-#        Content-Type: {{contentType}}
 
-# {
-#   "publicationId": "{{publicationId}}",
-#   "categorie": "INQUIETANT"
-# }
+### 5. Un autre membre (ou le modo) répond au message de Julie
+@name commentaireModo
+POST {{base}}/groupes/publications/{{publicationId}}/commentaires
+ Authorization: Bearer {{tokenModo}}
+Content-Type: {{contentType}}
+{
+    "contenu": "Bienvenue Julie ! Personnellement, la méthode du 5-4-3-2-1 m'aide beaucoup à me recentrer."
+}
+
+### Stocker l'ID du commentaire
+@commentaireId = {{commentaireModo.response.body.id}}
+
+
+### 6. Julie lit le fil de discussion (Paginé)
+GET {{base}}/groupes/{{groupeId}}/publications?page=1&limite=10
+Authorization: Bearer {{tokenJulie}}
+
+
+### 7. Test de Sécurité / Signalement (Ex: Julie signale un contenu inapproprié)
+POST {{base}}/signalements
+Authorization: Bearer {{tokenJulie}}
+Content-Type: {{contentType}}
+
+{
+    "publicationId": "{{publicationId}}",
+    "categorie": "INQUIETANT"
+}
 
 ### ----- Favoris -----
 
