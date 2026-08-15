@@ -9,6 +9,8 @@ export default function Messagerie() {
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [interlocuteur, setInterlocuteur] = useState<Interlocuteur | null>(null);
   const [nouveauMessage, setNouveauMessage] = useState("");
+  const [nouveauDestinataireId, setNouveauDestinataireId] = useState<string | null>(null);
+  const [nouveauDestinatairePseudo, setNouveauDestinatairePseudo] = useState<string>("");
 
   interface Utilisateur {
     id: string;
@@ -48,7 +50,7 @@ export default function Messagerie() {
       return;
     }
     api.get("/api/v1/messages")
-    .then(res=> setConversations(res.data.conversations))
+    .then(res=> setConversations([...res.data.conversations]))
     .catch(()=>setConversations(null));
   }
 
@@ -103,9 +105,40 @@ export default function Messagerie() {
               <div className="interlocuteur-container">
                 {interlocuteur? (
                   <><h3><img src={resolveAvatarUrl(interlocuteur.avatarUrl)} className="avatar"/>{interlocuteur.pseudonyme}</h3></>) :
-                
-                  <><h3>Destinataire: </h3><input type="text" className="interlocuteur-input" /></>
-                
+
+                  <><h3>Destinataire: </h3>
+                  <input
+                   type="text" 
+                   className="interlocuteur-input"
+                   value={nouveauDestinatairePseudo}
+                   onChange={
+                    async (e) => {
+                      const pseudo = e.target.value;
+                      setNouveauDestinatairePseudo(pseudo);
+
+                      if (pseudo.trim() === "") {
+                        setNouveauDestinataireId(null);
+                        return;
+                      }
+
+                      try {
+                        const res = await api.get(`/api/v1/users/pseudo/${pseudo}`);
+                        setNouveauDestinataireId(res.data.id)
+                      } catch {
+                        setNouveauDestinataireId(null)
+                      }
+                    }
+                   }
+                  /><p style={{color: nouveauDestinataireId ? "green" : "red"}}>
+                    {nouveauDestinatairePseudo.trim() !== "" 
+                    ? (nouveauDestinataireId 
+                      ? `Utilisateur trouve` 
+                      : "Utilisateur Introuvable"
+                    )
+                    : ""
+                    }
+                    </p></>
+
                 }
               </div>
               {interlocuteur && (<button className="bloquer-btn">Bloquer</button>)}
@@ -125,23 +158,36 @@ export default function Messagerie() {
                 async (e)=>{
                     e.preventDefault(); 
                     console.log("Message Envoyé")
-                    if(!interlocuteur || !nouveauMessage.trim()) {
+                    const destId = interlocuteur ? interlocuteur.id : nouveauDestinataireId;
+
+                    if(!destId || !nouveauMessage.trim()) {
                       return;
                     }
-                    
+
                     try {
-                      await api.post(`/api/v1/messages/${interlocuteur.id}`, { contenu: nouveauMessage });
+                      
+                      await api.post(`/api/v1/messages/${destId}`,{ contenu: nouveauMessage });
                       setNouveauMessage("");
-                      getMessages(interlocuteur.id);
+
+                      if (interlocuteur){
+                        getMessages(interlocuteur.id);
+                      } else {
+                        const reponseUtilisateur = await api.get(`/api/v1/users/${nouveauDestinataireId}`)
+                        setInterlocuteur(reponseUtilisateur.data)
+
+                        getConversations();
+                        getMessages(destId);
+
+                        setNouveauDestinatairePseudo("");
+                        setNouveauDestinataireId(null);
+                      }
+                      
                     } catch (err) {
                       console.error("Erreur envoi message: ", err)
                     }
-
-
                 }
-
               }>
-              
+
               <input 
                 className="message-input" 
                 placeholder="Entrez votre message ici" 

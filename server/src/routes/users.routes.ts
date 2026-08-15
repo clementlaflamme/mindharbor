@@ -60,4 +60,25 @@ routerUsers.post("/:id/block", authentifier, async (req: Request, res: Response)
     }
 })
 
+//recuperer un id par pseudo
+routerUsers.get("/pseudo/:pseudo", async (req: Request, res: Response) => {
+    try {
+        const pseudo = req.params.pseudo as string;
+        const user = await prisma.utilisateur.findUnique({
+            where: {pseudonyme: pseudo},
+            select: {
+                id: true,
+                niveauContact: true,
+            }
+        });
+
+        if (user && user.niveauContact != "PERSONNE"){
+            return res.status(200).json(user)
+        } else {
+            return res.status(404).json({erreur: "Utilisateur introuvable"})
+        }
+    } catch (e) {
+        return res.status(500).json({ erreur: "Erreur serveur" });
+    }
+})
 export default routerUsers
