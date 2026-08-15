@@ -1,4 +1,6 @@
-
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
 :root {
     --couleur-palette0: #1b2330; 
@@ -55,16 +57,17 @@
 }
 
 #root {
-    color: var(--couleur-palette0);
-  width: 1200px;
+  color: var(--couleur-palette0);
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
   border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 nav, footer {
@@ -73,14 +76,17 @@ nav, footer {
 
 footer {
     color: var(--couleur-palette0);
-
+    flex-shrink: 0;
 }
 
 main {
     background-color: var(--couleur-palette3);
     flex: 1;
     padding: 2px;
-
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
 }
 
 body {
@@ -151,4 +157,14 @@ h2 {
   padding: 0;
   gap: 1.5rem;
   align-items: center;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
 }

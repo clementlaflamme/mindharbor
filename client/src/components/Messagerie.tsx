@@ -12,7 +12,7 @@ export default function Messagerie() {
 
           <aside className="messagerie-sidebar">
             <h3>Conversations</h3>
-            <ul>
+            <ul className="conversations-container">
               <li><p></p></li>
               <li><p>conv</p></li>
               <li><p>conv</p></li>
@@ -23,8 +23,8 @@ export default function Messagerie() {
 
 
           <main className="messagerie-conversation">
-            <h3>Messages</h3>
-            <ul>
+            <div className="infos-container"><div className="interlocuteur-container"><h3>Interlocuteur</h3></div><button className="bloquer-btn">Bloquer</button></div>
+            <ul className="messages-container">
               <li><p>message</p></li>
               <li><p>message</p></li>
               <li><p>message</p></li>
