@@ -45,7 +45,7 @@ function App() {
 
 
   return (
-    <div className="app-container" style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
+    <div className="app-container" style={{display: "flex", flexDirection: "column", minHeight: "100vh", flex: "1 0 auto"}}>
 
       <Navbar setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>
 
@@ -56,7 +56,7 @@ function App() {
           {utilisateur ? `Bienvenue, ${utilisateur.pseudonyme}` : "Exam mi-session service web"}
         </h2>
         {pageActive === "analyses" && <Analyses/>}
-        {pageActive === "ressources" && <Ressources/>}
+        {pageActive === "ressources" && <Ressources setPageActive={setPageActive}/>}
         {pageActive === "accueil" && <Accueil/>}
         {pageActive === "admin" && <Admin/>}
         {pageActive === "connexion" && <Connexion setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>}
