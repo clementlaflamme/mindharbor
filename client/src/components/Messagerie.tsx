@@ -8,6 +8,7 @@ export default function Messagerie() {
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [interlocuteur, setInterlocuteur] = useState<Interlocuteur | null>(null);
+  const [nouveauMessage, setNouveauMessage] = useState("");
 
   interface Utilisateur {
     id: string;
@@ -109,8 +110,28 @@ export default function Messagerie() {
               )
               })}
             </ul>
-            <form className="message-input-container">
-              <input className="message-input" placeholder="Entrez votre message ici" type="text"></input>
+
+            <form className="message-input-container" onSubmit={
+                (e)=>{
+                    e.preventDefault(); 
+                    console.log("Message Envoyé")
+                    if (interlocuteur) {
+                      api.post(`/api/v1/messages/${interlocuteur.id}`)
+                      setNouveauMessage("")
+                    }
+
+
+                }
+
+              }>
+              
+              <input 
+                className="message-input" 
+                placeholder="Entrez votre message ici" 
+                type="text"
+                value = {nouveauMessage}
+                onChange={(e) => setNouveauMessage(e.target.value)}
+              />
               <button className="message-send-btn">Envoyer</button>
             </form>
             
