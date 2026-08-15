@@ -1,0 +1,26 @@
+.btnFavori {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--couleur-palette0);
+  color: var(--couleur-palette0);
+  border-radius: 9999px;
+  padding: 7px;
+  transition: transform 0.2s ease;  
+}
+
+.card {
+    max-width: 30rem;
+    border: solid 3px var(--couleur-palette3);
+    border-width: 4px;
+    padding: 6px;
+    max-height: 24rem;
+    margin: 10px;
+}
+
+select, form {
+    width: 100%;
+    min-width: 200px;
+    max-width: 480px;
+    padding: 4px;
+    margin: 8px;
+}
+
