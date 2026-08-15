@@ -76,7 +76,6 @@ nav, footer {
 
 footer {
     color: var(--couleur-palette0);
-    flex-shrink: 0;
 }
 
 main {
@@ -182,6 +181,8 @@ button:hover {
   padding: 5px;
   min-width: 100px;
   transition: transform 0.2s ease;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
