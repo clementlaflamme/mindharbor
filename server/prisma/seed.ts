@@ -5,6 +5,7 @@ import { seedEntreeJournal } from "./seeds/seedEntreeJournal.js";
 import { seedActivitesJournal } from "./seeds/seedActivitesJournal.js";
 import { seedSignalements } from "./seeds/seedSignalements.js";
 import { seedGroupes } from "./seeds/seedGroupes.js";
+import { seedFavoris } from "./seeds/seedFavoris.js";
 import prisma from "../src/utils/prisma.js";
 
 async function main() {
@@ -15,6 +16,7 @@ async function main() {
   await seedActivitesJournal();
   await seedSignalements();
   await seedGroupes();
+  await seedFavoris();
 }
 
 main()

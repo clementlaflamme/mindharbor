@@ -57,16 +57,6 @@ export default function Navbar({setPageActive, rafraichirUtilisateur}: NavbarPro
           <li><button onClick={() => setPageActive("options")} className="btn-nav-options"><i className="fa-solid fa-gear fa-2x"></i></button></li>
         </ul>
       </div>
-
-//       <button className="btn-nav-inscription">Inscription</button>
-//       <button className="btn-nav-connexion">Connexion</button>
-//       <button className="btn-nav-admin">Administrer</button>
-//       <button
-//         onClick={() => props.surChangementOnglet('groupes')}
-//         className={props.ongletActif === 'groupes' ? 'onglet-actif' : 'onglet-standard'}
-      >
-        Groupes
-      </button>
     </nav>
   );
 }

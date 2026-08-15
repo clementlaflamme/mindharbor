@@ -1,5 +1,4 @@
 @base = http://localhost:3000
-
 ### 1. Register user sans infos facultatives
 @name registerReq
 POST {{base}}/api/v1/auth/register
@@ -40,6 +39,9 @@ Content-Type: application/json
 {
   "courriel": "bobby@gmail.com", "pseudonyme": "Tristesse38", "motDePasse": "bobby123"
 }
+
+### ----- Journal -----
+
 ###
 @authToken = {{loginReq.response.body.token}}
 ###
@@ -67,7 +69,7 @@ Authorization: Bearer {{authToken}}
 {
   "humeur": 5,
   "energie": 4,
-  "sommeil": 8,
+  "sommeil": 5,
   "anxiete": 1,
   "gratitude": "Superbe séance de sport ce matin et un bon café au soleil"
 }
@@ -128,17 +130,36 @@ Authorization: Bearer {{aliceToken}}
 ### ----- Ressources -----
 
 ### Get ressources
-GET {{base}}/resources
+GET {{base}}/api/v1/resources
 
 ### Filtre par durée maximale uniquement (ex: max 6 minutes)
-GET {{base}}/resources?dureeMax=6
+GET {{base}}/api/v1/resources?dureeMax=6
 
 ### Combinaison : Recherche + Durée Max + Pagination
-GET {{base}}/resources?recherche=médit&dureeMax=6&page=1&limit=5
+GET {{base}}/api/v1/resources?recherche=anxie&dureeMax=6&page=1&limit=5
+
+@ressourceId = 301c8d8e-ce92-4ec0-b15f-85fca00e37e6
 
 ### Get une ressource par id
-GET {{base}}/resources/17dad342-7dfd-4e1d-a6f3-c6ec2d682ebc
+GET {{base}}/api/v1/resources/{{ressourceId}}
 
+### Creer une ressource en tant qu'admin
+POST {{base}}/api/v1/resources
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "titre": "Survivre au hackathon, comment gérer le stress",
+  "contenu": "C'est impossible",
+  "url": "https://zombo.com/",
+  "categorie": "ANXIETE",
+  "type": "Exercice mental",
+  "duree": 5,
+  "niveau": 1
+}
+
+
+### ----- Me -----
 
 ###
 GET {{base}}/api/v1/me/export
@@ -373,3 +394,21 @@ Content-Type: {{contentType}}
     "publicationId": "{{publicationId}}",
     "categorie": "INQUIETANT"
 }
+
+### ----- Favoris -----
+
+### ajouter un favori a Bobby
+POST {{base}}/api/v1/resources/{{ressourceId}}/favorite
+Authorization: Bearer {{authToken}}
+
+### GET mes favoris (en tant que bobby)
+GET {{base}}/api/v1/resources/me/fav
+Authorization: Bearer {{authToken}}
+
+### delete le favori précédent a Bobby
+DELETE {{base}}/api/v1/resources/{{ressourceId}}/favorite
+Authorization: Bearer {{authToken}}
+
+### GET suggestion contextuelle (pour Bobby)
+GET {{base}}/api/v1/resources/me/suggestions
+Authorization: Bearer {{authToken}}

@@ -11,6 +11,7 @@ ul {
   flex-direction: column;
   box-sizing: border-box;
   min-height: 0;
+  overflow: hidden;
 }
 
 .messagerie-layout {
@@ -66,11 +67,21 @@ ul {
   display: flex;
   gap: 0.5rem;
   width: 100%;
+  max-width: 100%;
 }
 
 .message-input {
   flex: 1;
   padding: 0.5rem;
+  min-width: 0;
+  
+}
+
+.interlocuteur-input {
+  flex: 1;
+  padding: 0.5rem;
+  width: 100%;
+  margin-left: 15px;
 }
 
 .new-message-btn {
@@ -109,4 +120,22 @@ ul {
 .contact {
   display: flex;
   margin: 5px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.messagerie-page form {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+    min-width: 0;
+    width: 100%;
+}
+
+.statut-recherche {
+  margin-left: 10px;
 }
