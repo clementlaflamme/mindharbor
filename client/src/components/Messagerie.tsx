@@ -93,13 +93,23 @@ export default function Messagerie() {
                 </li>
               ))}
             </ul>
-            <button className="new-message-btn">Nouveau Message</button>
+            <button className="new-message-btn" onClick={()=>{setInterlocuteur(null), setMessages(null)}}>Nouveau Message</button>
           </aside>
 
 
 
           <main className="messagerie-conversation">
-            <div className="infos-container"><div className="interlocuteur-container"><h3>{interlocuteur?  (<><img src={resolveAvatarUrl(interlocuteur.avatarUrl)} className="avatar"/>{interlocuteur.pseudonyme}</>) : "Messages"}</h3></div><button className="bloquer-btn">Bloquer</button></div>
+            <div className="infos-container">
+              <div className="interlocuteur-container">
+                {interlocuteur? (
+                  <><h3><img src={resolveAvatarUrl(interlocuteur.avatarUrl)} className="avatar"/>{interlocuteur.pseudonyme}</h3></>) :
+                
+                  <><h3>Destinataire: </h3><input type="text" className="interlocuteur-input" /></>
+                
+                }
+              </div>
+              {interlocuteur && (<button className="bloquer-btn">Bloquer</button>)}
+            </div>
             <ul className="messages-container">
               {messages?.map(mess => {
               const estMoi = mess.expediteurId === utilisateur?.id;
@@ -112,12 +122,19 @@ export default function Messagerie() {
             </ul>
 
             <form className="message-input-container" onSubmit={
-                (e)=>{
+                async (e)=>{
                     e.preventDefault(); 
                     console.log("Message Envoyé")
-                    if (interlocuteur) {
-                      api.post(`/api/v1/messages/${interlocuteur.id}`)
-                      setNouveauMessage("")
+                    if(!interlocuteur || !nouveauMessage.trim()) {
+                      return;
+                    }
+                    
+                    try {
+                      await api.post(`/api/v1/messages/${interlocuteur.id}`, { contenu: nouveauMessage });
+                      setNouveauMessage("");
+                      getMessages(interlocuteur.id);
+                    } catch (err) {
+                      console.error("Erreur envoi message: ", err)
                     }
 
 
@@ -132,7 +149,7 @@ export default function Messagerie() {
                 value = {nouveauMessage}
                 onChange={(e) => setNouveauMessage(e.target.value)}
               />
-              <button className="message-send-btn">Envoyer</button>
+              <button className="message-send-btn" disabled={nouveauMessage === ""}>Envoyer</button>
             </form>
             
           </main>
