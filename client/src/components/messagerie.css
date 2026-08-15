@@ -59,6 +59,7 @@ ul {
   margin-bottom: 1rem;
   border: 1px solid #eee;
   padding: 0.5rem;
+  text-align: left;
 }
 
 .message-input-container {
@@ -74,19 +75,31 @@ ul {
 
 .new-message-btn {
     padding: 0.5rem 0;
+    
 }
 
-
+.bloquer-btn{
+  padding: 0.75rem;
+}
 
 .infos-container {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
+  align-items: center; 
+  justify-content: space-between;
 }
 
-.interlocuteur-container{
-    width: 100%;
-    height: 1rem 0;
+.interlocuteur-container {
+  display: flex;
+  align-items: center; 
 }
+
+.interlocuteur-container h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 
 .avatar {
   max-width: 60px;
