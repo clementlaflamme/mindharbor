@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { api } from "../api/api";
 import { useAuth } from "../api/context/AuthContext";
+import "./css/formulaire.css";
 
 interface Props {
   setPageActive: (page: string) => void;
@@ -50,10 +51,10 @@ export default function Connexion({
     <div className="container-f">
       <h3>Formulaire de connexion</h3>
       <form
-        className="container-formulaire"
+        className="container-form"
         onSubmit={(e) => soumettreFormulaire(e)}
       >
-        <div className="element-formulaire">
+        <div className="element-form">
           <label>Email :</label>
           <input
             type="email"
@@ -62,7 +63,7 @@ export default function Connexion({
             required
           />
         </div>
-        <div className="element-formulaire">
+        <div className="element-form">
           <label>Mot de passe :</label>
           <input
             type="password"

@@ -47,10 +47,10 @@ export default function Inscription({ setPageActive }: Props) {
     <div className="container-f">
       <h3>Formulaire d'inscription</h3>
       <form
-        className="container-formulaire"
+        className="container-form"
         onSubmit={(e) => soumettreFormulaire(e)}
       >
-        <div className="element-formulaire">
+        <div className="element-form">
           <label>Nom :</label>
           <input
             type="text"
@@ -59,7 +59,7 @@ export default function Inscription({ setPageActive }: Props) {
             required
           />
         </div>
-        <div className="element-formulaire">
+        <div className="element-form">
           <label>Pseudonyme :</label>
           <input
             type="text"
@@ -68,7 +68,7 @@ export default function Inscription({ setPageActive }: Props) {
             required
           />
         </div>
-        <div className="element-formulaire">
+        <div className="element-form">
           <label>Email :</label>
           <input
             type="email"
@@ -77,7 +77,7 @@ export default function Inscription({ setPageActive }: Props) {
             required
           />
         </div>
-        <div className="element-formulaire">
+        <div className="element-form">
           <label>Mot de passe :</label>
           <input
             type="password"
