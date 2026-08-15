@@ -66,8 +66,17 @@ router.post(
       return res
         .status(400)
         .json({ erreur: "Ajout impossible. Une information est manquante." });
+
+    const dureeInt = Number(duree);
+    const niveauInt = Number(niveau);
+    if (isNaN(dureeInt) || isNaN(niveauInt)) {
+        return res
+          .status(400)
+          .json({erreur: "Erreur: Durée et niveau doivent être des nombres."})
+    }
+        
     const ressource = await prisma.ressource.create({
-      data: { titre, contenu, url, categorie, type, duree, niveau },
+      data: { titre, contenu, url, categorie, type, duree: dureeInt, niveau: niveauInt },
     });
     res.status(201).json(ressource);
   },
@@ -79,7 +88,7 @@ router.post(
   authentifier,
   async (req: Request, res: Response) => {
     try {
-      const utilisateurId = (req as any).user.sub;
+      const utilisateurId = (req as any).utilisateur.sub;
       const ressourceId = req.params.id as string;
 
       // valider si la ressource existe
@@ -121,7 +130,7 @@ router.delete(
   "/:id/favorite",
   authentifier,
   async (req: Request, res: Response) => {
-    const utilisateurId = (req as any).user.sub;
+    const utilisateurId = (req as any).utilisateur.sub;
     const ressourceId = req.params.id as string;
     const favoriId = {
       utilisateurId_ressourceId: {
@@ -140,13 +149,13 @@ router.delete(
         .json({ erreur: "Erreur: Ce n'est pas votre favori." });
     await prisma.favori.delete({ where: favoriId });
 
-    res.status(204).end;
+    res.status(200).json({message: "Le favoris a été supprimé avec succès!"});
   },
 );
 
 //GET /me/favorites Authentifié
 router.get("/me/fav", authentifier, async (req: Request, res: Response) => {
-  const utilisateurId = (req as any).user.sub;
+  const utilisateurId = (req as any).utilisateur.sub;
   const favoris = await prisma.favori.findMany({
     where: { utilisateurId },
     include: { ressource: true },
@@ -160,7 +169,7 @@ router.get(
   authentifier,
   async (req: Request, res: Response) => {
     try {
-      const utilisateurId = (req as any).user.sub;
+      const utilisateurId = (req as any).utilisateur.sub;
       const dernierJournal = await prisma.entreeJournal.findFirst({
         where: { utilisateurId },
         orderBy: { creeLe: "desc" },
