@@ -1,4 +1,6 @@
-export default function Navbar() {
+import React from 'react';
+
+export default function Navbar(props: any) {
   return (
     <nav className="navbar">
       <div className="navbar-logo"></div>
@@ -15,6 +17,12 @@ export default function Navbar() {
       <button className="btn-nav-inscription">Inscription</button>
       <button className="btn-nav-connexion">Connexion</button>
       <button className="btn-nav-admin">Administrer</button>
+      <button
+        onClick={() => props.surChangementOnglet('groupes')}
+        className={props.ongletActif === 'groupes' ? 'onglet-actif' : 'onglet-standard'}
+      >
+        Groupes
+      </button>
     </nav>
   );
 }
