@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./messagerie.css";
 import { api } from "../api/api";
-
+import resolveAvatarUrl from "../utils/resolveAvatar";
 
 export default function Messagerie() {
   const [conversations, setConversations] = useState<interlocuteur[] | null>(null);
@@ -84,8 +84,8 @@ export default function Messagerie() {
             <h3>Conversations</h3>
             <ul className="conversations-container">
               {conversations?.map(inter => (
-                <li key={inter.id} onClick={()=> getMessages(inter.id)}>
-                  <img src={inter.avatarUrl} className="avatar"/>
+                <li key={inter.id} onClick={()=> getMessages(inter.id)} className="contact">
+                  <img src={resolveAvatarUrl(inter.avatarUrl)} className="avatar" />
                   <p>{inter.pseudonyme}</p>
                 </li>
               ))}

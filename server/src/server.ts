@@ -30,6 +30,8 @@ app.use("/api/v1/users", routerUsers);
 app.use("/api/v1/me", routerMe);
 app.use("/api/v1/reports", routerReports);
 app.use("/api/v1/admin", routerAdmin);
+app.use("/public", express.static("public"));
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
