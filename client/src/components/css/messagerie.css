@@ -68,7 +68,7 @@ ul {
   width: 100%;
 }
 
-.message-input {
+.message-input, .interlocuteur-input {
   flex: 1;
   padding: 0.5rem;
 }
@@ -110,3 +110,11 @@ ul {
   display: flex;
   margin: 5px;
 }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+

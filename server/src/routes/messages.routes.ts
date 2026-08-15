@@ -117,10 +117,9 @@ routerMessages.post("/:userId", authentifier, async (req: Request, res: Response
     const idUtilisateur = (req as any).utilisateur.sub;
     const destId = req.params.userId as string;
     
-    const { sujet, contenu } = req.body
+    const { contenu } = req.body
 
-    if ( !sujet ) return res.status(400).json({erreur: "Un sujet est obligatoire pour envoyer un message"})
-
+    
     try {
         const destinataire = await prisma.utilisateur.findUnique({
             where: { id : destId }
@@ -149,7 +148,7 @@ routerMessages.post("/:userId", authentifier, async (req: Request, res: Response
         }
 
         const message = await prisma.message.create({
-            data: { expediteurId: idUtilisateur, destinataireId: destinataire.id, sujet, contenu }
+            data: { expediteurId: idUtilisateur, destinataireId: destinataire.id, contenu }
         });
         return res.status(201).json({message: `Message envoyé a ${destinataire.pseudonyme}`})
     } catch (e) {
