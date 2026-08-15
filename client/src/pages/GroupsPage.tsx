@@ -33,36 +33,7 @@ export function GroupsPage() {
     setErreur(null);
     try {
       const baseDonneesFictive: Groupe[] = [
-        {
-          id: "1",
-          thematique: "Signalement : Nids-de-poule Urgents",
-          description: "Coordination citoyenne pour cartographier et signaler les bris de chaussée critiques avant les inspections de la ville.",
-          regles: "Joindre des photos géolocalisées si possible.",
-          visibilite: "PUBLIC",
-          creeLe: new Date().toISOString(),
-          majLe: new Date().toISOString(),
-          _count: { membres: 18 }
-        },
-        {
-          id: "2",
-          thematique: "Éclairage Public Réseau Ouest",
-          description: "Suivi communautaire des lampadaires en panne et zones de pénombre dangereuses signalées par les résidents.",
-          regles: "Préciser le numéro de poteau ou l'intersection exacte.",
-          visibilite: "PUBLIC",
-          creeLe: new Date().toISOString(),
-          majLe: new Date().toISOString(),
-          _count: { membres: 7 }
-        },
-        {
-          id: "3",
-          thematique: "Modération & Signalements Sensibles",
-          description: "Groupe privé de traitement pour l'analyse des cas de harcèlement, d'incivilités ou de rapports urgents.",
-          regles: "Réservé aux administrateurs de la plateforme.",
-          visibilite: "PRIVE",
-          creeLe: new Date().toISOString(),
-          majLe: new Date().toISOString(),
-          _count: { membres: 4 }
-        }
+
       ];
 
     const resultatsFiltres = baseDonneesFictive.filter(groupe => {
@@ -115,144 +86,153 @@ export function GroupsPage() {
   }, []);
 
   return (
-    <div style={{ padding: '24px', backgroundColor: '#f8fafc', color: '#1e293b', minHeight: '100vh', fontFamily: 'sans-serif' }}>
-      {/* En-tete */}
-      <header style={{ marginBottom: '24px', borderBottom: '2px solid #1e293b', paddingBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+    <div style={{ padding: '24px', backgroundColor: '#e1d9d5', color: '#1e293b', minHeight: '100vh', fontFamily: 'sans-serif' }}>
+
+      <header style={{ marginBottom: '32px', borderBottom: '2px solid #7e9fc2', paddingBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ color: '#0f172a', margin: '0 0 4px 0', fontSize: '28px', fontWeight: 'bold' }}>📋 ACCUEIL & DASHBOARD</h1>
           <p style={{ color: '#475569', margin: 0, fontSize: '14px' }}>Résumé de la semaine et thématiques de signalement</p>
         </div>
-        <div style={{ display: 'flex', gap: '8px', backgroundColor: '#e2e8f0', padding: '4px', borderRadius: '6px' }}>
+
+        <div style={{ display: 'flex', gap: '8px', backgroundColor: '#d1c7c2', padding: '4px', borderRadius: '6px' }}>
           <button
             onClick={() => setOngletActif('groupes')}
-            style={{ padding: '8px 16px', backgroundColor: ongletActif === 'groupes' ? '#1e293b' : 'transparent', color: ongletActif === 'groupes' ? 'white' : '#475569', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
+            style={{ padding: '8px 16px', backgroundColor: ongletActif === 'groupes' ? '#7e9fc2' : 'transparent', color: ongletActif === 'groupes' ? 'white' : '#475569', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
           >
             🌐 Consulter les Groupes
           </button>
           <button
             onClick={() => setOngletActif('admin')}
-            style={{ padding: '8px 16px', backgroundColor: ongletActif === 'admin' ? '#ef4444' : 'transparent', color: ongletActif === 'admin' ? 'white' : '#475569', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
+            style={{ padding: '8px 16px', backgroundColor: ongletActif === 'admin' ? '#b22222' : 'transparent', color: ongletActif === 'admin' ? 'white' : '#475569', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
           >
             🛡️ Modération (Admin)
           </button>
         </div>
       </header>
 
-      <section style={{ backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', padding: '16px', marginBottom: '32px' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-
-          {/* barre de recherche */}
-          <div style={{ flex: 1, minWidth: '200px' }}>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '4px', textTransform: 'uppercase' }}>
-              [ RECHERCHE ]
-            </label>
-            <input
-              type="text"
-              placeholder="Rechercher par nom de groupe..."
-              value={recherche}
-              onChange={(e) => setRecherche(e.target.value)}
-              style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '4px', border: '1px solid #94a3b8', backgroundColor: '#f8fafc', color: '#0f172a' }}
-            />
+      {ongletActif === 'admin' ? (
+        <section style={{ backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <h2 style={{ margin: '0 0 16px 0', color: '#b22222', fontSize: '20px', fontWeight: 'bold' }}>🛡️ Signalements en attente de traitement</h2>
+          <p style={{ color: '#1e293b', fontSize: '14px', marginBottom: '20px' }}>File d'attente administrative pour la validation ou le rejet des signalements signalés par la communauté.</p>
+          <div style={{ padding: '30px', textAlign: 'center', border: '2px dashed #b22222', borderRadius: '6px', color: '#b22222', backgroundColor: '#faf8f7' }}>
+            ✓ Aucun signalement critique en attente dans votre juridiction.
           </div>
+        </section>
+      ) : (
+        <>
+          <section style={{ backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', padding: '16px', marginBottom: '32px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
 
+              <div style={{ flex: 1, minWidth: '200px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '4px', textTransform: 'uppercase' }}>
+                  [ RECHERCHE ]
+                </label>
+                <input
+                  type="text"
+                  placeholder="Rechercher par nom de groupe..."
+                  value={recherche}
+                  onChange={(e) => setRecherche(e.target.value)}
+                  style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '4px', border: '1px solid #cbd5e1', backgroundColor: '#faf8f7', color: '#1e293b' }}
+                />
+              </div>
 
-
-          <div>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '4px', textTransform: 'uppercase' }}>
-              [ DURÉE ]
-            </label>
-            <select style={{ padding: '10px', borderRadius: '4px', border: '1px solid #94a3b8', backgroundColor: '#ffffff', color: '#0f172a', minWidth: '120px' }}>
-              <option>Toutes</option>
-              <option>Récents</option>
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '4px', textTransform: 'uppercase' }}>
-              [ TYPE ]
-            </label>
-            <select
-              value={typeSelectionne}
-              onChange={(e) => setTypeSelectionne(e.target.value)}
-              style={{ padding: '10px', borderRadius: '4px', border: '1px solid #94a3b8', backgroundColor: '#ffffff', color: '#0f172a', minWidth: '120px' }}
-            >
-              <option value="Tous">Tous</option>
-              <option value="PUBLIC">PUBLIC</option>
-              <option value="PRIVE">PRIVE</option>
-            </select>
-          </div>
-
-          <button
-            onClick={() => chargerGroupes(recherche, typeSelectionne)}
-            style={{ alignSelf: 'flex-end', padding: '10px 24px', backgroundColor: '#1e293b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', height: '40px' }}
-          >
-            Filtrer
-          </button>
-        </div>
-      </section>
-
-      {chargement && <p style={{ color: '#64748b', textAlign: 'center' }}>Chargement des ressources...</p>}
-      {erreur && <p style={{ color: '#dc2626', backgroundColor: '#fee2e2', padding: '12px', borderRadius: '4px' }}>⚠️ {erreur}</p>}
-
-      <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#475569', marginBottom: '16px', textTransform: 'uppercase' }}>
-        Ress. Suggérées & Groupes
-      </h2>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-        {groupes.map((groupe) => {
-          const estPrive = groupe.visibilite === 'PRIVE';
-          return (
-            <div key={groupe.id} style={{ backgroundColor: '#ffffff', borderRadius: '6px', padding: '20px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 'bold', color: estPrive ? '#b91c1c' : '#15803d', textTransform: 'uppercase' }}>
-                    [{groupe.visibilite}]
-                  </span>
-                  <small style={{ color: '#94a3b8', fontSize: '12px' }}>DURÉE: XX</small>
-                </div>
-                <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold', color: '#0f172a' }}>
-                  {groupe.thematique}
-                </h3>
-                <p style={{ color: '#475569', fontSize: '14px', lineHeight: '1.5', marginBottom: '20px' }}>
-                  {groupe.description}
-                </p>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '4px', textTransform: 'uppercase' }}>
+                  [ DURÉE ]
+                </label>
+                <select style={{ padding: '10px', borderRadius: '4px', border: '1px solid #cbd5e1', backgroundColor: '#ffffff', color: '#1e293b', minWidth: '120px' }}>
+                  <option>Toutes</option>
+                  <option>Récents</option>
+                </select>
               </div>
 
-              <div style={{ marginTop: 'auto', borderTop: '1px solid #f1f5f9', paddingTop: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>👥 {groupe._count?.membres || 0} membres</span>
-                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>CAT: Signalement</span>
-                </div>
-
-                {estPrive && (
-                  <input
-                    type="text"
-                    placeholder="Pourquoi voulez-vous rejoindre ? (Requis)"
-                    value={presentations[groupe.id] || ''}
-                    onChange={(e) => setPresentations({ ...presentations, [groupe.id]: e.target.value })}
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '8px', borderRadius: '4px', border: '1px solid #cbd5e1', backgroundColor: '#f8fafc', color: '#0f172a', marginBottom: '8px', fontSize: '13px' }}
-                  />
-                )}
-
-                <button
-                  onClick={() => gererActionAdhesion(groupe.id, estPrive)}
-                  style={{ width: '100%', padding: '10px', backgroundColor: estPrive ? '#475569' : '#0f172a', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', textTransform: 'uppercase' }}
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '4px', textTransform: 'uppercase' }}>
+                  [ TYPE ]
+                </label>
+                <select
+                  value={typeSelectionne}
+                  onChange={(e) => setTypeSelectionne(e.target.value)}
+                  style={{ padding: '10px', borderRadius: '4px', border: '1px solid #cbd5e1', backgroundColor: '#ffffff', color: '#1e293b', minWidth: '120px' }}
                 >
-                  {estPrive ? "Demander l'accès" : "Rejoindre"}
-                </button>
-
-                {messagesStatut[groupe.id] && (
-                  <p style={{ margin: '8px 0 0 0', fontSize: '12px', textAlign: 'center', fontWeight: '500', color: messagesStatut[groupe.id].startsWith('❌') ? '#dc2626' : '#16a34a' }}>
-                    {messagesStatut[groupe.id]}
-                  </p>
-                )}
+                  <option value="Tous">Tous</option>
+                  <option value="PUBLIC">PUBLIC</option>
+                  <option value="PRIVE">PRIVE</option>
+                </select>
               </div>
+
+              <button
+                onClick={() => chargerGroupes(recherche, typeSelectionne)}
+                style={{ alignSelf: 'flex-end', padding: '10px 24px', backgroundColor: '#7e9fc2', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', height: '40px' }}
+              >
+                Filtrer
+              </button>
 
             </div>
-          );
-        })}
-      </div>
+          </section>
+
+          {chargement && <p style={{ color: '#64748b', textAlign: 'center' }}>Chargement des ressources...</p>}
+          {erreur && <p style={{ color: '#b22222', backgroundColor: '#fee2e2', padding: '12px', borderRadius: '4px' }}>⚠️ {erreur}</p>}
+
+          <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#475569', marginBottom: '16px', textTransform: 'uppercase' }}>
+          Groupes
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+            {groupes.map((groupe) => {
+              const estPrive = groupe.visibilite === 'PRIVE';
+              return (
+                <div key={groupe.id} style={{ backgroundColor: '#ffffff', borderRadius: '6px', padding: '20px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: estPrive ? '#b22222' : '#2e8b57', textTransform: 'uppercase' }}>
+                        [{groupe.visibilite}]
+                      </span>
+                      <small style={{ color: '#94a3b8', fontSize: '12px' }}>DURÉE: XX</small>
+                    </div>
+                    <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold', color: '#1e293b' }}>
+                      {groupe.thematique}
+                    </h3>
+                    <p style={{ color: '#475569', fontSize: '14px', lineHeight: '1.5', marginBottom: '20px' }}>
+                      {groupe.description}
+                    </p>
+                  </div>
+
+                  <div style={{ marginTop: 'auto', borderTop: '1px solid #e1d9d5', paddingTop: '14px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>👥 {groupe._count?.membres || 0} membres</span>
+                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>CAT: Signalement</span>
+                    </div>
+
+                    {estPrive && (
+                      <input
+                        type="text"
+                        placeholder="Pourquoi voulez-vous rejoindre ? (Requis)"
+                        value={presentations[groupe.id] || ''}
+                        onChange={(e) => setPresentations({ ...presentations, [groupe.id]: e.target.value })}
+                        style={{ width: '100%', boxSizing: 'border-box', padding: '8px', borderRadius: '4px', border: '1px solid #cbd5e1', backgroundColor: '#faf8f7', color: '#1e293b', marginBottom: '8px', fontSize: '13px' }}
+                      />
+                    )}
+
+                    <button
+                      onClick={() => gererActionAdhesion(groupe.id, estPrive)}
+                      style={{ width: '100%', padding: '10px', backgroundColor: estPrive ? '#475569' : '#7e9fc2', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', textTransform: 'uppercase' }}
+                    >
+                      {estPrive ? "Demander l'accès" : "Rejoindre"}
+                    </button>
+
+                    {messagesStatut[groupe.id] && (
+                      <p style={{ margin: '8px 0 0 0', fontSize: '12px', textAlign: 'center', fontWeight: '500', color: messagesStatut[groupe.id].startsWith('❌') ? '#b22222' : '#2e8b57' }}>
+                        {messagesStatut[groupe.id]}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
 
     </div>
-  );
-}
+  );}
