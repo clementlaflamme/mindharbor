@@ -36,10 +36,10 @@ function App() {
         {pageActive === "ressources" && <Ressources/>}
         {pageActive === "accueil" && <Accueil/>}
         {pageActive === "admin" && <Admin/>}
-        {pageActive === "connexion" && <Connexion/>}
+        {pageActive === "connexion" && <Connexion setPageActive={setPageActive}/>}
         {pageActive === "dashboard" && <Dashboard/>}
         {pageActive === "groupes" && <Groupes/>}
-        {pageActive === "inscription" && <Inscription/>}
+        {pageActive === "inscription" && <Inscription setPageActive={setPageActive}/>}
         {pageActive === "journal" && <Journal/>}
         {pageActive === "messagerie" && <Messagerie/>}
         {pageActive === "options" && <Options/>}
