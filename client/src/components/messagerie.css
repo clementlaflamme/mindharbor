@@ -1,0 +1,58 @@
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+.messagerie-page {
+  width: 100%;
+  height: 100%; /* je prends l’espace disponible */
+  display: flex;
+  flex-direction: column;
+}
+
+.messagerie-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.messagerie-sidebar {
+  width: 20%;
+  border-right: 1px solid #ccc;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.messagerie-conversation {
+  width: 80%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-input-container {
+  min-width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.message-input {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+
+
+
+
+.message-send-btn, .new-message-btn {
+  padding: 0.5rem 1rem;
+}
