@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./messagerie.css";
+import "./css/messagerie.css";
 import { api } from "../api/api";
 import resolveAvatarUrl from "../utils/resolveAvatar";
 

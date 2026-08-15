@@ -8,19 +8,21 @@ interface Props {
   rafraichirUtilisateur: () => void;
 }
 
-export default function Connexion({setPageActive, rafraichirUtilisateur}: Props) {
+export default function Connexion({
+  setPageActive,
+  rafraichirUtilisateur,
+}: Props) {
+  const [email, setEmail] = useState("");
+  const [mdp, setMdp] = useState("");
+  const [msgErreur, setMsgErreur] = useState("");
+  const { seConnecter } = useAuth();
 
-   const [email, setEmail] = useState("");
-    const [mdp, setMdp] = useState("");
-    const [msgErreur, setMsgErreur] = useState("");
-    const { seConnecter } = useAuth();
-
-    async function soumettreFormulaire(e: React.SubmitEvent<HTMLFormElement>) {
+  async function soumettreFormulaire(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setMsgErreur("");
 
     try {
-      const {data} = await api.post("/api/v1/auth/login", {
+      const { data } = await api.post("/api/v1/auth/login", {
         courriel: email,
         motDePasse: mdp,
       });
@@ -30,7 +32,6 @@ export default function Connexion({setPageActive, rafraichirUtilisateur}: Props)
       setPageActive("accueil");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-
         // Message renvoyé par le backend
         const messageBackend =
           error.response?.data?.erreur || error.response?.data?.message;
@@ -46,30 +47,34 @@ export default function Connexion({setPageActive, rafraichirUtilisateur}: Props)
   }
 
   return (
-    <div className="container-connexion">
-        <h2>Écran Connexion</h2>
-         <form
+    <div className="container">
+      <h3>Formulaire de connexion</h3>
+      <form
         className="container-formulaire"
         onSubmit={(e) => soumettreFormulaire(e)}
       >
-        <div>
-          <label>Email</label>
+        <div className="element-formulaire">
+          <label>Email :</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label>Mot de passe</label>
+        <div className="element-formulaire">
+          <label>Mot de passe :</label>
           <input
             type="password"
             value={mdp}
             onChange={(e) => setMdp(e.target.value)}
+            required
           />
         </div>
-        <button type="submit">Envoyer</button>
-        {msgErreur && <p>{msgErreur}</p>}
+        <button type="submit">Se connecter</button>
+        {msgErreur && (
+          <p style={{ color: "red", fontWeight: "bold" }}>{msgErreur}</p>
+        )}
       </form>
     </div>
   );

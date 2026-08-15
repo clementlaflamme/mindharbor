@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { api } from "../api/api";
-import "./ressources.css";
+import "./css/ressources.css";
 import { useAuth } from "../api/context/AuthContext";
 
 interface Props {
