@@ -1,7 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { authentifier, exigerRole } from "../middleware/auth.js";
-import router from "./auth.routes.js";
 
 const routerActivites = Router();
 

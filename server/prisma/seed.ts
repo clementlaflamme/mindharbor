@@ -3,6 +3,7 @@ import { seedActivites } from "./seeds/seedActivites.js";
 import { seedUsersMessages } from "./seeds/seedUsersAndMessages.js";
 import { seedEntreeJournal } from "./seeds/seedEntreeJournal.js";
 import { seedActivitesJournal } from "./seeds/seedActivitesJournal.js";
+import { seedSignalements } from "./seeds/seedSignalements.js";
 import prisma from "../src/utils/prisma.js";
 
 async function main() {
@@ -11,6 +12,7 @@ async function main() {
   await seedUsersMessages();
   await seedEntreeJournal();
   await seedActivitesJournal();
+  await seedSignalements();
 }
 
 main()

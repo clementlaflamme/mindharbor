@@ -2,8 +2,6 @@ import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { authentifier } from "../middleware/auth.js";
 import { z } from "zod";
-import { error } from "node:console";
-import type { NestedEnumVisibiliteProfilFilter } from "../../generated/prisma/commonInputTypes.js";
 
 const routerJournal = Router();
 
@@ -60,8 +58,21 @@ routerJournal.get("/", authentifier, async (req: Request, res: Response) => {
   }
 });
 
+const envoyerEntree = z.object({
+  humeur: z.int().min(1).max(5),
+  energie: z.int().min(1).max(5),
+  sommeil: z.int().min(1).max(5),
+  anxiete: z.int().min(1).max(5),
+  gratitude: z.string().nonempty().optional()
+})
+
 routerJournal.post("/", authentifier, async (req: Request, res: Response) => {
   try {
+    const validationBody = envoyerEntree.safeParse(req.body);
+    if (!validationBody) {
+      return res.status(400).json({message: "Erreur: Informations incorrectes"})
+    }
+
     const entreeJournal = await prisma.entreeJournal.create({
       data: {
         ...req.body,
@@ -117,7 +128,6 @@ const stats = await prisma.entreeJournal.aggregate({
   },
 );
 
-// NON VÉRIFIÉ, À VÉRIFIER LORSQUE ACTIVITÉS SONT IMPLÉMENTÉES
 routerJournal.get("/insights", authentifier, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).utilisateur.sub;

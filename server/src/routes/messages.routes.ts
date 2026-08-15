@@ -53,8 +53,9 @@ routerMessages.get("/:userId", authentifier, async (req: Request, res: Response)
 
 // // Afficher tous les dernier messages des conversations (toutes les conversations)
 routerMessages.get("/", authentifier, async (req: Request, res: Response) => {
+    const idUtilisateur = (req as any).utilisateur.sub;
+
     try {
-        const idUtilisateur = (req as any).utilisateur.sub;
         const messages = await prisma.message.findMany({ 
             where : {
                 OR: [
@@ -69,6 +70,7 @@ routerMessages.get("/", authentifier, async (req: Request, res: Response) => {
     const conversationsMap = new Map();
 
     for (const msg of messages) {
+        
         const ami = msg.expediteurId === idUtilisateur ? msg.destinataireId : msg.expediteurId;
         const bloque = await prisma.blocage.findFirst({
             where: {
@@ -82,13 +84,20 @@ routerMessages.get("/", authentifier, async (req: Request, res: Response) => {
         if (bloque) continue;
 
         if (!conversationsMap.has(ami)) {
-            conversationsMap.set(ami, {
-                idUtilisateur: ami,
-                dernierMessage: msg
+            const interlocuteur = await prisma.utilisateur.findUnique({
+                where: {id: ami},
+                select: {
+                    id: true,
+                    pseudonyme: true,
+                    avatarUrl: true
+                }
+            });
+            
+            conversationsMap.set(ami, interlocuteur);
 
-            }); 
+            } 
         }
-    }
+    
 
     const conversations = Array.from(conversationsMap.values());
     return res.status(200).json({ conversations });

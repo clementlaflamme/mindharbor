@@ -18,7 +18,7 @@ export interface Groupe {
   _count: CompteMembres;
 }
 
-export function GroupsPage() {
+export default function Groupes() {
   const [groupes, setGroupes] = useState<Groupe[]>([]);
   const [recherche, setRecherche] = useState<string>('');
   const [chargement, setChargement] = useState<boolean>(false);

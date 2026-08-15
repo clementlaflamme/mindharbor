@@ -16,7 +16,7 @@ export interface Signalement {
   majLe: string;
 }
 
-export function AdminSignalementsPage() {
+export default function Admin() {
   const [reports, setReports] = useState<Signalement[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
