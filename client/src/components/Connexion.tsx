@@ -5,9 +5,10 @@ import { useAuth } from "../api/context/AuthContext";
 
 interface Props {
   setPageActive: (page: string) => void;
+  rafraichirUtilisateur: () => void;
 }
 
-export default function Connexion({setPageActive}: Props) {
+export default function Connexion({setPageActive, rafraichirUtilisateur}: Props) {
 
    const [email, setEmail] = useState("");
     const [mdp, setMdp] = useState("");
@@ -24,7 +25,8 @@ export default function Connexion({setPageActive}: Props) {
         motDePasse: mdp,
       });
 
-      seConnecter(data.token)
+      seConnecter(data.token);
+      rafraichirUtilisateur();
       setPageActive("accueil");
     } catch (error) {
       if (axios.isAxiosError(error)) {
