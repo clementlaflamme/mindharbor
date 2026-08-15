@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./css/formulaire.css";
-import { useAuth } from "../api/context/AuthContext";
 import { api } from "../api/api";
 import axios from "axios";
 
