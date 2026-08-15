@@ -22,61 +22,59 @@ export default function Journal() {
   );
   const [msgErreur, setMsgErreur] = useState("");
   const [entree, setEntree] = useState<EntreeJournal | null>(null);
-  const [chargement, setChargement] = useState(true);
   const dateAujourdhui = formaterDateISO(new Date());
   const [estAujourdhui, setEstAujourdhui] = useState(true);
 
   useEffect(() => {
     setEstAujourdhui(dateAujourdhui === dateAffichee);
-  }, [dateAffichee])
+  }, [dateAffichee]);
 
   async function soumettreFormulaire(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  setMsgErreur("");
+    e.preventDefault();
+    setMsgErreur("");
 
-  const payload: Record<string, any> = {};
+    const payload: Record<string, any> = {};
 
-if (humeur) payload.humeur = Number(humeur);
-if (energie) payload.energie = Number(energie);
-if (sommeil) payload.sommeil = Number(sommeil);
-if (anxiete) payload.anxiete = Number(anxiete);
-if (gratitude.trim()) payload.gratitude = gratitude.trim();
+    if (humeur) payload.humeur = Number(humeur);
+    if (energie) payload.energie = Number(energie);
+    if (sommeil) payload.sommeil = Number(sommeil);
+    if (anxiete) payload.anxiete = Number(anxiete);
+    if (gratitude.trim()) payload.gratitude = gratitude.trim();
 
-  try {
-    let reponse;
+    try {
+      let reponse;
 
-    if (estRempli) {
-      reponse = await api.patch(`/api/v1/journal/${dateAffichee}`, payload);
-    } else {
-      reponse = await api.post("/api/v1/journal", payload);
-    }
+      if (estRempli) {
+        reponse = await api.patch(`/api/v1/journal/${dateAffichee}`, payload);
+      } else {
+        reponse = await api.post("/api/v1/journal", payload);
+      }
 
-    const entreeSauvegardee = reponse.data.entreeJournal ?? reponse.data;
-    setEntree(entreeSauvegardee);
+      const entreeSauvegardee = reponse.data.entreeJournal ?? reponse.data;
+      setEntree(entreeSauvegardee);
 
-    // Rénitialisation du formulaire
-    setHumeur("");
-    setEnergie("");
-    setSommeil("");
-    setAnxiete("");
-    setGratitude("");
-
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const messageBackend =
-        error.response?.data?.erreur ||
-        error.response?.data?.message ||
-        error.response?.data?.msgErreur;
-      setMsgErreur(
-        messageBackend || "Une erreur est survenue lors de l'enregistrement.",
-      );
-    } else if (error instanceof Error) {
-      setMsgErreur(error.message);
-    } else {
-      setMsgErreur("Une erreur inattendue est survenue.");
+      // Rénitialisation du formulaire
+      setHumeur("");
+      setEnergie("");
+      setSommeil("");
+      setAnxiete("");
+      setGratitude("");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const messageBackend =
+          error.response?.data?.erreur ||
+          error.response?.data?.message ||
+          error.response?.data?.msgErreur;
+        setMsgErreur(
+          messageBackend || "Une erreur est survenue lors de l'enregistrement.",
+        );
+      } else if (error instanceof Error) {
+        setMsgErreur(error.message);
+      } else {
+        setMsgErreur("Une erreur inattendue est survenue.");
+      }
     }
   }
-}
 
   const estRempli = entree !== null;
 
@@ -91,28 +89,25 @@ if (gratitude.trim()) payload.gratitude = gratitude.trim();
     const controller = new AbortController();
 
     async function chargerEntree() {
-  setChargement(true);
-  setMsgErreur("");
+      setMsgErreur("");
 
-  try {
-    const url = dateAffichee
-      ? `/api/v1/journal/${dateAffichee}`
-      : "/api/v1/journal/";
-    const response = await api.get(url, { signal: controller.signal });
+      try {
+        const url = dateAffichee
+          ? `/api/v1/journal/${dateAffichee}`
+          : "/api/v1/journal/";
+        const response = await api.get(url, { signal: controller.signal });
 
-    setEntree(response.data.entreeJournal || null);
-    
-    if (response.data.dateAffichee) {
-      setDateAffichee(response.data.dateAffichee);
+        setEntree(response.data.entreeJournal || null);
+
+        if (response.data.dateAffichee) {
+          setDateAffichee(response.data.dateAffichee);
+        }
+      } catch (err: any) {
+        if (err.name !== "CanceledError") {
+          setMsgErreur("Impossible de charger l'entrée du journal.");
+        }
+      }
     }
-  } catch (err: any) {
-    if (err.name !== "CanceledError") {
-      setMsgErreur("Impossible de charger l'entrée du journal.");
-    }
-  } finally {
-    setChargement(false);
-  }
-}
 
     chargerEntree();
 
@@ -148,7 +143,6 @@ if (gratitude.trim()) payload.gratitude = gratitude.trim();
   return (
     <div className="container-j">
       <div className="container-formulaire">
-        <h3>Journal du {dateAffichee}</h3>
         <form onSubmit={(e) => soumettreFormulaire(e)}>
           <div className="element-formulaire">
             <label htmlFor="humeur">Humeur :</label>
@@ -156,7 +150,6 @@ if (gratitude.trim()) payload.gratitude = gratitude.trim();
               id="humeur"
               value={humeur}
               onChange={(e) => setHumeur(e.target.value)}
-              
             >
               <option value="" disabled>
                 Sélectionner (1-5)
@@ -175,7 +168,6 @@ if (gratitude.trim()) payload.gratitude = gratitude.trim();
               id="energie"
               value={energie}
               onChange={(e) => setEnergie(e.target.value)}
-              
             >
               <option value="" disabled>
                 Sélectionner (1-5)
@@ -212,7 +204,6 @@ if (gratitude.trim()) payload.gratitude = gratitude.trim();
               id="anxiete"
               value={anxiete}
               onChange={(e) => setAnxiete(e.target.value)}
-              
             >
               <option value="" disabled>
                 Sélectionner (1-5)
@@ -234,7 +225,9 @@ if (gratitude.trim()) payload.gratitude = gratitude.trim();
             />
           </div>
 
-          <button type="submit" disabled={!estAujourdhui}>{estRempli ? "Modifier" : "Envoyer"}</button>
+          <button type="submit" disabled={!estAujourdhui}>
+            {estRempli ? "Modifier" : "Envoyer"}
+          </button>
         </form>
         {msgErreur && (
           <p style={{ color: "red", fontWeight: "bold" }}>{msgErreur}</p>
@@ -265,11 +258,19 @@ if (gratitude.trim()) payload.gratitude = gratitude.trim();
           </p>
         )}
 
-        <div>
-          <button className="bouton-action" onClick={allerJourPrecedent}>
+        <div className="pagination-journal">
+          <button
+            type="button"
+            className="bouton-action"
+            onClick={allerJourPrecedent}
+          >
             ◄
           </button>
-          <button className="bouton-action" onClick={allerJourSuivant}>
+          <button
+            type="button"
+            className="bouton-action"
+            onClick={allerJourSuivant}
+          >
             ►
           </button>
         </div>

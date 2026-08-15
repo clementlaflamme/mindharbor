@@ -63,14 +63,16 @@ const envoyerEntree = z.object({
   energie: z.int().min(1).max(5),
   sommeil: z.int().min(1).max(5),
   anxiete: z.int().min(1).max(5),
-  gratitude: z.string().nonempty().optional()
-})
+  gratitude: z.string().nonempty().optional(),
+});
 
 routerJournal.post("/", authentifier, async (req: Request, res: Response) => {
   try {
     const validationBody = envoyerEntree.safeParse(req.body);
     if (!validationBody) {
-      return res.status(400).json({message: "Erreur: Informations incorrectes"})
+      return res
+        .status(400)
+        .json({ message: "Erreur: Informations incorrectes" });
     }
 
     const entreeJournal = await prisma.entreeJournal.create({
@@ -94,29 +96,29 @@ routerJournal.get(
   authentifier,
   async (req: Request, res: Response) => {
     try {
-      const range = (req.query.range as string) || "30d"; 
+      const range = (req.query.range as string) || "30d";
 
-// Enlever le "d" du nombre de jours
-const days = parseInt(range.replace("d", "")) || 30;
+      // Enlever le "d" du nombre de jours
+      const days = parseInt(range.replace("d", "")) || 30;
 
-// Calculer la date du début
-const dateDebut = new Date();
-dateDebut.setDate(dateDebut.getDate() - days);
+      // Calculer la date du début
+      const dateDebut = new Date();
+      dateDebut.setDate(dateDebut.getDate() - days);
 
-const stats = await prisma.entreeJournal.aggregate({
-  where: {
-    utilisateurId: (req as any).utilisateur.sub,
-    creeLe: {
-      gte: dateDebut, 
-    },
-  },
-  _avg: {
-    humeur: true,
-    energie: true,
-    sommeil: true,
-    anxiete: true,
-  },
-});
+      const stats = await prisma.entreeJournal.aggregate({
+        where: {
+          utilisateurId: (req as any).utilisateur.sub,
+          creeLe: {
+            gte: dateDebut,
+          },
+        },
+        _avg: {
+          humeur: true,
+          energie: true,
+          sommeil: true,
+          anxiete: true,
+        },
+      });
 
       res.status(200).json(stats);
     } catch (error) {
@@ -128,109 +130,123 @@ const stats = await prisma.entreeJournal.aggregate({
   },
 );
 
-routerJournal.get("/insights", authentifier, async (req: Request, res: Response) => {
-  try {
-    const userId = (req as any).utilisateur.sub;
+routerJournal.get(
+  "/insights",
+  authentifier,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).utilisateur.sub;
 
-    const toutesLesEntrees = await prisma.entreeJournal.findMany({
-      where: { utilisateurId: userId },
-      include: {
-        activites: {
-          include: { activite: true },
+      const toutesLesEntrees = await prisma.entreeJournal.findMany({
+        where: { utilisateurId: userId },
+        include: {
+          activites: {
+            include: { activite: true },
+          },
         },
-      },
-    });
-
-    const SEUIL_MINIMUM = 3;
-    const metriques = ["humeur", "energie", "sommeil", "anxiete"] as const;
-
-    const moyenneGlobale = (metrique: (typeof metriques)[number]) => {
-      const total = toutesLesEntrees.reduce((acc, e) => acc + e[metrique], 0);
-      return total / toutesLesEntrees.length;
-    };
-
-    const activitesMap = new Map<string, { nom: string; entrees: typeof toutesLesEntrees }>();
-
-    for (const entree of toutesLesEntrees) {
-      for (const aj of entree.activites) {
-        const id = aj.activite.id;
-        if (!activitesMap.has(id)) {
-          activitesMap.set(id, { nom: aj.activite.nom, entrees: [] });
-        }
-        activitesMap.get(id)!.entrees.push(entree);
-      }
-    }
-
-    const correlations = Array.from(activitesMap.entries())
-      .map(([activiteId, { nom, entrees: entreesAvecActivite }]) => {
-        const total = entreesAvecActivite.length;
-        if (total < SEUIL_MINIMUM) return null;
-
-        const entreesSansActivite = toutesLesEntrees.filter(
-          (e) => !e.activites.some((aj) => aj.activite.id === activiteId)
-        );
-
-        const resultats: Record<string, any> = {};
-
-        for (const metrique of metriques) {
-          const moyenneAvec =
-            entreesAvecActivite.reduce((acc, e) => acc + e[metrique], 0) / total;
-
-          const moyenneSans =
-            entreesSansActivite.length > 0
-              ? entreesSansActivite.reduce((acc, e) => acc + e[metrique], 0) /
-                entreesSansActivite.length
-              : moyenneGlobale(metrique);
-
-          const differenceAbsolue = moyenneAvec - moyenneSans;
-          const differencePourcentage =
-            moyenneSans !== 0 ? (differenceAbsolue / moyenneSans) * 100 : 0;
-
-          resultats[metrique] = {
-            moyenneAvec: Number(moyenneAvec.toFixed(2)),
-            moyenneSans: Number(moyenneSans.toFixed(2)),
-            differencePourcentage: Number(differencePourcentage.toFixed(1)),
-          };
-        }
-
-        const metriqueDominante = metriques.reduce((max, m) =>
-          Math.abs(resultats[m].differencePourcentage) >
-          Math.abs(resultats[max].differencePourcentage)
-            ? m
-            : max
-        );
-
-        const ecart = resultats[metriqueDominante].differencePourcentage;
-        const direction = ecart > 0 ? "plus élevé" : "moins élevé";
-        const texte = `Lorsque vous pratiquez «${nom}», votre ${metriqueDominante} est ${Math.abs(
-          ecart
-        ).toFixed(0)}% ${direction} que d'habitude.`;
-
-        return {
-          activiteId,
-          nom,
-          nombreOccurrences: total,
-          metriques: resultats,
-          insight: texte,
-        };
-      })
-      .filter(Boolean)
-      .sort((a, b) => {
-        const maxA = Math.max(
-          ...metriques.map((m) => Math.abs(a!.metriques[m].differencePourcentage))
-        );
-        const maxB = Math.max(
-          ...metriques.map((m) => Math.abs(b!.metriques[m].differencePourcentage))
-        );
-        return maxB - maxA;
       });
 
-    res.status(200).json({ correlations });
-  } catch (error) {
-    console.error("Erreur :", error);
-    res.status(500).json({ message: "Erreur lors du calcul des corrélations" });
-  }
-});
+      const SEUIL_MINIMUM = 3;
+      const metriques = ["humeur", "energie", "sommeil", "anxiete"] as const;
+
+      const moyenneGlobale = (metrique: (typeof metriques)[number]) => {
+        const total = toutesLesEntrees.reduce((acc, e) => acc + e[metrique], 0);
+        return total / toutesLesEntrees.length;
+      };
+
+      const activitesMap = new Map<
+        string,
+        { nom: string; entrees: typeof toutesLesEntrees }
+      >();
+
+      for (const entree of toutesLesEntrees) {
+        for (const aj of entree.activites) {
+          const id = aj.activite.id;
+          if (!activitesMap.has(id)) {
+            activitesMap.set(id, { nom: aj.activite.nom, entrees: [] });
+          }
+          activitesMap.get(id)!.entrees.push(entree);
+        }
+      }
+
+      const correlations = Array.from(activitesMap.entries())
+        .map(([activiteId, { nom, entrees: entreesAvecActivite }]) => {
+          const total = entreesAvecActivite.length;
+          if (total < SEUIL_MINIMUM) return null;
+
+          const entreesSansActivite = toutesLesEntrees.filter(
+            (e) => !e.activites.some((aj) => aj.activite.id === activiteId),
+          );
+
+          const resultats: Record<string, any> = {};
+
+          for (const metrique of metriques) {
+            const moyenneAvec =
+              entreesAvecActivite.reduce((acc, e) => acc + e[metrique], 0) /
+              total;
+
+            const moyenneSans =
+              entreesSansActivite.length > 0
+                ? entreesSansActivite.reduce((acc, e) => acc + e[metrique], 0) /
+                  entreesSansActivite.length
+                : moyenneGlobale(metrique);
+
+            const differenceAbsolue = moyenneAvec - moyenneSans;
+            const differencePourcentage =
+              moyenneSans !== 0 ? (differenceAbsolue / moyenneSans) * 100 : 0;
+
+            resultats[metrique] = {
+              moyenneAvec: Number(moyenneAvec.toFixed(2)),
+              moyenneSans: Number(moyenneSans.toFixed(2)),
+              differencePourcentage: Number(differencePourcentage.toFixed(1)),
+            };
+          }
+
+          const metriqueDominante = metriques.reduce((max, m) =>
+            Math.abs(resultats[m].differencePourcentage) >
+            Math.abs(resultats[max].differencePourcentage)
+              ? m
+              : max,
+          );
+
+          const ecart = resultats[metriqueDominante].differencePourcentage;
+          const direction = ecart > 0 ? "plus élevé" : "moins élevé";
+          const texte = `Lorsque vous pratiquez «${nom}», votre ${metriqueDominante} est ${Math.abs(
+            ecart,
+          ).toFixed(0)}% ${direction} que d'habitude.`;
+
+          return {
+            activiteId,
+            nom,
+            nombreOccurrences: total,
+            metriques: resultats,
+            insight: texte,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => {
+          const maxA = Math.max(
+            ...metriques.map((m) =>
+              Math.abs(a!.metriques[m].differencePourcentage),
+            ),
+          );
+          const maxB = Math.max(
+            ...metriques.map((m) =>
+              Math.abs(b!.metriques[m].differencePourcentage),
+            ),
+          );
+          return maxB - maxA;
+        });
+
+      res.status(200).json({ correlations });
+    } catch (error) {
+      console.error("Erreur :", error);
+      res
+        .status(500)
+        .json({ message: "Erreur lors du calcul des corrélations" });
+    }
+  },
+);
 
 routerJournal.get(
   "/:date",
@@ -238,7 +254,7 @@ routerJournal.get(
   async (req: Request, res: Response) => {
     try {
       const date = req.params.date as string;
-      const validerDate = z.iso.date().safeParse(req.params.date);
+      const validerDate = z.iso.date().safeParse(date);
       if (!validerDate.success) {
         return res.status(400).json({
           message: "La date doit respecter le format ISO AAAA-MM-JJ",
@@ -258,7 +274,9 @@ routerJournal.get(
         },
       });
 
-      res.status(200).json(entreeJournal);
+      res
+        .status(200)
+        .json({ entreeJournal: entreeJournal ?? null, dateAffichee: date });
     } catch (error) {
       console.log("Error :", error);
       res
@@ -268,13 +286,15 @@ routerJournal.get(
   },
 );
 
-const modifierEntreeSchema = z.object({
-  humeur: z.number().int().min(1).max(5).optional(),
-  energie: z.number().int().min(1).max(5).optional(),
-  sommeil: z.number().min(1).max(5).optional(),
-  anxiete: z.number().int().min(1).max(5).optional(),
-  gratitude: z.string().max(500).optional(),
-}).strict();
+const modifierEntreeSchema = z
+  .object({
+    humeur: z.number().int().min(1).max(5).optional(),
+    energie: z.number().int().min(1).max(5).optional(),
+    sommeil: z.number().min(1).max(5).optional(),
+    anxiete: z.number().int().min(1).max(5).optional(),
+    gratitude: z.string().max(500).nullable().optional(),
+  })
+  .strict();
 
 routerJournal.patch(
   "/:date",
@@ -292,22 +312,20 @@ routerJournal.patch(
       const validationBody = modifierEntreeSchema.safeParse(req.body);
 
       if (!validationBody.success) {
-      return res.status(400).json({
-        message: "Les données fournies sont invalides",
-      });
-    }
+        return res.status(400).json({
+          message: "Les données fournies sont invalides",
+        });
+      }
 
       const debutJournee = new Date(`${date}T00:00:00.000Z`);
       const finJournee = new Date(`${date}T23:59:59.999Z`);
       const maintenant = new Date();
 
       if (debutJournee >= maintenant || maintenant >= finJournee) {
-        return res
-          .status(403)
-          .json({
-            message:
-              "Vous ne pouvez pas modifier ce journal, car il ne date pas d'aujourd'hui",
-          });
+        return res.status(403).json({
+          message:
+            "Vous ne pouvez pas modifier ce journal, car il ne date pas d'aujourd'hui",
+        });
       }
 
       const entreeExistante = await prisma.entreeJournal.findFirst({
@@ -328,7 +346,7 @@ routerJournal.patch(
 
       const entreeJournal = await prisma.entreeJournal.update({
         where: {
-          id: entreeExistante.id, 
+          id: entreeExistante.id,
         },
         data: {
           ...req.body,
