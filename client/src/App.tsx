@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "./api/api"
 import "./index.css"
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -17,7 +17,7 @@ import OptionsBio from "./components/OptionsBio";
 import Ressources from "./components/Ressources";
 
 
-const API = "http://localhost:3000/api/v1"
+
 
 function App() { 
   interface Utilisateur {
@@ -34,11 +34,7 @@ function App() {
       return;
     }
   
-  axios.get(API + "/auth/me", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  api.get<Utilisateur>("/api/v1/auth/me")
   .then(res => setUtilisateur(res.data))
   .catch(() => setUtilisateur(null));
   }
