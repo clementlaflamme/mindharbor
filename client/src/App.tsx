@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import { api } from "./api/api"
 import "./index.css"
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -17,7 +18,7 @@ import OptionsBio from "./components/OptionsBio";
 import Ressources from "./components/Ressources";
 
 
-const API = "http://localhost:3000"
+// const API = "http://localhost:3000"
 
 function App() {
   interface Utilisateur {
