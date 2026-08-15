@@ -4,16 +4,16 @@ import { api } from "../api/api";
 import resolveAvatarUrl from "../utils/resolveAvatar";
 
 export default function Messagerie() {
-  const [conversations, setConversations] = useState<interlocuteur[] | null>(null);
-  const [messages, setMessages] = useState(null);
+  const [conversations, setConversations] = useState<Interlocuteur[] | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
-
+  const [interlocuteur, setInterlocuteur] = useState<Interlocuteur | null>(null);
 
   interface Utilisateur {
     id: string;
   }
 
-  interface interlocuteur{
+  interface Interlocuteur{
     id: string,
     pseudonyme: string,
     avatarUrl: string
@@ -56,8 +56,8 @@ export default function Messagerie() {
       setMessages(null)
       return;
     }
-    api.get(`/api/v1/messages/${userId}`)
-    .then(res=> setMessages(res.data))
+    api.get(`/api/v1/messages/${userId}?sort=creeLe&order=asc`)
+    .then(res=> setMessages(res.data.messages))
     .catch(()=> setMessages(null));
   }
 
@@ -72,6 +72,8 @@ export default function Messagerie() {
   }, [utilisateur])
 
 
+
+
   return (
         
     <div className="messagerie-page">
@@ -84,7 +86,7 @@ export default function Messagerie() {
             <h3>Conversations</h3>
             <ul className="conversations-container">
               {conversations?.map(inter => (
-                <li key={inter.id} onClick={()=> getMessages(inter.id)} className="contact">
+                <li key={inter.id} onClick={()=> {setInterlocuteur(inter); getMessages(inter.id);}} className="contact">
                   <img src={resolveAvatarUrl(inter.avatarUrl)} className="avatar" />
                   <p>{inter.pseudonyme}</p>
                 </li>
@@ -96,11 +98,16 @@ export default function Messagerie() {
 
 
           <main className="messagerie-conversation">
-            <div className="infos-container"><div className="interlocuteur-container"><h3>Interlocuteur</h3></div><button className="bloquer-btn">Bloquer</button></div>
+            <div className="infos-container"><div className="interlocuteur-container"><h3>{interlocuteur?  (<><img src={resolveAvatarUrl(interlocuteur.avatarUrl)} className="avatar"/>{interlocuteur.pseudonyme}</>) : "Messages"}</h3></div><button className="bloquer-btn">Bloquer</button></div>
             <ul className="messages-container">
-              <li><p>message</p></li>
-              <li><p>message</p></li>
-              <li><p>message</p></li>
+              {messages?.map(mess => {
+              const estMoi = mess.expediteurId === utilisateur?.id;
+              return(  
+                <li key={mess.id} className="message">
+                  <p>{estMoi? "Moi" : interlocuteur?.pseudonyme} : {mess.contenu}</p>
+                </li>
+              )
+              })}
             </ul>
             <form className="message-input-container">
               <input className="message-input" placeholder="Entrez votre message ici" type="text"></input>

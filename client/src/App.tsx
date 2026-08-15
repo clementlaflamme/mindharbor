@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "./api/api"
+import axios from "axios";
 import "./index.css"
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -17,9 +17,9 @@ import OptionsBio from "./components/OptionsBio";
 import Ressources from "./components/Ressources";
 
 
+const API = "http://localhost:3000"
 
-
-function App() { 
+function App() {
   interface Utilisateur {
   pseudonyme: string;
 }
@@ -33,7 +33,7 @@ function App() {
       setUtilisateur(null);
       return;
     }
-  
+
   api.get<Utilisateur>("/api/v1/auth/me")
   .then(res => setUtilisateur(res.data))
   .catch(() => setUtilisateur(null));
@@ -69,10 +69,8 @@ function App() {
         {pageActive === "optionsBio" && <OptionsBio/>}
       </main>
 
-      <Footer/>
-
+      <Footer />
     </div>
-
   );
 }
 
