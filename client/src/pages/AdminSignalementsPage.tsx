@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Signalement } from '../types/signalements';
 import { signalementsService } from '../api/signalements';
+
+export type CategorieSignalement = 'INAPPROPRIE' | 'SPAM' | 'INQUIETANT';
+export type StatutSignalement = 'EN_ATTENTE' | 'TRAITE' | 'REJETE';
+
+export interface Signalement {
+  id: string;
+  utilisateurId: string;
+  categorie: CategorieSignalement;
+  statut: StatutSignalement;
+  messageId?: string | null;
+  publicationId?: string | null;
+  commentaireId?: string | null;
+  creeLe: string;
+  majLe: string;
+}
 
 export function AdminSignalementsPage() {
   const [reports, setReports] = useState<Signalement[]>([]);
@@ -37,7 +51,7 @@ export function AdminSignalementsPage() {
   return (
     <div style={{ padding: '24px', backgroundColor: '#0f172a', color: '#f8fafc', minHeight: '100vh', fontFamily: 'sans-serif' }}>
       <header style={{ borderBottom: '1px solid #334155', paddingBottom: '16px', marginBottom: '24px' }}>
-        <h1 style={{ color: '#ef4444', margin: '0 0 4px 0', fontSize: '24px' }}>🛡️ Module Administration : Gestion des Signalements</h1>
+        <h1 style={{ color: '#ef4444', margin: '0 0 4px 0', fontSize: '24px' }}>Module Administration : Gestion des Signalements</h1>
         <p style={{ color: '#94a3b8', margin: 0, fontSize: '14px' }}>Vue isolée du panneau d'administration conforme aux spécifications du wireframe.</p>
       </header>
 
@@ -46,7 +60,7 @@ export function AdminSignalementsPage() {
 
       {!loading && reports.length === 0 && (
         <div style={{ padding: '40px', textAlign: 'center', backgroundColor: '#1e293b', borderRadius: '8px', border: '1px solid #334155' }}>
-          <p style={{ color: '#94a3b8', margin: 0 }}>✅ Aucun signalement en attente de traitement.</p>
+          <p style={{ color: '#94a3b8', margin: 0 }}>Aucun signalement en attente de traitement.</p>
         </div>
       )}
 
@@ -55,7 +69,7 @@ export function AdminSignalementsPage() {
           <div key={report.id} style={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <span style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '12px', fontWeight: 'bold', backgroundColor: '#7f1d1d', color: '#fca5a5' }}>
-                🏷️ Catégorie: {report.categorie}
+                Catégorie: {report.categorie}
               </span>
               <small style={{ color: '#64748b' }}>ID Signalement : {report.id}</small>
             </div>

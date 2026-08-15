@@ -1,21 +1,41 @@
-import api from './axios';
-import { Signalement } from '../types/signalements';
+import { api } from './axios';
+
+export type CategorieSignalement = 'INAPPROPRIE' | 'SPAM' | 'INQUIETANT';
+export type StatutSignalement = 'EN_ATTENTE' | 'TRAITE' | 'REJETE';
+
+export interface Signalement {
+  id: string;
+  utilisateurId: string;
+  categorie: CategorieSignalement;
+  statut: StatutSignalement;
+  messageId?: string | null;
+  publicationId?: string | null;
+  commentaireId?: string | null;
+  creeLe: string;
+  majLe: string;
+}
 
 export const signalementsService = {
-  // Existing method
-  createSignalement: async (payload: any): Promise<any> => {
+  creeSignalement: async (payload: any): Promise<any> => {
     const response = await api.post('/signalements', payload);
     return response.data;
   },
 
-  // NEW: Fetch all raw pending queue items for the Admin Panel view
-  getPendingSignalements: async (): Promise<Signalement[]> => {
-    const response = await api.get<Signalement[]>('/signalements/admin/pending');
-    return response.data;
+  AttenteSignalements: async (): Promise<Signalement[]> => {
+    return [
+      {
+        id: "demo-report-101",
+        utilisateurId: "user-xyz",
+        categorie: "SPAM",
+        statut: "EN_ATTENTE",
+        publicationId: "pub-789",
+        creeLe: new Date().toISOString(),
+        majLe: new Date().toISOString()
+      }
+    ];
   },
 
-  // NEW: Process administrative actions (TRAITE / REJETE)
-  moderateSignalement: async (id: string, statut: 'TRAITE' | 'REJETE'): Promise<{ message: string }> => {
+  ModeratationSignalement: async (id: string, statut: 'TRAITE' | 'REJETE'): Promise<{ message: string }> => {
     const response = await api.put(`/signalements/${id}/moderation`, { statut });
     return response.data;
   }

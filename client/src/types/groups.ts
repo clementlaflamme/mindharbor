@@ -2,7 +2,7 @@ export type VisibiliteGroupe = 'PUBLIC' | 'PRIVE';
 export type StatutAdhesion = 'EN_ATTENTE' | 'ACCEPTEE' | 'REFUSEE';
 
 export interface GroupCount {
-  membres: boolean; // Matches your select: { membres: true } query response shape
+  membres: boolean;
 }
 
 export interface Group {
@@ -16,4 +16,14 @@ export interface Group {
   _count: {
     membres: number;
   };
+}
+
+export interface DemandeAdhesion {
+  id: string;
+  groupeId: string;
+  utilisateurId: string;
+  presentation: string;
+  statut: 'EN_ATTENTE' | 'ACCEPTEE' | 'REFUSEE';
+  creeLe: string;
+  majLe: string;
 }
