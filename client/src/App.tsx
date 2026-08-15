@@ -3,6 +3,8 @@ import { api } from "./api/api"
 import "./index.css"
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { GroupsPage } from "./pages/GroupsPage";
+import { AdminSignalementsPage } from "./pages/AdminSignalementsPage";
 import Accueil from "./components/Accueil";
 import Admin from "./components/Admin";
 import Analyses from "./components/Analyses";
@@ -73,6 +75,8 @@ function App() {
 
     </div>
 
+      <Footer />
+    </div>
   );
 }
 
