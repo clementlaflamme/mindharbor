@@ -1,7 +1,77 @@
+import { useEffect, useState } from "react";
 import "./messagerie.css";
+import { api } from "../api/api";
 
 
 export default function Messagerie() {
+  const [conversations, setConversations] = useState<interlocuteur[] | null>(null);
+  const [messages, setMessages] = useState(null);
+  const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
+
+
+  interface Utilisateur {
+    id: string;
+  }
+
+  interface interlocuteur{
+    id: string,
+    pseudonyme: string,
+    avatarUrl: string
+  }
+
+  interface Message {
+    id: string,
+    expediteurId: string,
+    destinataireId: string,
+    sujet: string,
+    contenu: string,
+    lu: boolean,
+    creeLe: string
+  }
+
+  function getUtilisateur() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUtilisateur(null);
+      return;
+    }
+
+    api.get("/api/v1/auth/me")
+    .then(res => setUtilisateur(res.data))
+    .catch(()=> setUtilisateur(null));
+  }
+
+  function getConversations(){
+    if (!utilisateur) {
+      setConversations(null)
+      return;
+    }
+    api.get("/api/v1/messages")
+    .then(res=> setConversations(res.data.conversations))
+    .catch(()=>setConversations(null));
+  }
+
+  function getMessages(userId: string){
+    if (!utilisateur) {
+      setMessages(null)
+      return;
+    }
+    api.get(`/api/v1/messages/${userId}`)
+    .then(res=> setMessages(res.data))
+    .catch(()=> setMessages(null));
+  }
+
+  useEffect(() => {
+    getUtilisateur();
+  }, []);
+
+  useEffect(()=>{
+    if (utilisateur) {
+      getConversations();
+    }
+  }, [utilisateur])
+
+
   return (
         
     <div className="messagerie-page">
@@ -13,9 +83,12 @@ export default function Messagerie() {
           <aside className="messagerie-sidebar">
             <h3>Conversations</h3>
             <ul className="conversations-container">
-              <li><p></p></li>
-              <li><p>conv</p></li>
-              <li><p>conv</p></li>
+              {conversations?.map(inter => (
+                <li key={inter.id} onClick={()=> getMessages(inter.id)}>
+                  <img src={inter.avatarUrl} className="avatar"/>
+                  <p>{inter.pseudonyme}</p>
+                </li>
+              ))}
             </ul>
             <button className="new-message-btn">Nouveau Message</button>
           </aside>
