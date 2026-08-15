@@ -170,7 +170,6 @@ model Message {
   id             String  @id @default(uuid())
   expediteurId   String
   destinataireId String
-  sujet          String
   contenu        String
   lu             Boolean @default(false)
 
@@ -243,7 +242,7 @@ model Group {
 
 model MembreGroup {
   id        String      @id @default(uuid())
-  groueId  String
+  groupId  String
   utilisateurId String
   role      RoleGroup  @default(MEMBRE)
   rejoindreLe   DateTime    @default(now())
@@ -277,7 +276,7 @@ model Publication {
   creeLe        DateTime @default(now())
   majLe         DateTime @updatedAt
 
-  group    Group  @relation(fields: [groueId], references: [id], onDelete: Cascade)
+  group    Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   commentaires  CommentaireGroup[]
   signalements  Signalement[]
