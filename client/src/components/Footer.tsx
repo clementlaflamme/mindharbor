@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer" style={{borderTop: "4px solid var(--couleur-palette1)"}}>
         <div style={{ display: "flex", justifyContent: "flex-end"}} className="badgeArea">
             <div className="badgeUrgence">911</div>
             <div className="badgeUrgence">1-866-APPELLE</div>
