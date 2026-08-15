@@ -17,11 +17,36 @@ import OptionsBio from "./components/OptionsBio";
 import Ressources from "./components/Ressources";
 
 
-const API = "http://localhost:3000"
+const API = "http://localhost:3000/api/v1"
 
 function App() { 
+  interface Utilisateur {
+  pseudonyme: string;
+}
 
   const [pageActive, setPageActive] = useState("analyses");
+  const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
+
+  function rafraichirUtilisateur() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUtilisateur(null);
+      return;
+    }
+  
+  axios.get(API + "/auth/me", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => setUtilisateur(res.data))
+  .catch(() => setUtilisateur(null));
+  }
+  useEffect(() => {
+    rafraichirUtilisateur();
+  }, []);
+
+
 
   return (
     <div className="app-container">
@@ -31,12 +56,14 @@ function App() {
       {/* Pour changer d'écran, on devra changer la balise accueil par une autre selon la page désirée
       ex: <Journal/> pour l'écran Journal qui vient de Journal.tsx */}
       <main>
-        <h2>Exam mi-session service web</h2>
+        <h2>
+          {utilisateur ? `Bienvenue, ${utilisateur.pseudonyme}` : "Exam mi-session service web"}
+        </h2>
         {pageActive === "analyses" && <Analyses/>}
         {pageActive === "ressources" && <Ressources/>}
         {pageActive === "accueil" && <Accueil/>}
         {pageActive === "admin" && <Admin/>}
-        {pageActive === "connexion" && <Connexion setPageActive={setPageActive}/>}
+        {pageActive === "connexion" && <Connexion setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>}
         {pageActive === "dashboard" && <Dashboard/>}
         {pageActive === "groupes" && <Groupes/>}
         {pageActive === "inscription" && <Inscription setPageActive={setPageActive}/>}
