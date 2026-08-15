@@ -39,12 +39,33 @@ routerMessages.get("/:userId", authentifier, async (req: Request, res: Response)
 
         const total = await prisma.message.count({ where: filtre });
 
+        const interlocuteur = await prisma.utilisateur.findUnique({
+            where: { id: ami },
+            select: {
+                id: true,
+                pseudonyme: true,
+                avatarUrl: true
+            }
+        });
+
+        await prisma.message.updateMany({
+            where: {
+                expediteurId: ami,
+                destinataireId: idUtilisateur,
+                lu: false
+            },
+            data: {
+                lu: true
+            }
+        });
+
         return res.status(200).json({
             page,
             limit,
             total,
             totalPages: Math.ceil(total / limit),
-            messages
+            messages,
+            interlocuteur
         });
     } catch (e) {
         return res.status(500).json({ erreur: "Erreur serveur" });
@@ -89,15 +110,31 @@ routerMessages.get("/", authentifier, async (req: Request, res: Response) => {
                 select: {
                     id: true,
                     pseudonyme: true,
-                    avatarUrl: true
+                    avatarUrl: true,
                 }
             });
+
+            const nonLus = await prisma.message.count({
+                where: {
+                    expediteurId: ami,
+                    destinataireId: idUtilisateur,
+                    lu: false
+                }
+            });
+
             
-            conversationsMap.set(ami, interlocuteur);
+            conversationsMap.set(ami, {
+                id: interlocuteur?.id,
+                pseudonyme: interlocuteur?.pseudonyme,
+                avatarUrl: interlocuteur?.avatarUrl,
+                nonLus
+            });
 
             } 
         }
     
+
+
 
     const conversations = Array.from(conversationsMap.values());
     return res.status(200).json({ conversations });

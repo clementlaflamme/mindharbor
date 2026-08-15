@@ -61,7 +61,8 @@ routerUsers.post("/:id/block", authentifier, async (req: Request, res: Response)
 })
 
 //recuperer un id par pseudo
-routerUsers.get("/pseudo/:pseudo", async (req: Request, res: Response) => {
+routerUsers.get("/pseudo/:pseudo", authentifier, async (req: Request, res: Response) => {
+    const idUtilisateur = (req as any).utilisateur.sub;
     try {
         const pseudo = req.params.pseudo as string;
         const user = await prisma.utilisateur.findUnique({
@@ -72,6 +73,24 @@ routerUsers.get("/pseudo/:pseudo", async (req: Request, res: Response) => {
             }
         });
 
+        if (!user) {
+            return  res.status(404).json({ erreur: "Utilisateur introuvable" });
+        }
+
+        const bloque = await prisma.blocage.findFirst({
+            where: {
+                    OR: [
+                        { bloqueurId: idUtilisateur, bloqueId: user.id },
+                        { bloqueurId: user.id, bloqueId: idUtilisateur }
+                ]
+            }
+        });
+
+
+        if (bloque) {
+            return res.status(404).json({ erreur: "Utilisateur introuvable" });
+        }
+
         if (user && user.niveauContact != "PERSONNE"){
             return res.status(200).json(user)
         } else {
@@ -81,4 +100,5 @@ routerUsers.get("/pseudo/:pseudo", async (req: Request, res: Response) => {
         return res.status(500).json({ erreur: "Erreur serveur" });
     }
 })
+
 export default routerUsers
