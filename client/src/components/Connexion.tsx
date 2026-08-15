@@ -47,7 +47,7 @@ export default function Connexion({
   }
 
   return (
-    <div className="container">
+    <div className="container-f">
       <h3>Formulaire de connexion</h3>
       <form
         className="container-formulaire"
