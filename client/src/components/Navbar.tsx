@@ -1,18 +1,22 @@
 import { useAuth } from "../api/context/AuthContext";
 import { useState } from "react";
+import "./css/navbar.css";
 
 interface NavbarProps {
   setPageActive: (page: string) => void;
   rafraichirUtilisateur: () => void;
+  nonLus: number;
 }
 
 export default function Navbar({
+  nonLus,
   setPageActive,
   rafraichirUtilisateur,
 }: NavbarProps) {
   // informations de connexion récupérées du useAuth
   const { estConnecte, estAdmin, seDeconnecter } = useAuth();
   const [popupConnexion, setPopupConnexion] = useState(false);
+  
 
   // handler de la déconnexion
   const gererDeconnexion = () => {
@@ -164,7 +168,7 @@ export default function Navbar({
             className="btn-nav-messagerie"
             title="Messagerie"
           >
-            <i className="fa-solid fa-message fa-2x"></i>
+            <i className="fa-solid fa-message fa-2x"></i><span className="non-lus">{nonLus || ""}</span>
           </button>
         </li>
         <li>
