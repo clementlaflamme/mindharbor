@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from "express";
 import prisma from "../utils/prisma.js";
 import { authentifier } from "../middleware/auth.js";
 import { z } from "zod";
+import { id } from "zod/locales";
 
 const routerJournal = Router();
 
@@ -95,6 +96,7 @@ routerJournal.get(
   "/stats",
   authentifier,
   async (req: Request, res: Response) => {
+    const idUtilisateur = (req as any).utilisateur.sub;
     try {
       const range = (req.query.range as string) || "30d";
 
@@ -105,7 +107,7 @@ routerJournal.get(
       const dateDebut = new Date();
       dateDebut.setDate(dateDebut.getDate() - days);
 
-      const stats = await prisma.entreeJournal.aggregate({
+      const moyennes = await prisma.entreeJournal.aggregate({
         where: {
           utilisateurId: (req as any).utilisateur.sub,
           creeLe: {
@@ -119,6 +121,40 @@ routerJournal.get(
           anxiete: true,
         },
       });
+
+      const evolution = await prisma.entreeJournal.findMany({
+        where : {
+          utilisateurId: idUtilisateur,
+          creeLe: { gte: dateDebut }
+        },
+        orderBy: { creeLe: "asc" }
+      })
+
+      type DateScore = { date: Date, score: number };
+      //ici il faut typer les couples de donnes, le type DateScore de chaque donne est la ligne juste au dessus
+      const statistiques: {
+        humeur: DateScore[],
+        energie: DateScore[],
+        sommeil: DateScore[],
+        anxiete: DateScore[]
+      } = {
+        humeur: [],
+        energie: [],
+        sommeil: [],
+        anxiete: []
+      };
+
+      for (const entree of evolution){
+
+        const date = entree.creeLe!;
+
+        statistiques.humeur.push({ date, score: entree.humeur });
+        statistiques.energie.push({ date, score: entree.energie });
+        statistiques.sommeil.push({ date, score: entree.sommeil });
+        statistiques.anxiete.push({ date, score: entree.anxiete });
+      }
+
+      const stats = {moyennes, evolution: statistiques, dateDebut }
 
       res.status(200).json(stats);
     } catch (error) {

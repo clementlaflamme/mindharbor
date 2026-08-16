@@ -31,7 +31,7 @@ export async function seedGroupes() {
       visibilite: "PRIVE",
       membres: {
         create: [
-          { utilisateurId: "u2", role: "MODERATEUR" }
+          { utilisateurId: "u2", role: "MODERATEUR" },
           { utilisateurId: "u3", role: "MEMBRE" }
         ]
       }
