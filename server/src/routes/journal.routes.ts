@@ -130,29 +130,14 @@ routerJournal.get(
         orderBy: { creeLe: "asc" }
       })
 
-      type DateScore = { date: Date, score: number };
-      //ici il faut typer les couples de donnes, le type DateScore de chaque donne est la ligne juste au dessus
-      const statistiques: {
-        humeur: DateScore[],
-        energie: DateScore[],
-        sommeil: DateScore[],
-        anxiete: DateScore[]
-      } = {
-        humeur: [],
-        energie: [],
-        sommeil: [],
-        anxiete: []
-      };
+      const statistiques = evolution.map(entree => ({
+        date: entree.creeLe.toISOString().slice(0, 10),
+        humeur: entree.humeur,
+        energie: entree.energie,
+        sommeil: entree.sommeil,
+        anxiete: entree.anxiete
+      }));
 
-      for (const entree of evolution){
-
-        const date = entree.creeLe!;
-
-        statistiques.humeur.push({ date, score: entree.humeur });
-        statistiques.energie.push({ date, score: entree.energie });
-        statistiques.sommeil.push({ date, score: entree.sommeil });
-        statistiques.anxiete.push({ date, score: entree.anxiete });
-      }
 
       const stats = {moyennes, evolution: statistiques, dateDebut }
 
