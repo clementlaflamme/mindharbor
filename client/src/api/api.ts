@@ -11,3 +11,25 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+let onTokenExpire: (() => void) | null = null;
+
+export function setOnTokenExpire(callback: () => void) {
+  onTokenExpire = callback;
+}
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const code = error.response?.data?.code;
+
+    if (code === "TOKEN_INVALIDE") {
+      localStorage.removeItem("token");
+      if (onTokenExpire) {
+        onTokenExpire();
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
