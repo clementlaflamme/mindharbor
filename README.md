@@ -18,7 +18,7 @@ Ce projet a été réalisé dans le cadre du hackathon de 88 heures du cours Ser
 Le dépôt contient deux applications distinctes :
 
 mindharbor/
-  server/   ← API Express + Prisma + Neon
+  server/   ← API Express + Prisma + Neon 
   client/   ← Interface React + Axios
 
 Toutes les commandes backend doivent être exécutées dans mindharbor/server.
@@ -39,8 +39,8 @@ cp .env.example .env
 
 Variables à remplir :
 - DATABASE_URL = lien Neon PostgreSQL
-- JWT_SECRET
-- CODE_AMIN (voir .env.example pour le code valide pour les tests de test.rest)
+- JWT_SECRET (un long code secret de votre cru)
+- CODE_AMIN (voir .env.example pour le code valide pour les tests de test.rest, dans un scénario réel, utilisez un autre code)
 
 ## 4. Initialiser Prisma (génération + migrations)
 npx prisma generate
@@ -66,7 +66,7 @@ http://localhost:3000
 
 # 🖥️ Installation du frontend (client)
 
-## 1. Aller dans le dossier du client
+## 1. Dans un autre terminal, allez dans le dossier du client
 cd mindharbor/client
 
 ## 2. Installer les dépendances
