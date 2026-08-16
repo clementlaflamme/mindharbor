@@ -298,8 +298,8 @@ export async function seedRessources() {
       niveau: 2,
     },
     {
-      titre: "Fatigue : 10 astuces pour booster vos niveaux d’énergie",
-      contenu: "Site web de ressources sur la santé et le bien-être",
+      titre: "10 astuces pour booster vos niveaux d’énergie",
+      contenu: "Site web de ressources sur le bien-être",
       url: "https://www.yhttps://www.pressesante.com/fatigue-10-astuces-pour-booster-vos-niveaux-denergie/outube.com/watch?v=Q1kTz6uJZz8",
       categorie: CategorieRessource.ENERGIE,
       type: "article",
@@ -307,8 +307,8 @@ export async function seedRessources() {
       niveau: 1,
     },
     {
-      titre: "Retrouver sa bonne humeur : comment se remonter le moral naturellement",
-      contenu: "Article faisant état de plusieurs méthodes pour remonter son moral naturellement.",
+      titre: "Retrouver sa bonne humeur",
+      contenu: "Plusieurs méthodes pour retrouver le moral",
       url: "https://www.amway.ca/fr_CA/discover/nutrition/ways-to-naturally-boost-your-mood",
       categorie: CategorieRessource.HUMEUR,
       type: "article",
