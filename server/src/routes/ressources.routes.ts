@@ -190,6 +190,8 @@ router.get(
       if (dernierJournal.anxiete >= 4) categoriesCibles.push("ANXIETE");
 
       // Si les notes du dernier journal sont bonnes pas de suggestion et message de support
+      console.log("Valeurs du journal:", dernierJournal.humeur, dernierJournal.energie, dernierJournal.sommeil, dernierJournal.anxiete);
+      console.log("Catégories ciblées:", categoriesCibles);
       if (categoriesCibles.length === 0)
         return res.json({ message: "Vous êtes sur la bonne voie! :)" });
 
@@ -202,6 +204,8 @@ router.get(
         },
         take: 3,
       });
+
+      console.log("Suggestions trouvées:", suggestions.length, suggestions.map(s => s.categorie));
       return res.json({
         categoriesTroubles: "categoriesCibles",
         derniereEntreeDate: "dernierJournal.creeLe",
