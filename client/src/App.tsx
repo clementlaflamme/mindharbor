@@ -25,7 +25,7 @@ function App() {
   const [pageActive, setPageActive] = useState("ressources");
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [sessionExpiree, setSessionExpiree] = useState(false);
-  const {estConnecte, seDeconnecter} = useAuth();
+  const {seDeconnecter} = useAuth();
 
   function rafraichirUtilisateur() {
     const token = localStorage.getItem("token");
