@@ -65,9 +65,14 @@ export default function Messagerie() {
     .catch(()=> setMessages(null));
   }
 
+
+
+
+
   useEffect(() => {
     getUtilisateur();
   }, []);
+
 
   useEffect(()=>{
     if (utilisateur) {
@@ -75,16 +80,30 @@ export default function Messagerie() {
     }
   }, [utilisateur])
 
-useEffect(() => {
+
+  useEffect(() => {
   if (interlocuteur) {
+    // Récupère les messages ET déclenche le marquage comme lu côté serveur 
     api.get(`/api/v1/messages/${interlocuteur.id}?sort=creeLe&order=asc`)
       .then(res => {
         setMessages(res.data.messages);
+        // Ensuite met la liste a jour pour que le marquage non plus soit fait sans avoir a rafraichis ou a 
+        // cliquer sur une autre conversation pour que ca soit visible
         getConversations();
       })
       .catch(() => setMessages(null));
   }
 }, [interlocuteur]);
+
+
+
+
+
+
+
+
+
+
 
 
   return (
@@ -156,7 +175,7 @@ useEffect(() => {
 
                 }
               </div>
-              {/* empecher de se bloquer soi meme (le boutton disparrait) et disparrait quand pas d'interlocuteur*/}
+              {/* empecher de se bloquer soi meme (le boutton disparrait) et disparrait quand pas d'interlocuteur */}
               {((interlocuteur && interlocuteur.id !== utilisateur?.id) || (!interlocuteur && nouveauDestinataireId))  && (<button className="bloquer-btn" onClick={ async ()=>{  
                   const idaBloquer = interlocuteur ? interlocuteur.id : nouveauDestinataireId;
                   await api.post(`/api/v1/users/${idaBloquer}/block`);
