@@ -1,0 +1,15 @@
+.interface-graphique {
+    display: flex;
+}
+
+
+.container-graphique {
+    width: 100%
+}
+
+.sidebar-graphique {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    justify-content: left;
+}
