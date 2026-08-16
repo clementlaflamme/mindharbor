@@ -29,7 +29,7 @@ export default function Journal() {
     setEstAujourdhui(dateAujourdhui === dateAffichee);
   }, [dateAffichee]);
 
-  async function soumettreFormulaire(e: React.FormEvent<HTMLFormElement>) {
+  async function soumettreFormulaire(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setMsgErreur("");
 
