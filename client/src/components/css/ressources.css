@@ -1,6 +1,6 @@
 .btnFavori {
   background-color: rgba(255, 255, 255, 0.2);
-  border: 2px solid var(--couleur-palette0);
+  border: 3px solid var(--couleur-palette0);
   color: var(--couleur-palette0);
   border-radius: 9999px;
   padding: 7px;
@@ -12,12 +12,12 @@
     border: solid 3px var(--couleur-palette1);
     border-width: 4px;
     padding: 6px;
-    max-height: 24rem;
+    min-height: 24rem;
     margin: 10px;
 }
 
 select, form {
-    width: 100%;
+    width: 80%;
     min-width: 200px;
     max-width: 480px;
     padding: 4px;
@@ -26,10 +26,14 @@ select, form {
 
 .badgeCategorie {
     background-color: var(--couleur-palette1);
+    border: solid var(--couleur-palette0) 3px;
+    font-weight: bold;
+    color: var(--couleur-palette3);
 }
 
 .badgeType {
     background-color: var(--couleur-palette2);
+    border: solid var(--couleur-palette1) 3px;
 }
 
 .badgeType, .badgeCategorie {

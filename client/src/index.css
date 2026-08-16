@@ -154,6 +154,7 @@ h2 {
   list-style: none;
   gap: 1.5rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .navbar-links button {
