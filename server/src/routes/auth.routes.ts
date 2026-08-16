@@ -107,9 +107,12 @@ router.get("/me", authentifier, async (req: Request, res: Response) => {
         id: true,
         courriel: true,
         pseudonyme: true,
+        nom: true,
         role: true,
         avatarUrl: true,
         bio: true,
+        visibilite: true,
+        niveauContact: true,
       },
     });
 

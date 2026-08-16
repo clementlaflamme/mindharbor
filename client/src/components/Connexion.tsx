@@ -30,7 +30,7 @@ export default function Connexion({
 
       seConnecter(data.token);
       rafraichirUtilisateur();
-      setPageActive("accueil");
+      setPageActive("journal");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Message renvoyé par le backend

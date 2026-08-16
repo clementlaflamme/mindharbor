@@ -14,7 +14,6 @@ import Inscription from "./components/Inscription";
 import Journal from "./components/Journal";
 import Messagerie from "./components/Messagerie";
 import Options from "./components/Options";
-import OptionsBio from "./components/OptionsBio";
 import Ressources from "./components/Ressources";
 
 
@@ -67,7 +66,6 @@ function App() {
         {pageActive === "journal" && <Journal/>}
         {pageActive === "messagerie" && <Messagerie/>}
         {pageActive === "options" && <Options/>}
-        {pageActive === "optionsBio" && <OptionsBio/>}
       </main>
 
       <Footer />
