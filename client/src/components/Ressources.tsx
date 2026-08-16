@@ -30,6 +30,11 @@ interface ReponseSuggestions {
   message?: string;
 }
 
+function capitaliser(valeur: string): string {
+  if (!valeur) return valeur;
+  return valeur.charAt(0).toUpperCase() + valeur.slice(1).toLowerCase();
+}
+
 export default function Ressources() {
 
   const {estConnecte} = useAuth(); // necessaire pour afficher la suggestion contextuelle
@@ -269,14 +274,14 @@ export default function Ressources() {
                     const estFavori = favoris.has(ressSuggeree.id);
                     return (
                       <div key={ressSuggeree.id} onClick={() => window.open(ressSuggeree.url, "_blank")} className="card b-rad25" style={{display: "flex", flexDirection: "column"}}>
-                        <h3 style={{textAlign: "left"}}>{ressSuggeree.titre}</h3>
-                        <h5 style={{textAlign: "left"}}>Niveau <span className="duree">{ressSuggeree.niveau}</span></h5>
-                        <p style={{textAlign: "left"}}>{ressSuggeree.contenu}</p>
-                        <h4 style={{textAlign: "left"}}>Durée: <span className="duree">{ressSuggeree.duree} minutes</span></h4>
-                        <div className="card-fav-split" style={{display: "flex"}}>
+                        <h3 style={{textAlign: "left", minHeight: "3.5rem", alignItems:"flex-start"}}>{ressSuggeree.titre}</h3>
+                        <h5 style={{textAlign: "left", minHeight: "1.5rem", margin: "8px 0"}}>Niveau <span className="duree">{ressSuggeree.niveau}</span></h5>
+                        <p style={{textAlign: "left", minHeight: "3rem", flexGrow: 1}}>{ressSuggeree.contenu}</p>
+                        <h4 style={{textAlign: "left", minHeight: "1.5rem", margin: "8px 0"}}>Durée: <span className="duree">{ressSuggeree.duree} minutes</span></h4>
+                        <div className="card-fav-split" style={{display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1}}>
                           <div className="card-fav-split-left" style={{display: "flex", flexDirection: "column", flexGrow: 1, padding: "12px, 0px"}}>
                             <div className="badgeCategorie">{ressSuggeree.categorie}</div>
-                            <div className="badgeType">{ressSuggeree.type}</div>
+                            <div className="badgeType">{capitaliser(ressSuggeree.type)}</div>
                           </div>
                         <div className="card-fav-split-right" style={{display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1}}>
                           <button className="btnFavori"
@@ -316,14 +321,14 @@ export default function Ressources() {
                 const estFavori = favoris.has(r.id);
                 return (
                 <div key={r.id} className="card b-rad25" onClick={() => window.open(r.url, "_blank")} style={{display: "flex", flexDirection: "column"}}>
-                  <h3 style={{textAlign: "left"}}>{r.titre}</h3>
-                  <h5 style={{textAlign: "left"}}>Niveau <span className="duree">{r.niveau}</span></h5>
-                  <p style={{textAlign: "left"}}>{r.contenu}</p>
-                  <h4 style={{textAlign: "left"}}>Durée: <span className="duree">{r.duree} minutes</span></h4>
-                  <div className="card-fav-split" style={{display: "flex"}}>
+                  <h3 style={{textAlign: "left", minHeight: "3.5rem", alignItems:"flex-start"}}>{r.titre}</h3>
+                  <h5 style={{textAlign: "left", minHeight: "1.5rem", margin: "8px 0"}}>Niveau <span className="duree">{r.niveau}</span></h5>
+                  <p style={{textAlign: "left", minHeight: "3rem", flexGrow: 1}}>{r.contenu}</p>
+                  <h4 style={{textAlign: "left", minHeight: "1.5rem", margin: "8px 0"}}>Durée: <span className="duree">{r.duree} minutes</span></h4>
+                  <div className="card-fav-split" style={{display: "flex", marginTop: "auto"}}>
                     <div className="card-fav-split-left" style={{display: "flex", flexDirection: "column", flexGrow: 1, padding: "12px, 0px"}}>
                       <div className="badgeCategorie">{r.categorie}</div>
-                      <div className="badgeType">{r.type}</div>
+                      <div className="badgeType">{capitaliser(r.type)}</div>
                     </div>
                     <div className="card-fav-split-right" style={{display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1}}>
                       <button className="btnFavori"
