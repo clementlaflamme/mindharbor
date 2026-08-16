@@ -23,7 +23,7 @@ routerMe.patch("/", authentifier, async (req: Request, res: Response) => {
       data: {
         ...(nom && { nom }),
         ...(avatarUrl && { avatarUrl }),
-        ...(bio && { bio }),
+        ...(bio && { bio }), 
       },
       select: {
         nom: true,
