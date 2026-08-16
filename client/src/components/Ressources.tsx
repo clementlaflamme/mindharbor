@@ -4,9 +4,6 @@ import { api } from "../api/api";
 import "./css/ressources.css";
 import { useAuth } from "../api/context/AuthContext";
 
-interface Props {
-  setPageActive: (page: string) => void;
-}
 
 interface Ressource {
     id: string;
@@ -17,13 +14,15 @@ interface Ressource {
     niveau: number;
 }
 
-function groupeDuree(duree: number): string {
-  if (duree < 5) return "court";
-  if (duree < 10) return "moyen";
-  return "long";
+interface Favori {
+    id: string;
+    utilisateurId: string;
+    ressourceId: string;
+    ressource: Ressource;
+
 }
 
-export default function Ressources({setPageActive}: Props) {
+export default function Ressources() {
 
   const {estConnecte} = useAuth(); // necessaire pour afficher la suggestion contextuelle
   const [recherche, setRecherche] = useState("");
@@ -33,6 +32,8 @@ export default function Ressources({setPageActive}: Props) {
   const [niveau, setNiveau] = useState("");
   const [ressSuggeree, setRessSuggeree] = useState("");
   const [listeRessources, setListeRessources] = useState<Ressource[]>([]);
+  const [filtreFavoris, setFiltreFavoris] = useState<boolean>(false);
+  const [favoris, setFavoris] = useState<Set<string>>(new Set());
   const [chargement, setChargement] = useState<boolean>(true);
   const [erreur, setErreur] = useState("");
 
@@ -52,9 +53,54 @@ export default function Ressources({setPageActive}: Props) {
     }
   };
 
+  const recupererFavoris = async () => {
+    if (!estConnecte) {
+      setFavoris(new Set());
+      return
+    }
+    try {
+      const reponse = await api.get<Favori[]>("/api/v1/me/fav");
+      const ids = new Set(reponse.data.map((f) => f.ressourceId));
+      setFavoris(ids);
+    } catch (err: any) {
+      console.error("Erreur de récupération des favoris", err);
+    }
+  }
+
   useEffect(() => {
     recupererListeRessources();
   }, []);
+
+  useEffect(() => {
+    recupererFavoris();
+  }, [estConnecte]);
+
+  const toggleFavori = async (ressourceId: string) => {
+    if (!estConnecte) return;
+    const estDejaFavori = favoris.has(ressourceId);
+
+    setFavoris((prev) => {
+      const copie = new Set(prev);
+      estDejaFavori ? copie.delete(ressourceId) : copie.add(ressourceId);
+      return copie;
+  });
+
+  try {
+    if (estDejaFavori) {
+      await api.delete(`/api/v1/resources/${ressourceId}/favorite`);
+    } else {
+      await api.post(`/api/v1/resources/${ressourceId}/favorite`)
+    }
+  } catch (err: any) {
+    console.error("Erreur lors du changement d'état du favoris.", err);
+
+    setFavoris((prev) => {
+      const copie = new Set(prev);
+      estDejaFavori ? copie.add(ressourceId) : copie.delete(ressourceId);
+      return copie;
+    });
+  }
+  };
 
   // Gestion de la soumission du formulaire
   const soumettreRecherche = (e: React.FormEvent) => {
@@ -69,7 +115,6 @@ export default function Ressources({setPageActive}: Props) {
     const correspondRecherche = !terme || r.titre.toLowerCase().includes(terme) || r.contenu.toLowerCase().includes(terme);
     const correspondCategorie = !categorie || r.categorie === categorie;
     const correspondNiveau = !niveau || r.niveau === Number(niveau);
-    // const correspondDuree = !duree || groupeDuree(r.duree) === duree;
     let correspondDuree = true;
     if (duree === "court") {
       correspondDuree = r.duree <= 2;
@@ -79,7 +124,9 @@ export default function Ressources({setPageActive}: Props) {
       correspondDuree = r.duree > 9;
     }
 
-    return correspondRecherche && correspondCategorie && correspondNiveau && correspondDuree;
+    const correspondFavori = !filtreFavoris || favoris.has(r.id);
+
+    return correspondRecherche && correspondCategorie && correspondNiveau && correspondDuree && correspondFavori;
   });
 
   const categoriesDisponibles = [...new Set(listeRessources.map((r) => r.categorie))];
@@ -108,9 +155,9 @@ export default function Ressources({setPageActive}: Props) {
 
                 <select name="dropDuree " id="dropDuree" value={duree} onChange={(e) => setDuree(e.target.value)}>
                     <option value="">Toutes les durées</option>
-                    <option value="court">Court (moins de 5 mins)</option>
-                    <option value="moyen">Moyen (moins de 10 mins)</option>
-                    <option value="long">Long (10 mins et plus)</option>
+                    <option value="court">Court (max 2 mins)</option>
+                    <option value="moyen">Moyen (max 8 mins)</option>
+                    <option value="long">Long (plus de 8 mins)</option>
                 </select>
 
                 <select name="dropNiveau" id="dropNiveau" value={niveau} onChange={(e) => setNiveau(e.target.value)}>
@@ -120,7 +167,21 @@ export default function Ressources({setPageActive}: Props) {
                   ))}
                 </select>
 
-                <button className="btnAfficherFavoris">Afficher les favoris <i className="fa-solid fa-heart"></i></button>
+                {estConnecte && (
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={filtreFavoris}
+                      onChange={(e) => setFiltreFavoris(e.target.checked)}
+                    />
+                    Voir seulement mes favoris <i className="fa-solid fa-heart"></i>
+                  </label>
+                )}
+
+                {!estConnecte && (
+                  <p>Connectez-vous pour ajouter des favoris! <i className="fa-solid fa-heart"></i></p>
+                )}
+
             </div>
             <div className="ress-top-right b-rad25" style={{flexGrow: 1, backgroundColor: "blue"}}>
 
@@ -151,7 +212,9 @@ export default function Ressources({setPageActive}: Props) {
           {!chargement && ressourcesFiltrees.length === 0 && (
             <p>Aucune ressource ne correspond à votre recherche.</p>
             )}
-              {ressourcesFiltrees.map((r: any) => (
+              {ressourcesFiltrees.map((r: any) => {
+                const estFavori = favoris.has(r.id);
+                return (
                 <div key={r.id} className="card b-rad25" style={{display: "flex", flexDirection: "column"}}>
                   <h3 style={{textAlign: "left"}}>{r.titre}</h3>
                   <h5 style={{textAlign: "left"}}>Niveau <span className="duree">{r.niveau}</span></h5>
@@ -163,12 +226,18 @@ export default function Ressources({setPageActive}: Props) {
                       <div className="badgeType">{r.type}</div>
                     </div>
                     <div className="card-fav-split-right" style={{display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1}}>
-                      <button className="btnFavori"><i className="fa-solid fa-heart fa-3x"></i></button>
+                      <button className="btnFavori" onClick={() => toggleFavori(r.id)} disabled={!estConnecte} title={estConnecte ? "" : "Connectez-vous pour ajouter au favoris."}>
+                        {estFavori ? (
+                          <i className="fa-solid fa-heart fa-3x"></i>
+                        ) : (
+                          <i className="fa-regular fa-heart fa-3x"></i>
+                        )}
+                      </button>
                     </div>
                   </div>
-
                 </div>
-              ))}
+              );
+            })}
         </div>
 
 
