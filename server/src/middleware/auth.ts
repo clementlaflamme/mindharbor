@@ -16,7 +16,7 @@ export async function authentifier(
   if (!header?.startsWith("Bearer ")) {
     return res
       .status(401)
-      .json({ code: "TOKEN_INVALIDE", message: "Session expirée ou token manquant" });
+      .json({ code: "TOKEN_INVALIDE", message: "Erreur: token manquant" });
   }
 
   const token = header.split(" ")[1];
@@ -51,9 +51,9 @@ export async function authentifier(
     (req as any).utilisateur = payload;
     next();
   } catch {
-    res
+    return res
       .status(401)
-      .json({ erreur: "Accès refusé. Votre token est invalide ou expiré." });
+      .json({ code: "TOKEN_INVALIDE", message: "Session expirée ou token manquant" });
   }
 }
 
