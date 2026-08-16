@@ -56,7 +56,7 @@ function App() {
           {utilisateur ? `Bienvenue, ${utilisateur.pseudonyme}` : "Exam mi-session service web"}
         </h2>
         {pageActive === "analyses" && <Analyses/>}
-        {pageActive === "ressources" && <Ressources setPageActive={setPageActive}/>}
+        {pageActive === "ressources" && <Ressources/>}
         {pageActive === "accueil" && <Accueil/>}
         {pageActive === "admin" && <Admin/>}
         {pageActive === "connexion" && <Connexion setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>}
