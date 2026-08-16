@@ -4,6 +4,7 @@ ul {
   margin: 0;
 }
 
+/* PAGE */
 .messagerie-page {
   width: 100%;
   flex: 1;
@@ -12,48 +13,148 @@ ul {
   box-sizing: border-box;
   min-height: 0;
   overflow: hidden;
+  padding: 1rem;
 }
 
+/* LAYOUT */
 .messagerie-layout {
   display: flex;
   flex: 1;
-  min-height: 0; 
+  min-height: 0;
   width: 100%;
+  gap: 1rem;
 }
 
+/* SIDEBAR */
 .messagerie-sidebar {
-  flex: 0 0 20%; 
+  flex: 0 0 20%;
   border-right: 1px solid #ccc;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   min-height: 0;
-  /* overflow: hidden; */
+  border-radius: 10px;
+  gap: 1rem;
 }
 
+/* BOUTON NOUVEAU MESSAGE */
+.new-message-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #6482AD;
+  color: white;
+  border: none;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.new-message-btn:hover {
+  background: #1b2330;
+  transform: translateY(-1px);
+}
+
+/* LISTE DES CONVERSATIONS */
 .conversations-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   min-height: 0;
-  border: 1px solid white;
+  border: 1px solid #eee;
   margin-bottom: 1rem;
   overflow-y: auto;
-  
+  border-radius: 10px;
+  padding: 0.3rem;
 }
 
+/* ITEM CONVERSATION */
+.contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.6rem;
+  margin: 4px;
+  border-radius: 10px;
+  transition: background-color 0.15s ease;
+}
+
+.contact:hover {
+  background-color: #7FA1C3;
+  cursor: pointer;
+}
+
+/* AVATAR */
+.avatar {
+  max-width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* ZONE DE CONVERSATION */
 .messagerie-conversation {
-  flex: 1;       
+  flex: 1;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  min-height: 0; 
-  
+  min-height: 0;
+  border-radius: 10px;
+  border: 1px solid #eee;
 }
 
+/* ENTÊTE INTERLOCUTEUR */
+.infos-container {
+  display: flex;
+  width: 100%;
+  height: 90px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.interlocuteur-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.interlocuteur-container h3 {
+  margin: 0;
+  padding: 0;
+}
+
+/* INPUT DESTINATAIRE */
+.interlocuteur-input {
+  flex: 1;
+  padding: 0.5rem;
+  width: 100%;
+  margin-left: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+/* BOUTON BLOQUER */
+.bloquer-btn {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.15s ease;
+}
+
+.bloquer-btn:hover {
+  background: #c0392b;
+}
+
+/* MESSAGES */
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -61,65 +162,47 @@ ul {
   border: 1px solid #eee;
   padding: 0.5rem;
   text-align: left;
+  border-radius: 10px;
 }
 
+.message {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #E2DAD6;
+  border-radius: 10px;
+}
+
+/* INPUT MESSAGE */
 .message-input-container {
   display: flex;
   gap: 0.5rem;
   width: 100%;
   max-width: 100%;
+  border-radius: 10px;
 }
 
 .message-input {
   flex: 1;
   padding: 0.5rem;
   min-width: 0;
-  
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 
-.interlocuteur-input {
-  flex: 1;
-  padding: 0.5rem;
-  width: 100%;
-  margin-left: 15px;
+/* BOUTON ENVOYER */
+.message-send-btn {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  background: #6482AD;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.15s ease;
 }
 
-.new-message-btn {
-    padding: 0.5rem 0;
-    
-}
-
-.bloquer-btn{
-  padding: 0.75rem;
-}
-
-.infos-container {
-  display: flex;
-  width: 100%;
-  align-items: center; 
-  justify-content: space-between;
-}
-
-.interlocuteur-container {
-  display: flex;
-  align-items: center; 
-}
-
-.interlocuteur-container h3 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-
-.avatar {
-  max-width: 60px;
-  margin-right: 15px;
-}
-
-.contact {
-  display: flex;
-  margin: 5px;
+.message-send-btn:hover:not(:disabled) {
+  background: #1b2330;
 }
 
 button:disabled {
@@ -128,14 +211,25 @@ button:disabled {
   pointer-events: none;
 }
 
-.messagerie-page form {
-    padding: 0;
-    margin: 0;
-    max-width: none;
-    min-width: 0;
-    width: 100%;
-}
-
+/* TEXTE STATUT */
 .statut-recherche {
   margin-left: 10px;
 }
+
+@media (max-width: 768px) {
+  .messagerie-layout {
+    flex-direction: column;
+  }
+
+  /* La sidebar doit devenir flexible */
+  .messagerie-sidebar {
+    flex: unset;
+    width: 100%;
+  }
+
+  /* Les conversations montent au-dessus */
+  .conversations-container {
+    order: -1;
+  }
+}
+
