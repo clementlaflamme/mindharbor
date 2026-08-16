@@ -38,7 +38,7 @@ export default function Navbar({
         }}
       >
         <img
-          onClick={() => setPageActive("accueil")}
+          onClick={() => setPageActive("ressources")}
           style={{ maxWidth: "100px", height: "auto" }}
           src="../../ressources/images/MindHarborLogo.png"
           alt="Logo"
