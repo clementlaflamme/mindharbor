@@ -97,15 +97,6 @@ export default function Messagerie() {
 
 
 
-
-
-
-
-
-
-
-
-
   return (
         
     <div className="messagerie-page">
@@ -135,7 +126,12 @@ export default function Messagerie() {
             <div className="infos-container">
               <div className="interlocuteur-container">
                 {interlocuteur? (
-                  <><h3><img src={resolveAvatarUrl(interlocuteur.avatarUrl)} className="avatar"/>{interlocuteur.pseudonyme}</h3></>) :
+                  <>
+                    <div className="interlocuteur-container">
+                      <img src={resolveAvatarUrl(interlocuteur.avatarUrl)} className="avatar" />
+                      <h3>{interlocuteur.pseudonyme}</h3>
+                    </div>
+                  </>) :
 
                   <><h3>Destinataire: </h3>
                   <input
