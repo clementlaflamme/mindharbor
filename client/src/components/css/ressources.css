@@ -9,7 +9,7 @@
 
 .card {
     max-width: 30rem;
-    border: solid 3px var(--couleur-palette3);
+    border: solid 3px var(--couleur-palette1);
     border-width: 4px;
     padding: 6px;
     max-height: 24rem;
@@ -24,3 +24,38 @@ select, form {
     margin: 8px;
 }
 
+.badgeCategorie {
+    background-color: var(--couleur-palette1);
+}
+
+.badgeType {
+    background-color: var(--couleur-palette2);
+}
+
+.badgeType, .badgeCategorie {
+    border-radius: 15px;
+    max-width: 120px;
+    min-width: 100px;
+    width: 100%;
+    padding: 4px;
+    margin: 6px;
+}
+
+.btnAfficherFavoris {
+    width: 100%;
+    min-width: 200px;
+    max-width: 480px;
+    padding: 4px;
+    margin: 8px;
+    transition: transform 0.2s ease;
+}
+
+.btnAfficherFavoris:hover {
+    transform: scale(1.02);
+}
+
+.ress-top-left, .ress-top-right {
+    border: solid 3px var(--couleur-palette1);
+    border-width: 4px;
+    margin: 10px;
+}
