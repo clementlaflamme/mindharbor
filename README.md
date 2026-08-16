@@ -40,7 +40,7 @@ cp .env.example .env
 Variables à remplir :
 - DATABASE_URL = lien Neon PostgreSQL
 - JWT_SECRET
-- JWT_REFRESH_SECRET
+- CODE_AMIN (voir .env.example pour le code valide pour les tests de test.rest)
 
 ## 4. Initialiser Prisma (génération + migrations)
 npx prisma generate
