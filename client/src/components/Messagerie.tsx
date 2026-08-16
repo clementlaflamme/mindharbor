@@ -109,7 +109,7 @@ export default function Messagerie() {
   return (
         
     <div className="messagerie-page">
-      <h2 className="titre">Messagerie</h2>
+      <h2 className="titre">Votre messagerie:</h2>
       
         <div className="messagerie-layout">
 

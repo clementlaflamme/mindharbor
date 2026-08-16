@@ -115,7 +115,7 @@ export default function Ressources() {
           setMessageSuggestion("");
         } else {
           setRessSuggeree(null);
-          setMessageSuggestion("Vous êtes sur la bonne voie!")
+          setMessageSuggestion("Vous êtes sur la bonne voie! Remplissez votre journal quotidiennement pour avoir des suggestions si ça va moins bien.")
         }
       } catch (err: any) {
         if (err.response?.status === 404) {

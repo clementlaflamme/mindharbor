@@ -94,8 +94,11 @@ function fermerPopupEtRediriger() {
       ex: <Journal/> pour l'écran Journal qui vient de Journal.tsx */}
       <main style={{flexGrow: 1}}>
         <h2>
-          {utilisateur ? `Bienvenue, ${utilisateur.pseudonyme}` : "Exam mi-session service web"}
+          {utilisateur ? `Bienvenue sur MindHarbor, ${utilisateur.pseudonyme}` : "Bienvenue sur MindHarbor"}
         </h2>
+        <p>
+          {utilisateur ? "" : "MindHarbor offre une collection d'outils pour le bien-être, inscrivez-vous et découvrez les gratuitement!"}
+        </p>
         {pageActive === "ressources" && <Ressources/>}
         {pageActive === "analyses" && <Analyses/>}
         {pageActive === "accueil" && <Accueil/>}

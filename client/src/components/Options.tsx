@@ -81,7 +81,7 @@ export default function Options() {
 
   return (
     <>
-      <h2>Écran Options (Profil)</h2>
+      <h2>Vos options de profil:</h2>
       <div className="container-options">
         <form
           className="formulaire-options"
