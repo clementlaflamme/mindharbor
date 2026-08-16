@@ -16,16 +16,19 @@ export async function authentifier(
   if (!header?.startsWith("Bearer ")) {
     return res
       .status(401)
-      .json({ erreur: "Accès refusé. Votre token est manquant." });
+      .json({ code: "TOKEN_INVALIDE", message: "Session expirée ou token manquant" });
   }
 
   const token = header.split(" ")[1];
 
   try {
-    const payload = jwt.verify(token!, process.env.JWT_SECRET!) as unknown as JwtPayload;
+    const payload = jwt.verify(
+      token!,
+      process.env.JWT_SECRET!,
+    ) as unknown as JwtPayload;
 
     const utilisateur = await prisma.utilisateur.findUnique({
-      where: { id: (payload.sub as unknown as string) },
+      where: { id: payload.sub as unknown as string },
       select: {
         id: true,
         role: true,
