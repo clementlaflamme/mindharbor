@@ -46,11 +46,11 @@ Variables à remplir :
 npx prisma generate
 npx prisma migrate dev --name init
 
-## 5. Exécuter le seed (si nécessaire)
+## 5. Exécuter le seed
 Le seed crée :
-- 1 admin
-- 1 modérateur
-- 30 ressources
+- 1 admin [admin@example.com | Password123!]
+- 1 modérateur [marc@example.com | Password123!]
+- 30 entrées dans le journal [alice@example.com | Password123!]
 - groupes publics et privés
 
 Dans le dossier /server
@@ -72,10 +72,7 @@ cd mindharbor/client
 ## 2. Installer les dépendances
 npm install
 
-## 3. Configurer l’URL de l’API dans .env
-VITE_API_URL=http://localhost:3000/api/v1
-
-## 4. Lancer l’application React
+## 3. Lancer l’application React
 npm run dev
 
 Interface disponible sur :
@@ -107,13 +104,15 @@ Le schéma Prisma inclut :
 ## ✔️ Analyse & tendances
 - Statistiques 7 / 30 / 90 jours
 - Graphiques via recharts
-- Calcul côté serveur
+- Moyennes des métriques
+- Observations sur les données 
 
 ## ✔️ Ressources & favoris
-- Recherche + filtres
-- 30 ressources seedées
-- Favoris N-N
-- Suggestion contextuelle (anxiété >= 4)
+- Recherche
+- Filtrage par durée, catégorie et niveau
+- Gestion des favoris
+- Suggestion contextuelle pour les utilisateurs avec un journal
+- Ressource récente pour les utilisateurs non connectés
 
 ## ✔️ Groupes de soutien
 - Groupes publics et privés
@@ -127,55 +126,40 @@ Le schéma Prisma inclut :
 - Blocage utilisateur
 - Messages non lus
 
-## ✔️ Tableau de bord
-- Page /dashboard
-- Statistiques partielles
-- Suggestion du jour
-- État du journal
-
-## ✔️ Administration
-- Suspension de compte
-- Traitement des signalements
-- Ressources officielles
-
 ---
 
-# 🌐 Pages React livrées
+# 🌐 Pages livrées
 
-- /login
-- /register
-- /journal
-- /journal/:date
-- /journal/stats
-- /resources
-- /resources/:id
-- /groups
-- /groups/:id
-- /messages
-- /messages/:userId
-- /dashboard (incomplet)
-- /me (non livré)
+- connexion
+- inscription
+- journal
+- ressources
+- groupes
+- amin
+- messagerie
+- analyses
+- options (profil)
 
 ---
 
 # 🔐 Comptes de démonstration (à remplir)
 
 ## Admin
-Email :
-Mot de passe :
+Email : admin@example.com
+Mot de passe : Password123!
 
 ## Modérateur
-Email :
-Mot de passe :
-Groupe modéré :
+Email : marc@example.com
+Mot de passe : Password123!
+Groupe modéré : Cercle du Sommeil (id: g2)
 
 ## Utilisateur régulier (30 jours de journal)
-Email :
-Mot de passe :
+Email : alice@example.com
+Mot de passe : Password123!
 
 ## Utilisateur profil privé
-Email :
-Mot de passe :
+Email : luc@example.com
+Mot de passe : Password123!
 
 ---
 
@@ -195,7 +179,8 @@ Mot de passe :
 ## Mathieu Gosselin
 - Ressources & favoris
 - Sécurité & JWT, Authentification
-- NavBar, footer, app principale
+- NavBar, Footer, App.tsx
+- Wireframes
 
 ## Pascale Mercier
 - Groupes de soutien
