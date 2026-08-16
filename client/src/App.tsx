@@ -17,14 +17,12 @@ import Options from "./components/Options";
 import Ressources from "./components/Ressources";
 
 
-// const API = "http://localhost:3000"
-
 function App() {
   interface Utilisateur {
   pseudonyme: string;
 }
 
-  const [pageActive, setPageActive] = useState("analyses");
+  const [pageActive, setPageActive] = useState("ressources");
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
 
   function rafraichirUtilisateur() {
@@ -55,8 +53,8 @@ function App() {
         <h2>
           {utilisateur ? `Bienvenue, ${utilisateur.pseudonyme}` : "Exam mi-session service web"}
         </h2>
-        {pageActive === "analyses" && <Analyses/>}
         {pageActive === "ressources" && <Ressources/>}
+        {pageActive === "analyses" && <Analyses/>}
         {pageActive === "accueil" && <Accueil/>}
         {pageActive === "admin" && <Admin/>}
         {pageActive === "connexion" && <Connexion setPageActive={setPageActive} rafraichirUtilisateur={rafraichirUtilisateur}/>}
