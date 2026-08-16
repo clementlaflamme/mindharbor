@@ -312,7 +312,7 @@ Authorization: Bearer {{adminToken}}
 
 ###
 
-SECTION D : Groupe de soutien
+# SECTION D : Groupe de soutien
 
 ### 1. Création du groupe privé par le modérateur
 @name creationGroupe
