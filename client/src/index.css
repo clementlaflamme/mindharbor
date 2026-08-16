@@ -154,6 +154,7 @@ h2 {
   list-style: none;
   gap: 1.5rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .navbar-links button {
@@ -192,4 +193,27 @@ button:hover {
 
 .b-rad25 {
   border-radius: 25px;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-contenu {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.popup-contenu button {
+  min-width: 120px;
 }

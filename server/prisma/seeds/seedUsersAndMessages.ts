@@ -1,6 +1,6 @@
 import prisma from "../../src/utils/prisma.js";
 import bcrypt from "bcryptjs";
-import { VisibiliteProfil } from "../../generated/prisma/enums.js";
+import { VisibiliteProfil, Role } from "../../generated/prisma/enums.js";
 
 export async function seedUsersMessages() {
   console.log("🌱 Nettoyage des tables Utilisateur et Message...");
@@ -18,6 +18,7 @@ export async function seedUsersMessages() {
       nom: "Alice Tremblay",
       bio: "Passionnée de bien-être et de méditation.",
       visibilite: VisibiliteProfil.PUBLIC,
+      role: Role.UTILISATEUR,
     },
     {
       id: "u2",
@@ -27,6 +28,7 @@ export async function seedUsersMessages() {
       nom: "Marc Gagnon",
       bio: "Développeur full-stack amateur de café.",
       visibilite: VisibiliteProfil.GROUPES_SEULEMENT,
+      role: Role.UTILISATEUR,
     },
     {
       id: "u3",
@@ -36,6 +38,7 @@ export async function seedUsersMessages() {
       nom: "Sara Lavoie",
       bio: "Étudiante en psychologie.",
       visibilite: VisibiliteProfil.PUBLIC,
+      role: Role.UTILISATEUR,
     },
     {
       id: "u4",
@@ -45,6 +48,7 @@ export async function seedUsersMessages() {
       nom: "Luc Desrosiers",
       bio: "Coach sportif et amateur de plein air.",
       visibilite: VisibiliteProfil.PRIVE,
+      role: Role.UTILISATEUR,
     },
     {
       id: "u5",
@@ -54,6 +58,7 @@ export async function seedUsersMessages() {
       nom: "Emma Boucher",
       bio: "J’adore les exercices de respiration.",
       visibilite: VisibiliteProfil.PUBLIC,
+      role: Role.UTILISATEUR,
     },
     {
       id: "u6",
@@ -63,6 +68,17 @@ export async function seedUsersMessages() {
       nom: "Tom Leblanc",
       bio: "Toujours à la recherche de nouvelles techniques de concentration.",
       visibilite: VisibiliteProfil.GROUPES_SEULEMENT,
+      role: Role.UTILISATEUR,
+    },
+    {
+      id: "u7",
+      courriel: "admin@example.com",
+      motDePasse: await bcrypt.hash("Password123!", 10),
+      pseudonyme: "AdminPowers",
+      nom: "Yvon Bienallé",
+      bio: "Je travail pour votre bien!",
+      visibilite: VisibiliteProfil.PUBLIC,
+      role: Role.ADMIN,
     },
   ];
 
