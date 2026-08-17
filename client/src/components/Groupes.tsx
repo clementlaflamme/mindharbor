@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { groupsService } from '../api/groups';
 import { Admin } from './Admin';
+import "./css/groupes.css"
 
 export type VisibiliteGroupe = 'PUBLIC' | 'PRIVE';
 export type StatutAdhesion = 'EN_ATTENTE' | 'ACCEPTEE' | 'REFUSEE';
