@@ -26,6 +26,7 @@ function App() {
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [sessionExpiree, setSessionExpiree] = useState(false);
   const {seDeconnecter} = useAuth();
+  const [nonLus, setNonLus] = useState(0)
 
   function rafraichirUtilisateur() {
     const token = localStorage.getItem("token");
@@ -40,6 +41,18 @@ function App() {
       .catch(() => setUtilisateur(null));
   }
 
+
+  function rafraichirNonLus() {
+  api.get("/api/v1/messages")
+    .then(res => {
+      const conversations: { nonLus: number }[] = res.data.conversations || [];
+      const total = conversations.reduce((acc: number, c: { nonLus: number }) => acc + c.nonLus, 0);
+      setNonLus(total);
+    })
+    .catch(() => {});
+}
+
+
   useEffect(() => {
     rafraichirUtilisateur();
      setOnTokenExpire(() => {
@@ -51,9 +64,21 @@ function App() {
 
   useEffect(() => {
   if (pageActive !== "connexion" && pageActive !== "inscription" && pageActive !== "ressources") {
+    rafraichirNonLus()
     rafraichirUtilisateur();
   }
 }, [pageActive]);
+
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    rafraichirNonLus();
+  }, 5000);
+
+  return () => clearInterval(interval);
+}, []);
+
+
 
 function fermerPopupEtRediriger() {
     setSessionExpiree(false);
@@ -88,6 +113,7 @@ function fermerPopupEtRediriger() {
         <Navbar
           setPageActive={setPageActive}
           rafraichirUtilisateur={rafraichirUtilisateur}
+          nonLus={nonLus}
         />
 
         {/* Pour changer d'écran, on devra changer la balise accueil par une autre selon la page désirée

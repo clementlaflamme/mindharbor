@@ -9,16 +9,14 @@ export default function Analyses() {
   const [moyennes, setMoyennes] = useState<Moyennes | null>(null);
   const [jours, setJours] = useState(0);
   const [metrics, setMetrics] = useState<string[]>([]);
+  const [indMax, setIndMax] = useState("")
+  const [indMin, setIndMin] = useState("")
     interface Stats{
     moyennes: Moyennes,
     evolution: Evolution[],
     dateDebut: string
   }
 
-  interface DateScore{
-  date: string,
-  score: number | null;
-}
 interface Moyennes{
   _avg:{
     humeur: number | null,
@@ -69,6 +67,29 @@ const couleursCharte: Record<string, string> = {
   anxiete: "black"
 };
 
+useEffect(() => {
+  if (!moyennes) return;
+
+  const moy = moyennes._avg
+
+  const entrees = Object.entries(moy).filter(([_, v]) => v !== null) as [string, number][];
+  
+
+  if (entrees.length === 0) {
+    setIndMax("");
+    setIndMin("");
+    return;
+  }
+
+  const max = entrees.reduce((a, b) => b[1] > a[1] ? b : a);
+  const min = entrees.reduce((a, b) => b[1] < a[1] ? b : a);
+
+  setIndMax(max[0]); 
+  setIndMin(min[0]); 
+}, [metrics, moyennes]);
+
+
+
 
 useEffect(() => {
   if (!stats) return;
@@ -90,7 +111,7 @@ useEffect(() => {
 
     
     <div className="container-analyses">
-        <h2>Analyses</h2>
+        <h2>Analyse de vos données:</h2>
 
         <div className="interface-graphique">
 
@@ -148,8 +169,8 @@ useEffect(() => {
               <button onClick={()=> {nombreJours(30)}}>30j.</button>
               <button onClick={()=> {nombreJours(90)}}>90j.</button>
             </div>
-
             <div className="graphique">
+              <h4>{jours} jours</h4>
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart
                   data={evolution}
@@ -175,6 +196,46 @@ useEffect(() => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
+
+            <div className="container-stats">
+              <h2>Moyenne sur {jours} jours</h2>
+              <div className="container-moyennes">
+                  
+                  <div className="Statistique">
+                    <span className="nom-stat">Humeur:</span>
+                    <span className="valeur-stat-humeur">{moyennes?._avg.humeur?.toFixed(2)}</span>
+                  </div>
+
+                  <div className="Statistique">
+                    <span className="nom-stat">Energie:</span>
+                    <span className="valeur-stat-energie">{moyennes?._avg.energie?.toFixed(2)}</span>
+                  </div>
+
+                  <div className="Statistique">
+                    <span className="nom-stat">Sommeil:</span>
+                    <span className="valeur-stat-sommeil">{moyennes?._avg.sommeil?.toFixed(2)}</span>
+                  </div>
+
+                  <div className="Statistique">
+                    <span className="nom-stat">Anxiete:</span>
+                    <span className="valeur-stat-anxiete">{moyennes?._avg.anxiete?.toFixed(2)}</span>
+                  </div>
+              </div>
+
+              <div className="container-obervations">
+                  <h3>Observations</h3>
+                  <div className="Statistique">
+                    <span className="nom-stat">Votre meilleur indicateur: </span>
+                    <span style={{ color: couleursCharte[indMax] }} className="valeur-stat-anxiete">{indMax || "-"}</span>
+                  </div>
+
+                  <div className="Statistique">
+                    <span className="nom-stat">Votre pire indicateur: </span>
+                    <span style={{ color: couleursCharte[indMin] }} className="valeur-stat-anxiete">{indMin || "-"}</span>
+                  </div>
+              </div>
+            </div>
+
 
 
           </div>  
