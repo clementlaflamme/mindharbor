@@ -1,10 +1,12 @@
 @base = http://localhost:3000
+
 ### 1. Register user sans infos facultatives
-@name registerReq
+# @name registerReq
 POST {{base}}/api/v1/auth/register
 Content-Type: application/json
 
 {"courriel": "bobby@gmail.com", "pseudonyme": "Tristesse38", "motDePasse": "bobby123"}
+
 ###
 @utilisateurId = {{registerReq.response.body.id}}
 
@@ -14,13 +16,14 @@ Content-Type: application/json
 
 {"courriel": "jean@gmail.com", "pseudonyme": "Jean_ai_plein_mon_cass", "motDePasse": "jean123", "nom": "Jean Souffre", "avatarUrl": "https://www.pinclipart.com/picdir/middle/529-5291405_peace-sign-clipart-avatar-peace-symbol-transparent-background.png", "bio": "Juste un dude tanné. Je veux des vacaaaaances...!"}
 
-### Créer un compte admin
+### 3. Créer un compte admin
 POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 {"courriel": "admin@gmail.com", "pseudonyme": "admin01", "motDePasse": "admin123", "nom": "Claude Cobra", "avatarUrl": "https://i.pinimg.com/originals/d4/92/a0/d492a0a000b65aa5bce960e1fd782b1d.png", "bio": "Hard at work pour le mieux-être de tous! La vie est belle on lâche pas!", "codeAdmin": "admin123"}
-### Login en tant qu'admin et récupérer le token
-@name loginAdmin
+
+### 4. Login en tant qu'admin et récupérer le token
+# @name loginAdmin
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
@@ -28,11 +31,12 @@ Content-Type: application/json
   "courriel": "admin@gmail.com",
   "motDePasse": "admin123"
 }
+
 ###
 @adminToken = {{loginAdmin.response.body.token}}
 
-### Login en tant qu'utilisateur et récupérer le token
-@name loginReq
+### 5. Login en tant qu'utilisateur et récupérer le token
+# @name loginReq
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
@@ -42,13 +46,13 @@ Content-Type: application/json
 
 ### ----- Journal -----
 
-###
+### 6. Recevoir mes journal
 @authToken = {{loginReq.response.body.token}}
 ###
 GET {{base}}/api/v1/journal
 Authorization: Bearer {{authToken}}
 
-### Créer une entrée de journal
+### 7. Créer une entrée de journal
 POST {{base}}/api/v1/journal
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -61,7 +65,7 @@ Authorization: Bearer {{authToken}}
     "gratitude": "Test"
 }
 
-###
+### 8. Créer une entrée dans le journal
 POST {{base}}/api/v1/journal
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -74,7 +78,7 @@ Authorization: Bearer {{authToken}}
   "gratitude": "Superbe séance de sport ce matin et un bon café au soleil"
 }
 
-###
+### 9. Créer une entrée dans le journal
 POST {{base}}/api/v1/journal
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -87,11 +91,11 @@ Authorization: Bearer {{authToken}}
   "gratitude": "Content d'avoir terminé mes examens à temps"
 }
 
-###
+### 10. Récupérer une entrée d'un journal avec une date
 GET {{base}}/api/v1/journal/2026-08-13
 Authorization: Bearer {{authToken}}
 
-###
+### 11. Modifier une entrée d'un journal d'une date passée
 PATCH {{base}}/api/v1/journal/2026-08-13
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -100,7 +104,7 @@ Content-Type: application/json
     "gratitude": "Test patch"
 }
 
-###
+### 12. Modifier une entrée dans un journal avec des données invalides
 PATCH {{base}}/api/v1/journal/2026-08-13
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -109,41 +113,44 @@ Content-Type: application/json
     "utilisateurId": "test"
 }
 
-###
+### 13. Recevoir les stats d'un journal 
 GET {{base}}/api/v1/journal/stats?range=15d
 Authorization: Bearer {{authToken}}
 
-### Login en tant que alice et récupérer le token
-@name loginAlice
+### 14. Login en tant que alice et récupérer le token
+# @name loginAlice
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
 {
   "courriel": "alice@example.com", "pseudonyme": "AliceZen", "motDePasse": "Password123!"
 }
+
 ###
 @aliceToken = {{loginAlice.response.body.token}}
-###
+
+### 15. Recevoir les correlations d'un utilisateur
 GET {{base}}/api/v1/journal/insights
 Authorization: Bearer {{aliceToken}}
 
 ### ----- Ressources -----
 
-### Get ressources
+### 16. Recevoir la totalité des ressources
 GET {{base}}/api/v1/resources
 
-### Filtre par durée maximale uniquement (ex: max 6 minutes)
+### 17. Filtre par durée maximale uniquement (ex: max 6 minutes)
 GET {{base}}/api/v1/resources?dureeMax=6
 
-### Combinaison : Recherche + Durée Max + Pagination
+### 18. Combinaison : Recherche + Durée Max + Pagination
 GET {{base}}/api/v1/resources?recherche=anxie&dureeMax=6&page=1&limit=5
 
-@ressourceId = 301c8d8e-ce92-4ec0-b15f-85fca00e37e6
+### S'assurer que le id existe bien dans la BDD (table Ressource)
+@ressourceId = 01354bf9-6b60-40bc-af53-4df2d39af071
 
-### Get une ressource par id
+### 19. Recevoir une ressource avec son id
 GET {{base}}/api/v1/resources/{{ressourceId}}
 
-### Creer une ressource en tant qu'admin
+### 20. Creer une ressource en tant qu'admin
 POST {{base}}/api/v1/resources
 Content-Type: application/json
 Authorization: Bearer {{adminToken}}
@@ -161,27 +168,22 @@ Authorization: Bearer {{adminToken}}
 
 ### ----- Me -----
 
-###
+### 21. Recevoir les données à exporter
 GET {{base}}/api/v1/me/export
 Authorization: Bearer {{authToken}}
 
-###
+### 22. Exporter les données en CSV
 GET {{base}}/api/v1/me/export?format=csv
 Authorization: Bearer {{authToken}}
 
-###
+### 23. Supprimer mon utilisateur
 DELETE  {{base}}/api/v1/me/
 Authorization: Bearer {{authToken}}
 
-###
-
-
-
-
 ###### MESSAGES ##############################
 
-### Login en tant qu'utilisateur et récupérer le token
-@name loginReq
+### 24. Login en tant qu'utilisateur et récupérer le token
+# @name loginReq
 POST {{base}}/api/v1/auth/login
 Content-Type: application/json
 
@@ -190,17 +192,17 @@ Content-Type: application/json
   "motDePasse": "Password123!"
 }
 
-###  Voir les messages de l'utilisateur u3 avec l'utilisateur u1
+### 25. Voir les messages de l'utilisateur u3 avec l'utilisateur u1
 GET {{base}}/api/v1/messages/u1
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-###  Voir toutes les conversations (le dernier message de chacune)
+### 26. Voir toutes les conversations (le dernier message de chacune)
 GET {{base}}/api/v1/messages
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-###  Envoyer un message a l'utilisateur u2
+### 27. Envoyer un message a l'utilisateur u2
 POST {{base}}/api/v1/messages/u2
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -210,7 +212,7 @@ Content-Type: application/json
     "contenu": "Aurais tu le temps de parler du deuil?"
 }
 
-###  Voir les messages de l'utilisateur u3 avec l'utilisateur u2
+### 28. Voir les messages de l'utilisateur u3 avec l'utilisateur u2
 GET {{base}}/api/v1/messages/u2
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -218,12 +220,12 @@ Content-Type: application/json
 
 ############ USERS #############################
 
-### Bloquer utilisateur u5
+### 29. Bloquer utilisateur u5
 POST {{base}}/api/v1/users/u5/block
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-### Essayer d'envoyer un message a u5
+### 30. Essayer d'envoyer un message a u5 après l'avoir bloqué
 POST {{base}}/api/v1/messages/u5
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -234,7 +236,7 @@ Content-Type: application/json
 }
 
 
-### afficher un utilisateur
+### 31. afficher un utilisateur
 GET {{base}}/api/v1/users/u5
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -243,7 +245,7 @@ Content-Type: application/json
 
 ############ ME #############################
 
-### changer la bio du user u3
+### 32. changer la bio du user u3
 PATCH {{base}}/api/v1/me
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -252,7 +254,7 @@ Content-Type: application/json
     "bio": "Moi j'aime les chars pis le biseboll"
 }
 
-### changer les donnes de privacy pour rendre le profil prive
+### 33. changer les donnes de privacy pour rendre le profil prive
 PATCH {{base}}/api/v1/me/privacy
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -261,7 +263,7 @@ Content-Type: application/json
     "visibilite": "PRIVE"
 }
 
-### changer les donnes de privacy pour rendre le profil public
+### 34. changer les donnes de privacy pour rendre le profil public
 PATCH {{base}}/api/v1/me/privacy
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -270,13 +272,22 @@ Content-Type: application/json
     "visibilite": "PUBLIC"
 }
 
+### 35. rendre a nouveau le profil privé pour le prochain test
+PATCH {{base}}/api/v1/me/privacy
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
 
-### afficher un utilisateur (introuvable lorse que prive)
+{
+    "visibilite": "PRIVE"
+}
+
+
+### 36. afficher un utilisateur (introuvable car privé)
 GET {{base}}/api/v1/users/u3
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-###
+### 36. Créer un signalement
 POST {{base}}/api/v1/reports
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
@@ -284,13 +295,12 @@ Content-Type: application/json
 {
   "categorie": "INQUIETANT"
 }
-###
 
+### 37. Recevoir les signalements
 GET {{base}}/api/v1/admin/reports
 Authorization: Bearer {{adminToken}}
 
-###
-
+### 38. Modifier un rapport
 PATCH  {{base}}/api/v1/admin/reports/sig1
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
@@ -298,7 +308,8 @@ Content-Type: application/json
 {
   "statut": "TRAITE"
 }
-###
+
+### 39. Recevoir des stats (administrateur)
 GET {{base}}/api/v1/admin/stats
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
@@ -306,11 +317,10 @@ Content-Type: application/json
 {
   "statut": "TRAITE"
 }
-###
+
+### 40. Suspendre un utilisateur
 PATCH {{base}}/api/v1/admin/users/u1/suspend
 Authorization: Bearer {{adminToken}}
-
-###
 
 # SECTION D : Groupe de soutien
 
@@ -397,18 +407,22 @@ Content-Type: {{contentType}}
 
 ### ----- Favoris -----
 
-### ajouter un favori a Bobby
+### 41. ajouter un favori a Bobby
 POST {{base}}/api/v1/resources/{{ressourceId}}/favorite
 Authorization: Bearer {{authToken}}
 
-### GET mes favoris (en tant que bobby)
+### 42. GET mes favoris (en tant que bobby)
 GET {{base}}/api/v1/resources/me/fav
 Authorization: Bearer {{authToken}}
 
-### delete le favori précédent a Bobby
+### 43. delete le favori précédent a Bobby
 DELETE {{base}}/api/v1/resources/{{ressourceId}}/favorite
 Authorization: Bearer {{authToken}}
 
-### GET suggestion contextuelle (pour Bobby)
+### 44. GET mes favoris à nouveau pour valider la suppression
+GET {{base}}/api/v1/resources/me/fav
+Authorization: Bearer {{authToken}}
+
+### 45. GET suggestion contextuelle (pour Bobby)
 GET {{base}}/api/v1/resources/me/suggestions
 Authorization: Bearer {{authToken}}
