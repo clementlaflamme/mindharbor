@@ -46,6 +46,49 @@ const bodySignalement = z
   })
   .strict();
 
+routerAdmin.patch(
+  "/reports/:id",
+  authentifier,
+  exigerRole("ADMIN"),
+  async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id as string;
+      if (!id || id.trim() === "") {
+        return res
+          .status(400)
+          .json({ message: "L'id du signalement est manquant" });
+      }
+
+      const resultatValidation = bodySignalement.safeParse(req.body);
+      if (!resultatValidation.success) {
+        return res.status(400).json({
+          message: "Données invalides",
+          erreurs: resultatValidation.error.issues,
+        });
+      }
+
+      // retire les clés dont la valeur est undefined. Zod les inclu mais prisma donnait une erreur de type à la ligne 79 avec resultatValidation.data au lieu de donneesAMettreAJour
+      const donneesAMettreAJour = Object.fromEntries(
+        Object.entries(resultatValidation.data).filter(
+          ([, valeur]) => valeur !== undefined,
+        ),
+      );
+
+      const signalementModifie = await prisma.signalement.update({
+        where: { id },
+        data: donneesAMettreAJour,
+      });
+
+      return res.status(200).json({ signalement: signalementModifie });
+    } catch (error) {
+      console.error("Erreur :", error);
+      return res
+        .status(500)
+        .json({ message: "Erreur lors de la modification du signalement." });
+    }
+  },
+);
+
 routerAdmin.get(
   "/stats",
   authentifier,
