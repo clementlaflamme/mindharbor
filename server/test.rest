@@ -300,7 +300,7 @@ Content-Type: application/json
 GET {{base}}/api/v1/admin/reports
 Authorization: Bearer {{adminToken}}
 
-### 38. Modifier un rapport
+### 38. Traiter un rapport
 PATCH  {{base}}/api/v1/admin/reports/sig1
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
