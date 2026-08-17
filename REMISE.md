@@ -9,7 +9,7 @@
 ## 1. Dépôt GitHub
 
 - **URL (public) :** <https://github.com/clementlaflamme/mindharbor>
-- **Commit final à corriger :** 1508eff
+- **Commit final à corriger :** 48457e0
 - **Branche :** main
 - [x] Vérifié en navigation privée : le dépôt est bien **PUBLIC**.
 
@@ -32,7 +32,7 @@
 | Rôle | Courriel | Mot de passe | Particularité |
 |------|----------|--------------|---------------|
 | Administrateur | admin@example.com | Password123! | — |
-| Modérateur | marc@example.com | Password123! | modère le groupe <nom> |
+| Modérateur | marc@example.com | Password123! | modère le groupe: Cercle du Sommeil (selon la bdd mais non implémentée) |
 | Utilisateur | alice@example.com | Password123! | 30 jours de journal |
 | Utilisateur | luc@example.com | Password123! | profil privé |
 
@@ -65,9 +65,8 @@ Aucune
 - On ne peut pas entrer d'activités dans le journal.
 - L'exportation des données du profil n'est pas implémentée
 - La base de données Neon PostgreSQL stocke les dates en UTC, tandis que le frontend utilise la date locale (UTC‑4).
-Après 20h, la date locale et la date UTC ne correspondent plus : le backend considère que nous sommes déjà au lendemain a partir de ce moment.
-Cela provoque un décalage d’un jour a partir de 20h et les journaux sont enregistrés en date du lendemain.
-- En date du dimanche 16 aout a 22:10, aucune connexion entre les groupes et la base de donnes (aucune utilisation de l'api dans le front end)  
+Après 20h, la date locale et la date UTC ne correspondent plus : le backend considère que nous sommes déjà au lendemain a partir de ce moment. Cela provoque un décalage d’un jour et les journaux sont enregistrés en date du lendemain.
+- En date du dimanche 16 aout à 23:10, aucune connexion entre les groupes et la base de donnes (aucune utilisation de l'api dans le front end)  
 
 
 ---
