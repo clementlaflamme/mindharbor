@@ -137,6 +137,8 @@ export default function Journal() {
   }
 
   function allerJourSuivant() {
+    console.log(estAujourdhui, dateAujourdhui)
+    if (estAujourdhui) return;
     changerJour(1);
   }
 
@@ -269,6 +271,7 @@ export default function Journal() {
           <button
             type="button"
             className="bouton-action"
+            disabled={estAujourdhui}
             onClick={allerJourSuivant}
           >
             ►
