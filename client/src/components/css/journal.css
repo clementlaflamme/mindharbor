@@ -204,3 +204,61 @@
   background-color: #e2e8f0;
   color: #0f172a;
 }
+
+/* ============================
+   MODE MOBILE (max-width: 900px)
+   ============================ */
+@media (max-width: 900px) {
+
+  .container-j {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .container-formulaire,
+  .container-journal {
+    width: 100%;
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Formulaire : grille devient verticale */
+  .element-formulaire {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .element-formulaire label {
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  /* Journal : grille devient verticale */
+  .element-affichage {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .label-affichage {
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  /* Texte de gratitude */
+  .valeur-affichage--texte {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  /* Pagination */
+  .pagination-journal {
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
+  .bouton-action {
+    width: 38px;
+    height: 34px;
+    font-size: 0.85rem;
+  }
+}
