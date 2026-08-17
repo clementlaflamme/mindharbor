@@ -1,0 +1,76 @@
+/* ============================================
+   MODE MOBILE (max-width: 600px) - Groupes
+   ============================================ */
+@media (max-width: 600px) {
+
+  /* 1. En-tête principal empilé */
+  header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  header > div:last-child {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  /* 2. Catalogue principal (Sidebar + Contenu empilés) */
+  div[style*="display: flex"][style*="gap: 24px"] {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  /* 3. Sidebar "Mes Groupes Rejoints" en pleine largeur */
+  aside {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  /* 4. Barre de recherche et filtres */
+  section div[style*="display: flex"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  section div[style*="flex: 1"] {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  /* 5. Formulaire de création de groupe */
+  div[style*="border-top: 1px solid #cbd5e1"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  div[style*="border-top: 1px solid #cbd5e1"] > div {
+    width: 100% !important;
+  }
+
+  /* 6. Grille des cartes de groupes (1 seule colonne) */
+  div[style*="display: grid"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 7. Espace de discussion / Chat responsive */
+  div[style*="min-height: 80vh"][style*="display: flex"][style*="flex-direction: column"] {
+    min-height: 70vh !important;
+  }
+
+  /* 8. Zone de saisie des messages en bas du chat */
+  div[style*="border-top: 1px solid #e1d9d5"] div[style*="display: flex"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  div[style*="border-top: 1px solid #e1d9d5"] textarea {
+    width: 100% !important;
+  }
+
+  div[style*="border-top: 1px solid #e1d9d5"] button {
+    width: 100% !important;
+    height: 40px !important;
+  }
+}
